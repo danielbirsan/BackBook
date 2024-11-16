@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\bgd\\Desktop\\proiect-daw\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A009F2F2-C69C-4AEA-B23D-DF0CCF032434}|Solution Items{A009F2F2-C69C-4AEA-B23D-DF0CCF032434}|C:\\Users\\bgd\\Desktop\\proiect-daw\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A009F2F2-C69C-4AEA-B23D-DF0CCF032434}|Solution Items{A009F2F2-C69C-4AEA-B23D-DF0CCF032434}|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+      "AbsoluteMoniker": "D:0:0:{8863E47C-6259-47DA-B3FF-200BFF7E02B6}|proiect-daw\\proiect-daw.csproj|c:\\users\\bgd\\desktop\\proiect-daw\\proiect-daw\\models\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8863E47C-6259-47DA-B3FF-200BFF7E02B6}|proiect-daw\\proiect-daw.csproj|solutionrelative:proiect-daw\\models\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8863E47C-6259-47DA-B3FF-200BFF7E02B6}|proiect-daw\\proiect-daw.csproj|c:\\users\\bgd\\desktop\\proiect-daw\\proiect-daw\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8863E47C-6259-47DA-B3FF-200BFF7E02B6}|proiect-daw\\proiect-daw.csproj|solutionrelative:proiect-daw\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A009F2F2-C69C-4AEA-B23D-DF0CCF032434}|Solution Items{A009F2F2-C69C-4AEA-B23D-DF0CCF032434}|C:\\Users\\bgd\\Desktop\\proiect-daw\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A009F2F2-C69C-4AEA-B23D-DF0CCF032434}|Solution Items{A009F2F2-C69C-4AEA-B23D-DF0CCF032434}|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,6 +27,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Account.cs",
+              "DocumentMoniker": "C:\\Users\\bgd\\Desktop\\proiect-daw\\proiect-daw\\Models\\Account.cs",
+              "RelativeDocumentMoniker": "proiect-daw\\Models\\Account.cs",
+              "ToolTip": "C:\\Users\\bgd\\Desktop\\proiect-daw\\proiect-daw\\Models\\Account.cs",
+              "RelativeToolTip": "proiect-daw\\Models\\Account.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-16T12:24:45.488Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": ".gitignore",
               "DocumentMoniker": "C:\\Users\\bgd\\Desktop\\proiect-daw\\.gitignore",
               "RelativeDocumentMoniker": ".gitignore",
@@ -41,7 +58,7 @@
               "RelativeDocumentMoniker": "proiect-daw\\Program.cs",
               "ToolTip": "C:\\Users\\bgd\\Desktop\\proiect-daw\\proiect-daw\\Program.cs",
               "RelativeToolTip": "proiect-daw\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABIAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-16T11:51:10.869Z",
               "EditorCaption": ""

@@ -1,0 +1,35 @@
+﻿
+
+<h2 class="text-center">Afisare articole</h2>
+
+<br />
+
+@if(ViewBag.Message != null){
+
+    <h2 class="alert-success p-3 rounded-3 text-center mb-5">@ViewBag.Message</h2>
+}
+
+
+<div class="d-flex justify-content-center">
+
+    <a class="btn btn-outline-success" href="/Categories/Index/">Afisare categorii</a>
+    <br />
+    <a class="btn btn-outline-success" href="/Articles/New">Adauga articol</a>
+    <br />
+
+</div>
+
+<br />
+
+
+@foreach (ArticlesApp.Models.Article article in ViewBag.Articles)
+{
+    <div class="card">
+	    <partial name="ArticleInfo" model="article" />
+        <a class="btn btn-success" href="/Articles/Show/@article.Id">Afisare articol</a>
+    </div>
+
+    <br />
+    <br />
+}
+

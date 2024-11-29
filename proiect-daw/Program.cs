@@ -1,4 +1,4 @@
-using ArticlesApp.Data;
+using proiect_daw.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,9 +40,9 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Articles}/{action=Index}/{id?}");
+    pattern: "{controller=Auth}/{action=Index}");
 app.MapRazorPages();
 
-app.Urls.Add("http://0.0.0.0:80");
+// app.Urls.Add("http://0.0.0.0:80");
 
 app.Run();

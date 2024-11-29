@@ -1,8 +1,8 @@
-using ArticlesApp.Models;
+using proiect_daw.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace ArticlesApp.Controllers
+namespace proiect_daw.Controllers
 {
     public class HomeController : Controller
     {

@@ -1,8 +1,8 @@
-﻿using ArticlesApp.Models;
+﻿using proiect_daw.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ArticlesApp.Data
+namespace proiect_daw.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
@@ -10,9 +10,5 @@ namespace ArticlesApp.Data
             : base(options)
         {
         }
-
-        public DbSet<Article> Articles { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Comment> Comments { get; set; }
     }
 }

@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/app/proiect-daw.csproj": {}
+    "C:\\Users\\bgd\\Desktop\\proiect-daw\\proiect-daw\\proiect-daw.csproj": {}
   },
   "projects": {
-    "/app/proiect-daw.csproj": {
+    "C:\\Users\\bgd\\Desktop\\proiect-daw\\proiect-daw\\proiect-daw.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/proiect-daw.csproj",
+        "projectUniqueName": "C:\\Users\\bgd\\Desktop\\proiect-daw\\proiect-daw\\proiect-daw.csproj",
         "projectName": "proiect-daw",
-        "projectPath": "/app/proiect-daw.csproj",
-        "packagesPath": "/root/.nuget/packages/",
-        "outputPath": "/app/obj/",
+        "projectPath": "C:\\Users\\bgd\\Desktop\\proiect-daw\\proiect-daw\\proiect-daw.csproj",
+        "packagesPath": "C:\\Users\\bgd\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\bgd\\Desktop\\proiect-daw\\proiect-daw\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/root/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\bgd\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -36,8 +42,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -93,7 +100,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.404/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

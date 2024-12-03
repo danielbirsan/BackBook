@@ -26,7 +26,6 @@
   <ItemGroup>
     <Content Remove="Views\Auth\Login.cshtml" />
     <Content Remove="Views\Shared\ArticleInfo.cshtml" />
-    <Content Remove="Views\Shared\_LoginPartial.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

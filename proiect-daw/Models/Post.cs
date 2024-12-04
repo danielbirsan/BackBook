@@ -17,28 +17,28 @@ namespace proiect_daw.Models
         public string Title { get; set; }
 
         //[Max200CharsValidation] - Validare custom folosind atribute personalizate
-        [Required(ErrorMessage = "Continutul postareului este obligatoriu")]
+        [Required(ErrorMessage = "Continutul articolului este obligatoriu")]
         
         public string Content { get; set; }
 
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "Categoria este obligatorie")]
-        // cheie externa (FK) - un postare are asociata o categorie
+        // cheie externa (FK) - un articol are asociata o categorie
         public int? CategoryId { get; set; }
 
         // PASUL 6: useri si roluri
-        // cheie externa (FK) - un postare este postat de catre un user
+        // cheie externa (FK) - un articol este postat de catre un user
         public string? UserId { get; set; }
 
-        // un postare are o categorie
+        // un articol are o categorie
         public virtual Category? Category { get; set; }
 
         // PASUL 6: useri si roluri
-        // proprietatea virtuala - un postare este postat de catre un user
+        // proprietatea virtuala - un articol este postat de catre un user
         public virtual ApplicationUser? User { get; set; }
 
-        // un postare poate avea o colectie de comentarii
+        // un articol poate avea o colectie de comentarii
         public virtual ICollection<Comment>? Comments { get; set; }
 
         // relatia many-to-many dintre Post si Bookmark

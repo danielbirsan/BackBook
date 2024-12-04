@@ -1,7 +1,7 @@
 ﻿@model proiect_daw.Models.Post
 
 
-@* Afisarea unui postare impreuna cu categoria din care face *@
+@* Afisarea unui articol impreuna cu categoria din care face *@
 
 
 @if (TempData["message"] != null)
@@ -13,136 +13,112 @@
 
 <br />
 
-<div class="card">
+<div class="card shadow-sm border-0 rounded-3 my-4">
 
-    <partial name="PostInfo" model="Model"></partial>
+    <div class="card-body">
+        <!-- Post Info -->
+        <partial name="PostInfo" model="Model"></partial>
 
-    @if ((ViewBag.AfisareButoane == true && Model.UserId == ViewBag.UserCurent)
-    || ViewBag.EsteAdmin == true)
-    {
-        <div class="d-flex flex-row justify-content-between">
+        <!-- Post Actions -->
+        @if ((ViewBag.AfisareButoane == true && Model.UserId == ViewBag.UserCurent)
+        || ViewBag.EsteAdmin == true)
+        {
+            <div class="d-flex flex-row justify-content-between align-items-center mt-3">
+                <a class="btn btn-outline-primary btn-sm" asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="bi bi-pencil"></i> Editeaza
+                </a>
+                <form method="post" asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id">
+                    <button class="btn btn-outline-danger btn-sm" type="submit">
+                        <i class="bi bi-trash"></i> Sterge
+                    </button>
+                </form>
+            </div>
+        }
 
-            <a class="btn btn-success" asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Editeaza postare</a>
-
-            <form method="post" asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id">
-
-                <button class="btn btn-danger" type="submit">Sterge postare</button>
-
-            </form>
-
-        </div>
-    }
-
-    <form method="post" asp-controller="Posts" asp-action="AddBookmark">
-        <input type="hidden" name="PostId" value="@Model.Id" />
-        <div class="d-flex flex-row justify-content-center p-3 border-1 border-top">
-            <div>
-                <select name="BookmarkId" class="form-control">
-                    <option selected>Adauga acest postare intr-o colectie</option>
+        <!-- Bookmark Section -->
+        <form method="post" asp-controller="Posts" asp-action="AddBookmark" class="mt-4">
+            <input type="hidden" name="PostId" value="@Model.Id" />
+            <div class="input-group">
+                <select name="BookmarkId" class="form-select form-select-sm">
+                    <option selected>Adauga in colectie</option>
                     @foreach (var bookmark in ViewBag.UserBookmarks)
                     {
                         <option value="@bookmark.Id">@bookmark.Name</option>
                     }
                 </select>
+                <button class="btn btn-outline-success btn-sm" type="submit">
+                    <i class="bi bi-plus"></i>
+                </button>
             </div>
-            <div>
-                <input type="submit" class="btn btn-success alert-success" value="+" />
-            </div>
-        </div>
-    </form>
-
+        </form>
+    </div>
 </div>
 
-<br />
-<br />
+<!-- Comments Section -->
+<div class="comments-section my-4">
+    @foreach (var comm in Model.Comments)
+    {
+        <div class="card mb-3 border-0 shadow-sm rounded-3 animate__animated animate__fadeIn">
+            <div class="card-body">
+                <p class="mb-1">@comm.Content</p>
+                <small class="text-muted">@comm.Date</small>
+                <strong class="d-block">
+                    <i class="bi bi-person"></i> @comm.User.UserName
+                </strong>
 
-@* Afisare comentarii impreuna cu butoanele de editare si stergere *@
-
-@foreach (var comm in Model.Comments)
-{
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2"></div>
-
-            <div class="col-md-8">
-
-                <div>
-
-                    <p>@comm.Content</p>
-                    <small>@comm.Date</small>
-                    <strong><i class="bi bi-person"> @comm.User.UserName</i></strong>
-
-                </div>
-                <br>
-
+                <!-- Comment Actions -->
                 @if (comm.UserId == ViewBag.UserCurent || ViewBag.EsteAdmin == true)
                 {
-                    <div class="d-flex">
-                        <div>
-                            <a class="btn btn-outline-primary" asp-controller="Comments" asp-action="Edit" asp-route-id="@comm.Id">
-                                <i class="bi bi-pencil-square"></i> Editeaza
-                            </a>
-
-                        </div>
-                        <div>
-                            <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id">
-
-                                <button class="btn btn-outline-danger" type="submit"><i class="bi bi-trash"></i>Sterge</button>
-
-                            </form>
-                        </div>
+                    <div class="d-flex mt-2">
+                        <a class="btn btn-outline-secondary btn-sm me-2" asp-controller="Comments" asp-action="Edit" asp-route-id="@comm.Id">
+                            <i class="bi bi-pencil-square"></i> Editeaza
+                        </a>
+                        <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id">
+                            <button class="btn btn-outline-danger btn-sm" type="submit">
+                                <i class="bi bi-trash"></i> Sterge
+                            </button>
+                        </form>
                     </div>
                 }
-
-                <br />
             </div>
-
-            <div class="col-md-2"></div>
-
         </div>
-
-    </div>
-}
-
-
-@* Afisarea formularului in care se poate adauga un comentariu *@
-
-<div class="container">
-
-    <div class="row">
-
-        <div class="col-md-2"></div>
-
-        <div class="col-md-8">
-
-            <div class="card">
-
-                <form method="post" asp-controller="Posts" asp-action="Show">
-
-                    <div class="card-body">
-
-                        <input type="hidden" name="PostId" value="@Model.Id" />
-
-                        <label>Continut comentariu</label>
-                        <br />
-
-                        <textarea class="form-control" name="Content"></textarea>
-
-                        <span asp-validation-for="Content" class="text-danger"></span>
-                        <br /><br />
-
-                        <button class="btn btn-success" type="submit">Adauga comentariul</button>
-
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-2"></div>
-
-    </div>
-
+    }
 </div>
+
+<!-- Add Comment Form -->
+<div class="card shadow-sm border-0 rounded-3">
+    <div class="card-body">
+        <form method="post" asp-controller="Posts" asp-action="Show">
+            <input type="hidden" name="PostId" value="@Model.Id" />
+            <label for="commentContent" class="form-label">Adauga un comentariu</label>
+            <textarea id="commentContent" name="Content" class="form-control mb-2" rows="3" placeholder="Scrie un comentariu..."></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+            <button class="btn btn-primary btn-sm mt-2 w-100" type="submit">
+                <i class="bi bi-chat-dots"></i> Posteaza
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Custom CSS for Modern Look -->
+<style>
+    .comments-section {
+        max-width: 700px;
+        margin: auto;
+    }
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+    .card:hover {
+        transform: scale(1.02);
+    }
+    .btn {
+        transition: all 0.2s ease-in-out;
+    }
+    .btn:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+<!-- Animate.css for Animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />

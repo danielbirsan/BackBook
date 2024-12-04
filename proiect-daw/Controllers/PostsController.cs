@@ -33,7 +33,7 @@ namespace proiect_daw.Controllers
 
         // Se afiseaza lista tuturor postarilor impreuna cu categoria 
         // din care fac parte
-        // Pentru fiecare postare se afiseaza si userul care a postat postareul respectiv
+        // Pentru fiecare articol se afiseaza si userul care a postat articolul respectiv
         // [HttpGet] care se executa implicit
         [Authorize(Roles = "User,Editor,Admin")]
         public IActionResult Index()
@@ -59,7 +59,7 @@ namespace proiect_daw.Controllers
             {
                 search = Convert.ToString(HttpContext.Request.Query["search"]).Trim(); // eliminam spatiile libere 
 
-                // Cautare in postare (Title si Content)
+                // Cautare in articol (Title si Content)
 
                 List<int> postIds = db.Posts.Where
                                         (
@@ -79,7 +79,7 @@ namespace proiect_daw.Controllers
 
 
                 // Lista postarilor care contin cuvantul cautat
-                // fie in postare -> Title si Content
+                // fie in articol -> Title si Content
                 // fie in comentarii -> Content
                 postari = db.Posts.Where(post => mergedIds.Contains(post.Id))
                                       .Include("Category")
@@ -140,10 +140,10 @@ namespace proiect_daw.Controllers
             return View();
         }
 
-        // Se afiseaza un singur postare in functie de id-ul sau 
+        // Se afiseaza un singur articol in functie de id-ul sau 
         // impreuna cu categoria din care face parte
-        // In plus sunt preluate si toate comentariile asociate unui postare
-        // Se afiseaza si userul care a postat postareul respectiv
+        // In plus sunt preluate si toate comentariile asociate unui articol
+        // Se afiseaza si userul care a postat articolul respectiv
         // [HttpGet] se executa implicit implicit
         [Authorize(Roles = "User,Editor,Admin")]
         public IActionResult Show(int id)
@@ -171,12 +171,12 @@ namespace proiect_daw.Controllers
             return View(post);
         }
 
-        // Se afiseaza formularul in care se vor completa datele unui postare
+        // Se afiseaza formularul in care se vor completa datele unui articol
         // impreuna cu selectarea categoriei din care face parte
         // HttpGet implicit
 
 
-        // Adaugarea unui comentariu asociat unui postare in baza de date
+        // Adaugarea unui comentariu asociat unui articol in baza de date
         // Toate rolurile pot adauga comentarii in baza de date
         [HttpPost]
         [Authorize(Roles = "User,Editor,Admin")]
@@ -222,7 +222,7 @@ namespace proiect_daw.Controllers
             // Daca modelul este valid
             if (ModelState.IsValid)
             {
-                // Verificam daca avem deja postareul in colectie
+                // Verificam daca avem deja articolul in colectie
                 if (db.PostBookmarks
                     .Where(ab => ab.PostId == postBookmark.PostId)
                     .Where(ab => ab.BookmarkId == postBookmark.BookmarkId)
@@ -233,7 +233,7 @@ namespace proiect_daw.Controllers
                 }
                 else
                 {
-                    // Adaugam asocierea intre postare si bookmark 
+                    // Adaugam asocierea intre articol si bookmark 
                     db.PostBookmarks.Add(postBookmark);
                     // Salvam modificarile
                     db.SaveChanges();
@@ -250,12 +250,12 @@ namespace proiect_daw.Controllers
                 TempData["messageType"] = "alert-danger";
             }
 
-            // Ne intoarcem la pagina postareului
+            // Ne intoarcem la pagina articolului
             return Redirect("/Posts/Show/" + postBookmark.PostId);
         }
 
 
-        // Se afiseaza formularul in care se vor completa datele unui postare
+        // Se afiseaza formularul in care se vor completa datele unui articol
         // impreuna cu selectarea categoriei din care face parte
         // Doar utilizatorii cu rolul de Editor si Admin pot adauga postari in platforma
         // [HttpGet] - care se executa implicit
@@ -270,7 +270,7 @@ namespace proiect_daw.Controllers
             return View(post);
         }
 
-        // Se adauga postareul in baza de date
+        // Se adauga articolul in baza de date
         // Doar utilizatorii cu rolul Editor si Admin pot adauga postari in platforma
         [HttpPost]
         [Authorize(Roles = "Editor,Admin")]
@@ -280,7 +280,7 @@ namespace proiect_daw.Controllers
 
             post.Date = DateTime.Now;
 
-            // preluam Id-ul utilizatorului care posteaza postareul
+            // preluam Id-ul utilizatorului care posteaza articolul
             post.UserId = _userManager.GetUserId(User);
 
             if(ModelState.IsValid)
@@ -300,11 +300,11 @@ namespace proiect_daw.Controllers
             }
         }
 
-        // Se editeaza un postare existent in baza de date impreuna cu categoria din care face parte
+        // Se editeaza un articol existent in baza de date impreuna cu categoria din care face parte
         // Categoria se selecteaza dintr-un dropdown
-        // Se afiseaza formularul impreuna cu datele aferente postareului din baza de date
+        // Se afiseaza formularul impreuna cu datele aferente articolului din baza de date
         // Doar utilizatorii cu rolul de Editor si Admin pot edita postari
-        // Adminii pot edita orice postare din baza de date
+        // Adminii pot edita orice articol din baza de date
         // Editorii pot edita doar postarile proprii (cele pe care ei le-au postat)
         // [HttpGet] - se executa implicit
 
@@ -332,7 +332,7 @@ namespace proiect_daw.Controllers
             }  
         }
 
-        // Se adauga postareul modificat in baza de date
+        // Se adauga articolul modificat in baza de date
         // Se verifica rolul utilizatorilor care au dreptul sa editeze (Editor si Admin)
         [HttpPost]
         [Authorize(Roles = "Editor,Admin")]
@@ -375,10 +375,10 @@ namespace proiect_daw.Controllers
         }
 
 
-        // Se sterge un postare din baza de date 
+        // Se sterge un articol din baza de date 
         // Utilizatorii cu rolul de Editor sau Admin pot sterge postari
         // Editorii pot sterge doar postarile publicate de ei
-        // Adminii pot sterge orice postare de baza de date
+        // Adminii pot sterge orice articol de baza de date
 
         [HttpPost]
         [Authorize(Roles = "Editor,Admin")]

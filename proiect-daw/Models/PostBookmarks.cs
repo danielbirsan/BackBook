@@ -5,7 +5,7 @@ namespace proiect_daw.Models
     public class PostBookmarks
     {
         // tabelul asociativ care face legatura intre Post si Bookmark
-        // un postare are mai multe colectii din care face parte
+        // un articol are mai multe colectii din care face parte
         // iar o colectie contine mai multe postari in cadrul ei
         public class PostBookmark
         {

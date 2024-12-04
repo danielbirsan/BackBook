@@ -25,7 +25,7 @@ namespace proiect_daw.Controllers
         }
         /*
         
-        // Adaugarea unui comentariu asociat unui postare in baza de date
+        // Adaugarea unui comentariu asociat unui articol in baza de date
         [HttpPost]
         public IActionResult New(Comment comm)
         {
@@ -49,7 +49,7 @@ namespace proiect_daw.Controllers
         */
 
 
-        // Stergerea unui comentariu asociat unui postare din baza de date
+        // Stergerea unui comentariu asociat unui articol din baza de date
         // Se poate sterge comentariul doar de catre userii cu rolul de Admin 
         // sau de catre utilizatorii cu rolul de User sau Editor, doar daca 
         // acel comentariu a fost postat de catre acestia
@@ -76,7 +76,7 @@ namespace proiect_daw.Controllers
 
         // In acest moment vom implementa editarea intr-o pagina View separata
         // Se editeaza un comentariu existent
-        // Editarea unui comentariu asociat unui postare
+        // Editarea unui comentariu asociat unui articol
         // [HttpGet] - se executa implicit
         // Se poate edita un comentariu doar de catre utilizatorul care a postat comentariul respectiv 
         // Adminii pot edita orice comentariu, chiar daca nu a fost postat de ei

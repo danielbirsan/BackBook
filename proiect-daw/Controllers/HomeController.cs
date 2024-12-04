@@ -36,7 +36,7 @@ namespace proiect_daw.Controllers
 
         public IActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Articles");
             }
@@ -44,11 +44,21 @@ namespace proiect_daw.Controllers
             var articles = from article in db.Articles
                            select article;
 
-            ViewBag.FirstArticle = articles.First();
-            ViewBag.Articles = articles.OrderBy(o => o.Date).Skip(1).Take(2);
+            var firstArticle = articles.FirstOrDefault();
+            if (firstArticle != null)
+            {
+                ViewBag.FirstArticle = firstArticle;
+                ViewBag.Articles = articles.OrderBy(o => o.Date).Skip(1).Take(2);
+            }
+            else
+            {
+                ViewBag.FirstArticle = null;
+                ViewBag.Articles = Enumerable.Empty<Article>();
+            }
 
             return View();
         }
+
 
         public IActionResult Privacy()
         {

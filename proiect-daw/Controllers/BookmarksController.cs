@@ -70,12 +70,12 @@ namespace proiect_daw.Controllers
             {
                 TempData["message"] = "Nu aveti drepturi asupra colectiei";
                 TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index", "Articles");
+                return RedirectToAction("Index", "Posts");
             }
             
         }
 
-        // Afisarea tuturor articolelor pe care utilizatorul le-a salvat in 
+        // Afisarea tuturor postarilor pe care utilizatorul le-a salvat in 
         // bookmark-ul sau 
         [Authorize(Roles = "User,Editor,Admin")]
         public IActionResult Show(int id)
@@ -85,8 +85,8 @@ namespace proiect_daw.Controllers
             if (User.IsInRole("User") || User.IsInRole("Editor"))
             {
                 var bookmarks = db.Bookmarks
-                                  .Include("ArticleBookmarks.Article.Category")
-                                  .Include("ArticleBookmarks.Article.User")
+                                  .Include("PostBookmarks.Post.Category")
+                                  .Include("PostBookmarks.Post.User")
                                   .Include("User")
                                   .Where(b => b.Id == id)
                                   .Where(b => b.UserId == _userManager.GetUserId(User))
@@ -96,7 +96,7 @@ namespace proiect_daw.Controllers
                 {
                     TempData["message"] = "Resursa cautata nu poate fi gasita";
                     TempData["messageType"] = "alert-danger";
-                    return RedirectToAction("Index", "Articles");
+                    return RedirectToAction("Index", "Posts");
                 }
 
                 return View(bookmarks);
@@ -106,8 +106,8 @@ namespace proiect_daw.Controllers
             if (User.IsInRole("Admin"))
             {
                 var bookmarks = db.Bookmarks
-                                  .Include("ArticleBookmarks.Article.Category")
-                                  .Include("ArticleBookmarks.Article.User")
+                                  .Include("PostBookmarks.Post.Category")
+                                  .Include("PostBookmarks.Post.User")
                                   .Include("User")
                                   .Where(b => b.Id == id)
                                   .FirstOrDefault();
@@ -117,7 +117,7 @@ namespace proiect_daw.Controllers
                 {
                     TempData["message"] = "Resursa cautata nu poate fi gasita";
                     TempData["messageType"] = "alert-danger";
-                    return RedirectToAction("Index", "Articles");
+                    return RedirectToAction("Index", "Posts");
                 }
 
 
@@ -128,7 +128,7 @@ namespace proiect_daw.Controllers
             {
                 TempData["message"] = "Nu aveti drepturi";
                 TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index", "Articles");
+                return RedirectToAction("Index", "Posts");
             }  
         }
 

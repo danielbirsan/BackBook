@@ -7,19 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using static proiect_daw.Models.ArticleBookmarks;
+using static proiect_daw.Models.PostBookmarks;
+using Microsoft.Extensions.Hosting;
 
 namespace proiect_daw.Controllers
 {
     [Authorize]
-    public class ArticlesController : Controller
+    public class PostsController : Controller
     {
         // PASUL 10: useri si roluri 
 
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public ArticlesController(
+        public PostsController(
         ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager
@@ -30,19 +31,19 @@ namespace proiect_daw.Controllers
             _roleManager = roleManager;
         }
 
-        // Se afiseaza lista tuturor articolelor impreuna cu categoria 
+        // Se afiseaza lista tuturor postarilor impreuna cu categoria 
         // din care fac parte
-        // Pentru fiecare articol se afiseaza si userul care a postat articolul respectiv
+        // Pentru fiecare postare se afiseaza si userul care a postat postareul respectiv
         // [HttpGet] care se executa implicit
         [Authorize(Roles = "User,Editor,Admin")]
         public IActionResult Index()
         {
-            var articles = db.Articles.Include("Category")
+            var postari = db.Posts.Include("Category")
                                       .Include("User")
                                       .OrderByDescending(a => a.Date);
 
             // ViewBag.OriceDenumireSugestiva
-            // ViewBag.Articles = articles;
+            // ViewBag.Posts = posts;
 
             if (TempData.ContainsKey("message"))
             {
@@ -58,29 +59,29 @@ namespace proiect_daw.Controllers
             {
                 search = Convert.ToString(HttpContext.Request.Query["search"]).Trim(); // eliminam spatiile libere 
 
-                // Cautare in articol (Title si Content)
+                // Cautare in postare (Title si Content)
 
-                List<int> articleIds = db.Articles.Where
+                List<int> postIds = db.Posts.Where
                                         (
                                          at => at.Title.Contains(search)
                                          || at.Content.Contains(search)
                                         ).Select(a => a.Id).ToList();
 
                 // Cautare in comentarii (Content)
-                List<int> articleIdsOfCommentsWithSearchString = db.Comments
+                List<int> postIdsOfCommentsWithSearchString = db.Comments
                                         .Where
                                         (
                                          c => c.Content.Contains(search)
-                                        ).Select(c => (int)c.ArticleId).ToList();
+                                        ).Select(c => (int)c.PostId).ToList();
 
                 // Se formeaza o singura lista formata din toate id-urile selectate anterior
-                List<int> mergedIds = articleIds.Union(articleIdsOfCommentsWithSearchString).ToList();
+                List<int> mergedIds = postIds.Union(postIdsOfCommentsWithSearchString).ToList();
 
 
-                // Lista articolelor care contin cuvantul cautat
-                // fie in articol -> Title si Content
+                // Lista postarilor care contin cuvantul cautat
+                // fie in postare -> Title si Content
                 // fie in comentarii -> Content
-                articles = db.Articles.Where(article => mergedIds.Contains(article.Id))
+                postari = db.Posts.Where(post => mergedIds.Contains(post.Id))
                                       .Include("Category")
                                       .Include("User")
                                       .OrderByDescending(a => a.Date);
@@ -91,23 +92,22 @@ namespace proiect_daw.Controllers
 
             // AFISARE PAGINATA
 
-            // Alegem sa afisam 3 articole pe pagina
+            // Alegem sa afisam 3 postari pe pagina
             int _perPage = 3;
 
-            // Fiind un numar variabil de articole, verificam de fiecare data utilizand 
+            // Fiind un numar variabil de postari, verificam de fiecare data utilizand 
             // metoda Count()
-
-            int totalItems = articles.Count();
+            int totalItems = postari.Count();
 
             // Se preia pagina curenta din View-ul asociat
             // Numarul paginii este valoarea parametrului page din ruta
-            // /Articles/Index?page=valoare
+            // /Posts/Index?page=valoare
 
             var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
 
             // Pentru prima pagina offsetul o sa fie zero
             // Pentru pagina 2 o sa fie 3 
-            // Asadar offsetul este egal cu numarul de articole care au fost deja afisate pe paginile anterioare
+            // Asadar offsetul este egal cu numarul de postari care au fost deja afisate pe paginile anterioare
             var offset = 0;
 
             // Se calculeaza offsetul in functie de numarul paginii la care suntem
@@ -116,40 +116,39 @@ namespace proiect_daw.Controllers
                 offset = (currentPage - 1) * _perPage;
             }
 
-            // Se preiau articolele corespunzatoare pentru fiecare pagina la care ne aflam 
+            // Se preiau postarile corespunzatoare pentru fiecare pagina la care ne aflam 
             // in functie de offset
-            var paginatedArticles = articles.Skip(offset).Take(_perPage);
-
+            var paginatedPosts = postari.Skip(offset).Take(_perPage).ToList();
 
             // Preluam numarul ultimei pagini
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
 
-            // Trimitem articolele cu ajutorul unui ViewBag catre View-ul corespunzator
-            ViewBag.Articles = paginatedArticles;
+            // Trimitem postarile cu ajutorul unui ViewBag catre View-ul corespunzator
+            ViewBag.Posts = paginatedPosts;
 
             // DACA AVEM AFISAREA PAGINATA IMPREUNA CU SEARCH
 
             if (search != "")
             {
-                ViewBag.PaginationBaseUrl = "/Articles/Index/?search=" + search + "&page";
+                ViewBag.PaginationBaseUrl = "/Posts/Index/?search=" + search + "&page";
             }
             else
             {
-                ViewBag.PaginationBaseUrl = "/Articles/Index/?page";
+                ViewBag.PaginationBaseUrl = "/Posts/Index/?page";
             }
 
             return View();
         }
 
-        // Se afiseaza un singur articol in functie de id-ul sau 
+        // Se afiseaza un singur postare in functie de id-ul sau 
         // impreuna cu categoria din care face parte
-        // In plus sunt preluate si toate comentariile asociate unui articol
-        // Se afiseaza si userul care a postat articolul respectiv
+        // In plus sunt preluate si toate comentariile asociate unui postare
+        // Se afiseaza si userul care a postat postareul respectiv
         // [HttpGet] se executa implicit implicit
         [Authorize(Roles = "User,Editor,Admin")]
         public IActionResult Show(int id)
         {
-            Article article = db.Articles.Include("Category")
+            Post post = db.Posts.Include("Category")
                                          .Include("Comments")
                                          .Include("User")
                                          .Include("Comments.User")
@@ -169,15 +168,15 @@ namespace proiect_daw.Controllers
                 ViewBag.Alert = TempData["messageType"];
             }
 
-            return View(article);
+            return View(post);
         }
 
-        // Se afiseaza formularul in care se vor completa datele unui articol
+        // Se afiseaza formularul in care se vor completa datele unui postare
         // impreuna cu selectarea categoriei din care face parte
         // HttpGet implicit
 
 
-        // Adaugarea unui comentariu asociat unui articol in baza de date
+        // Adaugarea unui comentariu asociat unui postare in baza de date
         // Toate rolurile pot adauga comentarii in baza de date
         [HttpPost]
         [Authorize(Roles = "User,Editor,Admin")]
@@ -192,18 +191,18 @@ namespace proiect_daw.Controllers
             {
                 db.Comments.Add(comment);
                 db.SaveChanges();
-                return Redirect("/Articles/Show/" + comment.ArticleId);
+                return Redirect("/Posts/Show/" + comment.PostId);
             }
             else 
             {
-                Article art = db.Articles.Include("Category")
+                Post art = db.Posts.Include("Category")
                                          .Include("User")
                                          .Include("Comments")
                                          .Include("Comments.User")
-                                         .Where(art => art.Id == comment.ArticleId)
+                                         .Where(art => art.Id == comment.PostId)
                                          .First();
 
-                //return Redirect("/Articles/Show/" + comm.ArticleId);
+                //return Redirect("/Posts/Show/" + comm.PostId);
 
                 // Adaugam bookmark-urile utilizatorului pentru dropdown
                 ViewBag.UserBookmarks = db.Bookmarks
@@ -218,191 +217,191 @@ namespace proiect_daw.Controllers
 
         [HttpPost]
         [Authorize(Roles = "User,Editor,Admin")]
-        public IActionResult AddBookmark([FromForm] ArticleBookmark articleBookmark)
+        public IActionResult AddBookmark([FromForm] PostBookmark postBookmark)
         {
             // Daca modelul este valid
             if (ModelState.IsValid)
             {
-                // Verificam daca avem deja articolul in colectie
-                if (db.ArticleBookmarks
-                    .Where(ab => ab.ArticleId == articleBookmark.ArticleId)
-                    .Where(ab => ab.BookmarkId == articleBookmark.BookmarkId)
+                // Verificam daca avem deja postareul in colectie
+                if (db.PostBookmarks
+                    .Where(ab => ab.PostId == postBookmark.PostId)
+                    .Where(ab => ab.BookmarkId == postBookmark.BookmarkId)
                     .Count() > 0)
                 {
-                    TempData["message"] = "Acest articol este deja adaugat in colectie";
+                    TempData["message"] = "Aceasta postare este deja adaugata in colectie";
                     TempData["messageType"] = "alert-danger";
                 }
                 else
                 {
-                    // Adaugam asocierea intre articol si bookmark 
-                    db.ArticleBookmarks.Add(articleBookmark);
+                    // Adaugam asocierea intre postare si bookmark 
+                    db.PostBookmarks.Add(postBookmark);
                     // Salvam modificarile
                     db.SaveChanges();
 
                     // Adaugam un mesaj de succes
-                    TempData["message"] = "Articolul a fost adaugat in colectia selectata";
+                    TempData["message"] = "Postarea a fost adaugata in colectia selectata";
                     TempData["messageType"] = "alert-success";
                 }
 
             }
             else
             {
-                TempData["message"] = "Nu s-a putut adauga articolul in colectie";
+                TempData["message"] = "Nu s-a putut adauga postarea in colectie";
                 TempData["messageType"] = "alert-danger";
             }
 
-            // Ne intoarcem la pagina articolului
-            return Redirect("/Articles/Show/" + articleBookmark.ArticleId);
+            // Ne intoarcem la pagina postareului
+            return Redirect("/Posts/Show/" + postBookmark.PostId);
         }
 
 
-        // Se afiseaza formularul in care se vor completa datele unui articol
+        // Se afiseaza formularul in care se vor completa datele unui postare
         // impreuna cu selectarea categoriei din care face parte
-        // Doar utilizatorii cu rolul de Editor si Admin pot adauga articole in platforma
+        // Doar utilizatorii cu rolul de Editor si Admin pot adauga postari in platforma
         // [HttpGet] - care se executa implicit
 
         [Authorize(Roles = "Editor,Admin")]
         public IActionResult New()
         {
-            Article article = new Article();
+            Post post = new Post();
 
-            article.Categ = GetAllCategories();
+            post.Categ = GetAllCategories();
 
-            return View(article);
+            return View(post);
         }
 
-        // Se adauga articolul in baza de date
-        // Doar utilizatorii cu rolul Editor si Admin pot adauga articole in platforma
+        // Se adauga postareul in baza de date
+        // Doar utilizatorii cu rolul Editor si Admin pot adauga postari in platforma
         [HttpPost]
         [Authorize(Roles = "Editor,Admin")]
-        public IActionResult New(Article article)
+        public IActionResult New(Post post)
         {
             var sanitizer = new HtmlSanitizer();
 
-            article.Date = DateTime.Now;
+            post.Date = DateTime.Now;
 
-            // preluam Id-ul utilizatorului care posteaza articolul
-            article.UserId = _userManager.GetUserId(User);
+            // preluam Id-ul utilizatorului care posteaza postareul
+            post.UserId = _userManager.GetUserId(User);
 
             if(ModelState.IsValid)
             {
-                article.Content = sanitizer.Sanitize(article.Content);
+                post.Content = sanitizer.Sanitize(post.Content);
 
-                db.Articles.Add(article);
+                db.Posts.Add(post);
                 db.SaveChanges();
-                TempData["message"] = "Articolul a fost adaugat";
+                TempData["message"] = "Postarea a fost adaugata";
                 TempData["messageType"] = "alert-success";
                 return RedirectToAction("Index");
             }
             else
             {
-                article.Categ = GetAllCategories();
-                return View(article);
+                post.Categ = GetAllCategories();
+                return View(post);
             }
         }
 
-        // Se editeaza un articol existent in baza de date impreuna cu categoria din care face parte
+        // Se editeaza un postare existent in baza de date impreuna cu categoria din care face parte
         // Categoria se selecteaza dintr-un dropdown
-        // Se afiseaza formularul impreuna cu datele aferente articolului din baza de date
-        // Doar utilizatorii cu rolul de Editor si Admin pot edita articole
-        // Adminii pot edita orice articol din baza de date
-        // Editorii pot edita doar articolele proprii (cele pe care ei le-au postat)
+        // Se afiseaza formularul impreuna cu datele aferente postareului din baza de date
+        // Doar utilizatorii cu rolul de Editor si Admin pot edita postari
+        // Adminii pot edita orice postare din baza de date
+        // Editorii pot edita doar postarile proprii (cele pe care ei le-au postat)
         // [HttpGet] - se executa implicit
 
         [Authorize(Roles = "Editor,Admin")]
         public IActionResult Edit(int id)
         {
 
-            Article article = db.Articles.Include("Category")
+            Post post = db.Posts.Include("Category")
                                          .Where(art => art.Id == id)
                                          .First();
 
-            article.Categ = GetAllCategories();
+            post.Categ = GetAllCategories();
 
-            if ((article.UserId == _userManager.GetUserId(User)) || 
+            if ((post.UserId == _userManager.GetUserId(User)) || 
                 User.IsInRole("Admin"))
             {
-                return View(article);
+                return View(post);
             }
             else
             {    
                 
-                TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unui articol care nu va apartine";
+                TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unui post care nu va apartine";
                 TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }  
         }
 
-        // Se adauga articolul modificat in baza de date
+        // Se adauga postareul modificat in baza de date
         // Se verifica rolul utilizatorilor care au dreptul sa editeze (Editor si Admin)
         [HttpPost]
         [Authorize(Roles = "Editor,Admin")]
-        public IActionResult Edit(int id, Article requestArticle)
+        public IActionResult Edit(int id, Post requestPost)
         {
             var sanitizer = new HtmlSanitizer();
 
-            Article article = db.Articles.Find(id);
+            Post post = db.Posts.Find(id);
 
             if(ModelState.IsValid)
             {
-                if((article.UserId == _userManager.GetUserId(User)) 
-                    || User.IsInRole("Admin"))
+                if(post.UserId == _userManager.GetUserId(User)
+                    || User.IsInRole("Admin") )
                 {
-                    article.Title = requestArticle.Title;
+                    post.Title = requestPost.Title;
 
-                    requestArticle.Content = sanitizer.Sanitize(requestArticle.Content);
+                    requestPost.Content = sanitizer.Sanitize(requestPost.Content);
 
-                    article.Content = requestArticle.Content;
+                    post.Content = requestPost.Content;
 
-                    article.Date = DateTime.Now;
-                    article.CategoryId = requestArticle.CategoryId;
-                    TempData["message"] = "Articolul a fost modificat";
+                    post.Date = DateTime.Now;
+                    post.CategoryId = requestPost.CategoryId;
+                    TempData["message"] = "Postarea a fost modificata";
                     TempData["messageType"] = "alert-success";
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
                 else
                 {                    
-                    TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unui articol care nu va apartine";
+                    TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unui post care nu va apartine";
                     TempData["messageType"] = "alert-danger";
                     return RedirectToAction("Index");
                 }
             }
             else
             {
-                requestArticle.Categ = GetAllCategories();
-                return View(requestArticle);
+                requestPost.Categ = GetAllCategories();
+                return View(requestPost);
             }
         }
 
 
-        // Se sterge un articol din baza de date 
-        // Utilizatorii cu rolul de Editor sau Admin pot sterge articole
-        // Editorii pot sterge doar articolele publicate de ei
-        // Adminii pot sterge orice articol de baza de date
+        // Se sterge un postare din baza de date 
+        // Utilizatorii cu rolul de Editor sau Admin pot sterge postari
+        // Editorii pot sterge doar postarile publicate de ei
+        // Adminii pot sterge orice postare de baza de date
 
         [HttpPost]
         [Authorize(Roles = "Editor,Admin")]
         public ActionResult Delete(int id)
         {
-            // Article article = db.Articles.Find(id);
+            // Post post = db.Posts.Find(id);
 
-            Article article = db.Articles.Include("Comments")
+            Post post = db.Posts.Include("Comments")
                                          .Where(art => art.Id == id)
                                          .First();
 
-            if ((article.UserId == _userManager.GetUserId(User))
+            if ((post.UserId == _userManager.GetUserId(User))
                     || User.IsInRole("Admin"))
             {
-                db.Articles.Remove(article);
+                db.Posts.Remove(post);
                 db.SaveChanges();
-                TempData["message"] = "Articolul a fost sters";
+                TempData["message"] = "Postarea a fost stearsa";
                 TempData["messageType"] = "alert-success";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["message"] = "Nu aveti dreptul sa stergeti un articol care nu va apartine";
+                TempData["message"] = "Nu aveti dreptul sa stergeti o postare care nu va apartine";
                 TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }    

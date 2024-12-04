@@ -43,26 +43,26 @@ namespace proiect_daw.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ArticleBookmarks",
+                name: "PostBookmarks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ArticleId = table.Column<int>(type: "int", nullable: false),
+                    PostId = table.Column<int>(type: "int", nullable: false),
                     BookmarkId = table.Column<int>(type: "int", nullable: false),
                     BookmarkDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArticleBookmarks", x => new { x.Id, x.ArticleId, x.BookmarkId });
+                    table.PrimaryKey("PK_PostBookmarks", x => new { x.Id, x.PostId, x.BookmarkId });
                     table.ForeignKey(
-                        name: "FK_ArticleBookmarks_Articles_ArticleId",
-                        column: x => x.ArticleId,
-                        principalTable: "Articles",
+                        name: "FK_PostBookmarks_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ArticleBookmarks_Bookmarks_BookmarkId",
+                        name: "FK_PostBookmarks_Bookmarks_BookmarkId",
                         column: x => x.BookmarkId,
                         principalTable: "Bookmarks",
                         principalColumn: "Id",
@@ -70,13 +70,13 @@ namespace proiect_daw.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArticleBookmarks_ArticleId",
-                table: "ArticleBookmarks",
-                column: "ArticleId");
+                name: "IX_PostBookmarks_PostId",
+                table: "PostBookmarks",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArticleBookmarks_BookmarkId",
-                table: "ArticleBookmarks",
+                name: "IX_PostBookmarks_BookmarkId",
+                table: "PostBookmarks",
                 column: "BookmarkId");
 
             migrationBuilder.CreateIndex(
@@ -89,7 +89,7 @@ namespace proiect_daw.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ArticleBookmarks");
+                name: "PostBookmarks");
 
             migrationBuilder.DropTable(
                 name: "Bookmarks");

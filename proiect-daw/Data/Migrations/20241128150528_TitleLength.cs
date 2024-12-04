@@ -12,7 +12,7 @@ namespace proiect_daw.Data.Migrations
         {
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
-                table: "Articles",
+                table: "Posts",
                 type: "nvarchar(100)",
                 maxLength: 100,
                 nullable: false,
@@ -26,7 +26,7 @@ namespace proiect_daw.Data.Migrations
         {
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
-                table: "Articles",
+                table: "Posts",
                 type: "nvarchar(10)",
                 maxLength: 10,
                 nullable: false,

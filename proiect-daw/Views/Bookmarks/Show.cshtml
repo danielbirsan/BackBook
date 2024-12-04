@@ -22,9 +22,9 @@
     </div>
     <br />
 
-    @if(Model.ArticleBookmarks.Count > 0)
+    @if(Model.PostBookmarks.Count > 0)
 
-    @foreach (var articleBookmark in Model.ArticleBookmarks)
+    @foreach (var postBookmark in Model.PostBookmarks)
     {
         <div class="col-12">
             <div class="card" style="width: 100%;">
@@ -32,7 +32,7 @@
 
                 <div class="card-body">
 
-                    <partial name="ArticleInfo" model="articleBookmark.Article" />
+                    <partial name="PostInfo" model="postBookmark.Post" />
 
                 </div>
             </div>

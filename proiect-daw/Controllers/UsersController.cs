@@ -110,7 +110,7 @@ namespace proiect_daw.Controllers
         public IActionResult Delete(string id)
         {
             var user = db.Users
-                         .Include("Articles")
+                         .Include("Posts")
                          .Include("Comments")
                          .Include("Bookmarks")
                          .Where(u => u.Id == id)
@@ -134,12 +134,12 @@ namespace proiect_daw.Controllers
                 }
             }
 
-            // Delete user articles
-            if (user.Articles.Count > 0)
+            // Delete user posts
+            if (user.Posts.Count > 0)
             {
-                foreach (var article in user.Articles)
+                foreach (var post in user.Posts)
                 {
-                    db.Articles.Remove(article);
+                    db.Posts.Remove(post);
                 }
             }
 

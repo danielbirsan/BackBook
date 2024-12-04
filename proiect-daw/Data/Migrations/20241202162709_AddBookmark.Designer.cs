@@ -96,7 +96,7 @@ namespace proiect_daw.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("proiect_daw.Models.Article", b =>
+            modelBuilder.Entity("proiect_daw.Models.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,10 +129,10 @@ namespace proiect_daw.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Articles");
+                    b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("proiect_daw.Models.ArticleBookmarks+ArticleBookmark", b =>
+            modelBuilder.Entity("proiect_daw.Models.PostBookmarks+PostBookmark", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,7 +140,7 @@ namespace proiect_daw.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ArticleId")
+                    b.Property<int?>("PostId")
                         .HasColumnType("int");
 
                     b.Property<int?>("BookmarkId")
@@ -149,13 +149,13 @@ namespace proiect_daw.Data.Migrations
                     b.Property<DateTime>("BookmarkDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id", "ArticleId", "BookmarkId");
+                    b.HasKey("Id", "PostId", "BookmarkId");
 
-                    b.HasIndex("ArticleId");
+                    b.HasIndex("PostId");
 
                     b.HasIndex("BookmarkId");
 
-                    b.ToTable("ArticleBookmarks");
+                    b.ToTable("PostBookmarks");
                 });
 
             modelBuilder.Entity("proiect_daw.Models.Bookmark", b =>
@@ -205,7 +205,7 @@ namespace proiect_daw.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ArticleId")
+                    b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -220,7 +220,7 @@ namespace proiect_daw.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArticleId");
+                    b.HasIndex("PostId");
 
                     b.HasIndex("UserId");
 
@@ -364,16 +364,16 @@ namespace proiect_daw.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("proiect_daw.Models.Article", b =>
+            modelBuilder.Entity("proiect_daw.Models.Post", b =>
                 {
                     b.HasOne("proiect_daw.Models.Category", "Category")
-                        .WithMany("Articles")
+                        .WithMany("Posts")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("proiect_daw.Models.ApplicationUser", "User")
-                        .WithMany("Articles")
+                        .WithMany("Posts")
                         .HasForeignKey("UserId");
 
                     b.Navigation("Category");
@@ -381,21 +381,21 @@ namespace proiect_daw.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("proiect_daw.Models.ArticleBookmarks+ArticleBookmark", b =>
+            modelBuilder.Entity("proiect_daw.Models.PostBookmarks+PostBookmark", b =>
                 {
-                    b.HasOne("proiect_daw.Models.Article", "Article")
-                        .WithMany("ArticleBookmarks")
-                        .HasForeignKey("ArticleId")
+                    b.HasOne("proiect_daw.Models.Post", "Post")
+                        .WithMany("PostBookmarks")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("proiect_daw.Models.Bookmark", "Bookmark")
-                        .WithMany("ArticleBookmarks")
+                        .WithMany("PostBookmarks")
                         .HasForeignKey("BookmarkId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Article");
+                    b.Navigation("Post");
 
                     b.Navigation("Bookmark");
                 });
@@ -411,9 +411,9 @@ namespace proiect_daw.Data.Migrations
 
             modelBuilder.Entity("proiect_daw.Models.Comment", b =>
                 {
-                    b.HasOne("proiect_daw.Models.Article", "Article")
+                    b.HasOne("proiect_daw.Models.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("ArticleId")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -421,7 +421,7 @@ namespace proiect_daw.Data.Migrations
                         .WithMany("Comments")
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Article");
+                    b.Navigation("Post");
 
                     b.Navigation("User");
                 });
@@ -479,28 +479,28 @@ namespace proiect_daw.Data.Migrations
 
             modelBuilder.Entity("proiect_daw.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Articles");
+                    b.Navigation("Posts");
 
                     b.Navigation("Bookmarks");
 
                     b.Navigation("Comments");
                 });
 
-            modelBuilder.Entity("proiect_daw.Models.Article", b =>
+            modelBuilder.Entity("proiect_daw.Models.Post", b =>
                 {
-                    b.Navigation("ArticleBookmarks");
+                    b.Navigation("PostBookmarks");
 
                     b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("proiect_daw.Models.Bookmark", b =>
                 {
-                    b.Navigation("ArticleBookmarks");
+                    b.Navigation("PostBookmarks");
                 });
 
             modelBuilder.Entity("proiect_daw.Models.Category", b =>
                 {
-                    b.Navigation("Articles");
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

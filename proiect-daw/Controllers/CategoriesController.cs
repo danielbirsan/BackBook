@@ -97,8 +97,8 @@ namespace proiect_daw.Controllers
         {
             // Category category = db.Categories.Find(id);
 
-            Category category = db.Categories.Include("Articles")
-                                             .Include("Articles.Comments")
+            Category category = db.Categories.Include("Posts")
+                                             .Include("Posts.Comments")
                                              .Where(c => c.Id == id)
                                              .First();
 

@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static proiect_daw.Models.ArticleBookmarks;
+using static proiect_daw.Models.PostBookmarks;
 
 namespace proiect_daw.Models
 {
-    public class Article 
+    public class Post 
     {
         [Key]
         public int Id { get; set; }
@@ -17,32 +17,32 @@ namespace proiect_daw.Models
         public string Title { get; set; }
 
         //[Max200CharsValidation] - Validare custom folosind atribute personalizate
-        [Required(ErrorMessage = "Continutul articolului este obligatoriu")]
+        [Required(ErrorMessage = "Continutul postareului este obligatoriu")]
         
         public string Content { get; set; }
 
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "Categoria este obligatorie")]
-        // cheie externa (FK) - un articol are asociata o categorie
+        // cheie externa (FK) - un postare are asociata o categorie
         public int? CategoryId { get; set; }
 
         // PASUL 6: useri si roluri
-        // cheie externa (FK) - un articol este postat de catre un user
+        // cheie externa (FK) - un postare este postat de catre un user
         public string? UserId { get; set; }
 
-        // un articol are o categorie
+        // un postare are o categorie
         public virtual Category? Category { get; set; }
 
         // PASUL 6: useri si roluri
-        // proprietatea virtuala - un articol este postat de catre un user
+        // proprietatea virtuala - un postare este postat de catre un user
         public virtual ApplicationUser? User { get; set; }
 
-        // un articol poate avea o colectie de comentarii
+        // un postare poate avea o colectie de comentarii
         public virtual ICollection<Comment>? Comments { get; set; }
 
-        // relatia many-to-many dintre Article si Bookmark
-        public virtual ICollection<ArticleBookmark>? ArticleBookmarks { get; set; }
+        // relatia many-to-many dintre Post si Bookmark
+        public virtual ICollection<PostBookmark>? PostBookmarks { get; set; }
 
         [NotMapped]
         public IEnumerable<SelectListItem>? Categ { get; set; }

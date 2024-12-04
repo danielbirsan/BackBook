@@ -18,7 +18,7 @@ namespace proiect_daw.Data.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
-                table: "Articles",
+                table: "Posts",
                 type: "nvarchar(10)",
                 maxLength: 10,
                 nullable: false,
@@ -27,7 +27,7 @@ namespace proiect_daw.Data.Migrations
 
             migrationBuilder.AddColumn<string>(
                 name: "UserId",
-                table: "Articles",
+                table: "Posts",
                 type: "nvarchar(450)",
                 nullable: true);
 
@@ -37,13 +37,13 @@ namespace proiect_daw.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Articles_UserId",
-                table: "Articles",
+                name: "IX_Posts_UserId",
+                table: "Posts",
                 column: "UserId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Articles_AspNetUsers_UserId",
-                table: "Articles",
+                name: "FK_Posts_AspNetUsers_UserId",
+                table: "Posts",
                 column: "UserId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id");
@@ -60,8 +60,8 @@ namespace proiect_daw.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Articles_AspNetUsers_UserId",
-                table: "Articles");
+                name: "FK_Posts_AspNetUsers_UserId",
+                table: "Posts");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Comments_AspNetUsers_UserId",
@@ -72,8 +72,8 @@ namespace proiect_daw.Data.Migrations
                 table: "Comments");
 
             migrationBuilder.DropIndex(
-                name: "IX_Articles_UserId",
-                table: "Articles");
+                name: "IX_Posts_UserId",
+                table: "Posts");
 
             migrationBuilder.DropColumn(
                 name: "UserId",
@@ -81,11 +81,11 @@ namespace proiect_daw.Data.Migrations
 
             migrationBuilder.DropColumn(
                 name: "UserId",
-                table: "Articles");
+                table: "Posts");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
-                table: "Articles",
+                table: "Posts",
                 type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(string),

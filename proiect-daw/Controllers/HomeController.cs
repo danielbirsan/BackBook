@@ -38,22 +38,22 @@ namespace proiect_daw.Controllers
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Articles");
+                return RedirectToAction("Index", "Posts");
             }
 
-            var articles = from article in db.Articles
-                           select article;
+            var posts = from post in db.Posts
+                        select post;
 
-            var firstArticle = articles.FirstOrDefault();
-            if (firstArticle != null)
+            var firstPost = posts.FirstOrDefault();
+            if (firstPost != null)
             {
-                ViewBag.FirstArticle = firstArticle;
-                ViewBag.Articles = articles.OrderBy(o => o.Date).Skip(1).Take(2);
+                ViewBag.FirstPost = firstPost;
+                ViewBag.Posts = posts.OrderBy(o => o.Date).Skip(1).Take(2);
             }
             else
             {
-                ViewBag.FirstArticle = null;
-                ViewBag.Articles = Enumerable.Empty<Article>();
+                ViewBag.FirstPost = null;
+                ViewBag.Posts = Enumerable.Empty<Post>();
             }
 
             return View();

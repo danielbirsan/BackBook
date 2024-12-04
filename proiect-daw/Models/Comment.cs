@@ -12,8 +12,8 @@ namespace proiect_daw.Models
 
         public DateTime Date { get; set; }
 
-        // cheie externa (FK) - un comentariu apartine unui articol
-        public int ArticleId { get; set; }
+        // cheie externa (FK) - un comentariu apartine unui postare
+        public int PostId { get; set; }
 
         // PASUL 6: useri si roluri 
         // cheie externa (FK) - un comentariu este postat de catre un user
@@ -23,8 +23,8 @@ namespace proiect_daw.Models
         // proprietatea virtuala - un comentariu este postat de catre un user
         public virtual ApplicationUser? User { get; set; }
 
-        // proprietatea virtuala - un comentariu apartine unui articol
-        public virtual Article? Article { get; set; }
+        // proprietatea virtuala - un comentariu apartine unui postare
+        public virtual Post? Post { get; set; }
     }
 
 }

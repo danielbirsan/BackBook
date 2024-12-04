@@ -12,8 +12,8 @@ using proiect_daw.Data;
 namespace proiect_daw.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241204191001_BackBookDB")]
-    partial class BackBookDB
+    [Migration("20241204230330_BackBook")]
+    partial class BackBook
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -233,6 +233,75 @@ namespace proiect_daw.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("proiect_daw.Models.Bookmark", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bookmarks");
+                });
+
+            modelBuilder.Entity("proiect_daw.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("proiect_daw.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("proiect_daw.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -288,80 +357,11 @@ namespace proiect_daw.Data.Migrations
 
                     b.HasKey("Id", "PostId", "BookmarkId");
 
-                    b.HasIndex("PostId");
-
                     b.HasIndex("BookmarkId");
 
-                    b.ToTable("PostBookmarks");
-                });
-
-            modelBuilder.Entity("proiect_daw.Models.Bookmark", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Bookmarks");
-                });
-
-            modelBuilder.Entity("proiect_daw.Models.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("proiect_daw.Models.Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
                     b.HasIndex("PostId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Comments");
+                    b.ToTable("PostBookmarks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -415,42 +415,6 @@ namespace proiect_daw.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("proiect_daw.Models.Post", b =>
-                {
-                    b.HasOne("proiect_daw.Models.Category", "Category")
-                        .WithMany("Posts")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("proiect_daw.Models.ApplicationUser", "User")
-                        .WithMany("Posts")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Category");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("proiect_daw.Models.PostBookmarks+PostBookmark", b =>
-                {
-                    b.HasOne("proiect_daw.Models.Post", "Post")
-                        .WithMany("PostBookmarks")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("proiect_daw.Models.Bookmark", "Bookmark")
-                        .WithMany("PostBookmarks")
-                        .HasForeignKey("BookmarkId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("Bookmark");
-                });
-
             modelBuilder.Entity("proiect_daw.Models.Bookmark", b =>
                 {
                     b.HasOne("proiect_daw.Models.ApplicationUser", "User")
@@ -477,20 +441,49 @@ namespace proiect_daw.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("proiect_daw.Models.Post", b =>
+                {
+                    b.HasOne("proiect_daw.Models.Category", "Category")
+                        .WithMany("Posts")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("proiect_daw.Models.ApplicationUser", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("proiect_daw.Models.PostBookmarks+PostBookmark", b =>
+                {
+                    b.HasOne("proiect_daw.Models.Bookmark", "Bookmark")
+                        .WithMany("PostBookmarks")
+                        .HasForeignKey("BookmarkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("proiect_daw.Models.Post", "Post")
+                        .WithMany("PostBookmarks")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bookmark");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("proiect_daw.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Posts");
-
                     b.Navigation("Bookmarks");
 
                     b.Navigation("Comments");
-                });
 
-            modelBuilder.Entity("proiect_daw.Models.Post", b =>
-                {
-                    b.Navigation("PostBookmarks");
-
-                    b.Navigation("Comments");
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("proiect_daw.Models.Bookmark", b =>
@@ -501,6 +494,13 @@ namespace proiect_daw.Data.Migrations
             modelBuilder.Entity("proiect_daw.Models.Category", b =>
                 {
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("proiect_daw.Models.Post", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("PostBookmarks");
                 });
 #pragma warning restore 612, 618
         }

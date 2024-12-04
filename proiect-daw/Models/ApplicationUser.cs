@@ -12,8 +12,8 @@ namespace proiect_daw.Models
         // un user poate posta mai multe comentarii
         public virtual ICollection<Comment>? Comments { get; set; }
 
-        // un user poate posta mai multe articole
-        public virtual ICollection<Article>? Articles { get; set; }
+        // un user poate posta mai multe postari
+        public virtual ICollection<Post>? Posts { get; set; }
 
         // un user poate sa creeze mai multe colectii
         public virtual ICollection<Bookmark>? Bookmarks { get; set; }

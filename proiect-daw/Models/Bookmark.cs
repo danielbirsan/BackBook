@@ -1,4 +1,4 @@
-﻿using static proiect_daw.Models.ArticleBookmarks;
+﻿using static proiect_daw.Models.PostBookmarks;
 using System.ComponentModel.DataAnnotations;
 
 namespace proiect_daw.Models
@@ -15,7 +15,7 @@ namespace proiect_daw.Models
         public string? UserId { get; set; }
         public virtual ApplicationUser? User { get; set; }
 
-        // relatia many-to-many dintre Article si Bookmark
-        public virtual ICollection<ArticleBookmark>? ArticleBookmarks { get; set; }
+        // relatia many-to-many dintre Post si Bookmark
+        public virtual ICollection<PostBookmark>? PostBookmarks { get; set; }
     }
 }

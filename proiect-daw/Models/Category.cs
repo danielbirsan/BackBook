@@ -10,8 +10,8 @@ namespace proiect_daw.Models
         [Required(ErrorMessage = "Numele categoriei este obligatoriu")]
         public string CategoryName { get; set; }
 
-        // proprietatea virtuala - dintr-o categorie fac parte mai multe articole
-        public virtual ICollection<Article>? Articles { get; set; }
+        // proprietatea virtuala - dintr-o categorie fac parte mai multe postari
+        public virtual ICollection<Post>? Posts { get; set; }
     }
 
 }

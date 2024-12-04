@@ -25,7 +25,7 @@ namespace proiect_daw.Controllers
         }
         /*
         
-        // Adaugarea unui comentariu asociat unui articol in baza de date
+        // Adaugarea unui comentariu asociat unui postare in baza de date
         [HttpPost]
         public IActionResult New(Comment comm)
         {
@@ -35,12 +35,12 @@ namespace proiect_daw.Controllers
             {
                 db.Comments.Add(comm);
                 db.SaveChanges();
-                return Redirect("/Articles/Show/" + comm.ArticleId);
+                return Redirect("/Posts/Show/" + comm.PostId);
             }
 
             else
             {
-                return Redirect("/Articles/Show/" + comm.ArticleId);
+                return Redirect("/Posts/Show/" + comm.PostId);
             }
 
         }
@@ -49,7 +49,7 @@ namespace proiect_daw.Controllers
         */
 
 
-        // Stergerea unui comentariu asociat unui articol din baza de date
+        // Stergerea unui comentariu asociat unui postare din baza de date
         // Se poate sterge comentariul doar de catre userii cu rolul de Admin 
         // sau de catre utilizatorii cu rolul de User sau Editor, doar daca 
         // acel comentariu a fost postat de catre acestia
@@ -64,19 +64,19 @@ namespace proiect_daw.Controllers
             {
                 db.Comments.Remove(comm);
                 db.SaveChanges();
-                return Redirect("/Articles/Show/" + comm.ArticleId);
+                return Redirect("/Posts/Show/" + comm.PostId);
             }
             else
             {
                 TempData["message"] = "Nu aveti dreptul sa stergeti comentariul";
                 TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index", "Articles");
+                return RedirectToAction("Index", "Posts");
             }    
         }
 
         // In acest moment vom implementa editarea intr-o pagina View separata
         // Se editeaza un comentariu existent
-        // Editarea unui comentariu asociat unui articol
+        // Editarea unui comentariu asociat unui postare
         // [HttpGet] - se executa implicit
         // Se poate edita un comentariu doar de catre utilizatorul care a postat comentariul respectiv 
         // Adminii pot edita orice comentariu, chiar daca nu a fost postat de ei
@@ -94,7 +94,7 @@ namespace proiect_daw.Controllers
             {
                 TempData["message"] = "Nu aveti dreptul sa editati comentariul";
                 TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index", "Articles");
+                return RedirectToAction("Index", "Posts");
             }            
         }
 
@@ -112,7 +112,7 @@ namespace proiect_daw.Controllers
 
                     db.SaveChanges();
 
-                    return Redirect("/Articles/Show/" + comm.ArticleId);
+                    return Redirect("/Posts/Show/" + comm.PostId);
                 }
                 else
                 {
@@ -123,7 +123,7 @@ namespace proiect_daw.Controllers
             {
                 TempData["message"] = "Nu aveti dreptul sa editati comentariul";
                 TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index", "Articles");
+                return RedirectToAction("Index", "Posts");
             }
         }
     }

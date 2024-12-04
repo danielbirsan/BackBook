@@ -25,7 +25,7 @@ namespace proiect_daw.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("proiect_daw.Models.Article", b =>
+            modelBuilder.Entity("proiect_daw.Models.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace proiect_daw.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Articles");
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("proiect_daw.Models.Category", b =>
@@ -79,7 +79,7 @@ namespace proiect_daw.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ArticleId")
+                    b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -91,7 +91,7 @@ namespace proiect_daw.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArticleId");
+                    b.HasIndex("PostId");
 
                     b.ToTable("Comments");
                 });
@@ -298,10 +298,10 @@ namespace proiect_daw.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("proiect_daw.Models.Article", b =>
+            modelBuilder.Entity("proiect_daw.Models.Post", b =>
                 {
                     b.HasOne("proiect_daw.Models.Category", "Category")
-                        .WithMany("Articles")
+                        .WithMany("Posts")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -311,13 +311,13 @@ namespace proiect_daw.Data.Migrations
 
             modelBuilder.Entity("proiect_daw.Models.Comment", b =>
                 {
-                    b.HasOne("proiect_daw.Models.Article", "Article")
+                    b.HasOne("proiect_daw.Models.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("ArticleId")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Article");
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -371,14 +371,14 @@ namespace proiect_daw.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("proiect_daw.Models.Article", b =>
+            modelBuilder.Entity("proiect_daw.Models.Post", b =>
                 {
                     b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("proiect_daw.Models.Category", b =>
                 {
-                    b.Navigation("Articles");
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

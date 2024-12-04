@@ -1,12 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
 
-@{
-    var name = @User.Identity?.Name;
-}
+<!-- PASUL 7: useri si roluri-->
 
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
+<ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
@@ -20,14 +19,11 @@
 }
 else
 {
-    <div class="text-center">
-        <h1 class="display-4">Bine ați venit!</h1>
-        <p>Alegeți una dintre opțiunile de mai jos:</p>
-
-        <!-- Buton pentru Login -->
-        <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="/Home" class="btn btn-primary btn-lg m-2">Login</a>
-
-        <!-- Buton pentru Register -->
-        <a asp-area="Identity" asp-page="/Account/Register" asp-route-returnUrl="/Home" class="btn btn-secondary btn-lg m-2">Register</a>
-    </div>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
 }
+</ul>

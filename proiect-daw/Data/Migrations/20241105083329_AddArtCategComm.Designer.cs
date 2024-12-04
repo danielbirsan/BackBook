@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ArticlesApp.Data.Migrations
+namespace proiect_daw.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20241105083329_AddArtCategComm")]
@@ -25,7 +25,7 @@ namespace ArticlesApp.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ArticlesApp.Models.Article", b =>
+            modelBuilder.Entity("proiect_daw.Models.Article", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,7 +54,7 @@ namespace ArticlesApp.Data.Migrations
                     b.ToTable("Articles");
                 });
 
-            modelBuilder.Entity("ArticlesApp.Models.Category", b =>
+            modelBuilder.Entity("proiect_daw.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,7 +71,7 @@ namespace ArticlesApp.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("ArticlesApp.Models.Comment", b =>
+            modelBuilder.Entity("proiect_daw.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -298,9 +298,9 @@ namespace ArticlesApp.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ArticlesApp.Models.Article", b =>
+            modelBuilder.Entity("proiect_daw.Models.Article", b =>
                 {
-                    b.HasOne("ArticlesApp.Models.Category", "Category")
+                    b.HasOne("proiect_daw.Models.Category", "Category")
                         .WithMany("Articles")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -309,9 +309,9 @@ namespace ArticlesApp.Data.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("ArticlesApp.Models.Comment", b =>
+            modelBuilder.Entity("proiect_daw.Models.Comment", b =>
                 {
-                    b.HasOne("ArticlesApp.Models.Article", "Article")
+                    b.HasOne("proiect_daw.Models.Article", "Article")
                         .WithMany("Comments")
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -371,12 +371,12 @@ namespace ArticlesApp.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ArticlesApp.Models.Article", b =>
+            modelBuilder.Entity("proiect_daw.Models.Article", b =>
                 {
                     b.Navigation("Comments");
                 });
 
-            modelBuilder.Entity("ArticlesApp.Models.Category", b =>
+            modelBuilder.Entity("proiect_daw.Models.Category", b =>
                 {
                     b.Navigation("Articles");
                 });

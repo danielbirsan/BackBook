@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "E:\\proiect-daw\\proiect-daw\\wwwroot\\js\\Summernote.js",
+      "PackagePath": "staticwebassets\\js\\Summernote.js"
+    },
+    {
       "Id": "E:\\proiect-daw\\proiect-daw\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "YzFrgwIGkfrCUkRd0e0Vs0Grhvb/sOJJuufrnvgZxX4=",
+  "Hash": "MfwftrTzg/hVboP1oXwxjBIwCgzxtuKnZ8FY/2Y1cws=",
   "Source": "proiect-daw",
   "BasePath": "_content/proiect-daw",
   "Mode": "Default",
@@ -1250,6 +1250,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
+    },
+    {
+      "Identity": "E:\\proiect-daw\\proiect-daw\\wwwroot\\js\\Summernote.js",
+      "SourceId": "proiect-daw",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\proiect-daw\\proiect-daw\\wwwroot\\",
+      "BasePath": "_content/proiect-daw",
+      "RelativePath": "js/Summernote.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\Summernote.js"
     },
     {
       "Identity": "E:\\proiect-daw\\proiect-daw\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",

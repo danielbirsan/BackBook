@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ArticlesApp.Data.Migrations
+namespace proiect_daw.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddArtCategComm : Migration

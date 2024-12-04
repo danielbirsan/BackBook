@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\proiect-daw\\proiect-daw\\proiect-daw.csproj": {}
+    "D:\\testul\\daw\\proiect-daw\\proiect-daw\\proiect-daw.csproj": {}
   },
   "projects": {
-    "E:\\proiect-daw\\proiect-daw\\proiect-daw.csproj": {
+    "D:\\testul\\daw\\proiect-daw\\proiect-daw\\proiect-daw.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\proiect-daw\\proiect-daw\\proiect-daw.csproj",
+        "projectUniqueName": "D:\\testul\\daw\\proiect-daw\\proiect-daw\\proiect-daw.csproj",
         "projectName": "proiect-daw",
-        "projectPath": "E:\\proiect-daw\\proiect-daw\\proiect-daw.csproj",
-        "packagesPath": "C:\\Users\\bgd\\.nuget\\packages\\",
-        "outputPath": "E:\\proiect-daw\\proiect-daw\\obj\\",
+        "projectPath": "D:\\testul\\daw\\proiect-daw\\proiect-daw\\proiect-daw.csproj",
+        "packagesPath": "C:\\Users\\Daniel\\.nuget\\packages\\",
+        "outputPath": "D:\\testul\\daw\\proiect-daw\\proiect-daw\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\bgd\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Daniel\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -100,7 +100,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.402/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

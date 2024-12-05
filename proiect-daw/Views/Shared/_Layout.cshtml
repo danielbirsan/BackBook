@@ -25,7 +25,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
 
-                        @if(User.IsInRole("Admin"))
+                        @* @if(User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Index">Afisare postari</a>
@@ -65,7 +65,11 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Bookmarks" asp-action="Index">Colectii</a>
                             </li>
-                        }
+                        }*@
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Utilizatori</a>
+                        </li>
 
                     </ul>
                     <partial name="_LoginPartial" />

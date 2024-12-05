@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace proiect_daw.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext db;
@@ -32,6 +32,26 @@ namespace proiect_daw.Controllers
         }
         public IActionResult Index()
         {
+            // MOTOR DE CAUTARE
+
+            var search = "";
+
+            if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
+            {
+                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim(); // eliminam spatiile libere 
+
+                var searched_users = db.Users
+                     .Where(u => (u.FirstName + " " + u.LastName).Contains(search) ||
+                                 u.UserName.Contains(search) ||
+                                 u.Email.Contains(search))
+                     .OrderBy(u => u.UserName)
+                     .ToList();
+
+                ViewBag.SearchedUsersList = searched_users;
+            }
+
+            ViewBag.SearchString = search;
+
             var users = from user in db.Users
                         orderby user.UserName
                         select user;

@@ -1,55 +1,93 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Permanent+Marker&family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Permanent+Marker&family=Roboto:wght@300;500&display=swap');
 
-
+/* Global Font Settings */
 html {
-  font-size: 14px;
+    font-size: 14px;
+    scroll-behavior: smooth;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    margin-bottom: 80px;
+    color: #2c2c2c;
+    line-height: 1.6;
 }
 
+/* Navbar */
 .navbar {
-    background-color: #dfe6e9 !important;
+    background-color: #ffffff !important;
     border: none !important;
-    box-shadow: 0 3px 12px #636e72 !important;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease-in-out;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+    .navbar:hover {
+        background-color: #eef2f7 !important;
+    }
+
+header {
+    margin-top: 12vh;
 }
 
 a.nav-link {
-    color: #2c2c2c !important;
+    color: #0056b3 !important;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    transition: color 0.3s ease;
 }
 
     a.nav-link:hover {
-        color: #00b894 !important;
+        color: #0056b3 !important;
+        text-decoration: none;
     }
 
 .logoutbtn {
-    color: #2c2c2c !important;
+    color: #007bff !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
-.logoutbtn:hover {
-    color: #00b894 !important;
+    .logoutbtn:hover {
+        color: #0056b3 !important;
+        text-decoration: none;
+    }
+
+/* Button Focus */
+.btn:focus,
+.btn:active:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #007bff;
+    transition: box-shadow 0.3s ease-in-out;
 }
 
-.note-editor .dropdown-toggle::after {
-    display: none;
+/* Card Styling */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background-color: #ffffff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+    .card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+/* Typography */
 .font-montserrat {
     font-family: 'Montserrat', sans-serif;
 }
@@ -60,30 +98,79 @@ a.nav-link {
 
 .font-logo {
     font-family: 'Permanent Marker', cursive;
+    color: #007bff;
+    transition: color 0.3s ease;
 }
 
-.font-logo:hover {
-    color: #00b894 !important;
-}
+    .font-logo:hover {
+        color: #0056b3 !important;
+    }
 
-.footer-position {
-    position: fixed;
+/* Footer */
+.footer {
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: #ffffff;
     text-align: center;
-    box-shadow: 0 3px 12px #636e72;
+    font-size: 0.875rem;
+    background-color: #ffffff;
+    box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    color: #6c757d;
 }
 
+    .footer a {
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .footer a:hover {
+            color: #0056b3;
+        }
+
+/* Truncate Text */
 .truncate {
-    /* Required declarations: */
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -moz-box-orient: vertical;
-    /* Limit the text block to x lines */
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 5; /* Adjust number of lines */
 }
 
+/* Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.alert {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+    .truncate {
+        -webkit-line-clamp: 3;
+    }
+
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+
+    .footer {
+        font-size: 0.75rem;
+    }
+}
 

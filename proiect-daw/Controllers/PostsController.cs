@@ -149,11 +149,17 @@ namespace proiect_daw.Controllers
         public IActionResult Show(int id)
         {
             Post post = db.Posts.Include("Category")
-                                         .Include("Comments")
-                                         .Include("User")
-                                         .Include("Comments.User")
-                              .Where(art => art.Id == id)
-                              .First();
+                                .Include("Comments")
+                                .Include("User")
+                                .Include("Comments.User")
+                                .Where(art => art.Id == id)
+                                .FirstOrDefault();
+
+            if (post == null)
+            {
+                // Handle the case when the post is not found
+                return NotFound();
+            }
 
             // Adaugam bookmark-urile utilizatorului pentru dropdown
             ViewBag.UserBookmarks = db.Bookmarks

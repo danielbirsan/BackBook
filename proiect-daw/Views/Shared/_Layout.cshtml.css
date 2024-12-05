@@ -1,48 +1,103 @@
-﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
+﻿
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-word; 
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff; 
+    transition: color 0.3s ease;
 }
+
+    a.navbar-brand:hover {
+        color: #0056b3; 
+    }
 
 a {
-  color: #0077cc;
+    color: #007bff; 
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
+    a:hover {
+        color: #0056b3; 
+    }
+
+/* Buttons */
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #007bff; 
+    border-color: #0056b3;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #003f8a;
+    }
+
+/* Navigation Pills */
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #0056b3;
 }
 
+.nav-pills .nav-link {
+    color: #007bff;
+    font-weight: 500;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+    .nav-pills .nav-link:hover {
+        color: #0056b3;
+    }
+
+/* Borders */
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #dee2e6;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #dee2e6;
 }
 
+/* Box Shadow */
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
 }
 
+    .box-shadow:hover {
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+    }
+
+/* Footer */
+
+
+    .footer a {
+        color: #007bff;
+        transition: color 0.3s ease;
+    }
+
+        .footer a:hover {
+            color: #0056b3;
+        }
+
+/* Animations and Transitions */
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
-}
+    button.accept-policy:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }

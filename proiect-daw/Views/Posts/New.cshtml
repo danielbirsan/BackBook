@@ -1,57 +1,49 @@
 ﻿@model proiect_daw.Models.Post
 
-
-<h2 class="text-center mt-5">Adaugare postare</h2>
-
-<br />
-
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-6 offset-3">
-
-            <form method="post" asp-action="New" asp-controller="Posts">
-
-                <div asp-validation-summary="All" class="text-danger"></div>
-
-                <div class="form-group">
-                    <label asp-for="Title" class="form-label">Titlu </label>
-                    <br />
-                    <input asp-for="Title" class="form-control" />
-
-                    <!-- Mesaj de validare pentru titlu -->
-                    <span asp-validation-for="Title" class="text-danger"></span>
-
-                    <br /><br />
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Create Post Card -->
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-light text-center py-3">
+                    <h5 class="font-montserrat mb-0">Creează o postare</h5>
                 </div>
+                <div class="card-body">
+                    <form method="post" asp-action="New" asp-controller="Posts">
+                        <!-- Validation Summary -->
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <!-- Post Title -->
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label font-montserrat">Titlu</label>
+                            <input asp-for="Title" class="form-control" placeholder="Adaugă un titlu..." />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
 
-                <div class="form-group">
-                    <label asp-for="Content" class="form-label">Continut</label>
-                    <br />
-                    <textarea asp-for="Content" class="form-control summernote"></textarea>
+                        <!-- Post Content -->
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label font-montserrat">Conținut</label>
+                            <textarea asp-for="Content" class="form-control summernote" placeholder="Scrie ceva..."></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
 
-                    <!-- Mesaj de validare pentru continut -->
-                    <span asp-validation-for="Content" class="text-danger"></span>
+                        <!-- Post Category -->
+                        <div class="mb-3">
+                            <label for="CategoryId" class="form-label font-montserrat">Categorie</label>
+                            <select asp-for="CategoryId" asp-items="Model.Categ" class="form-select">
+                                <option value="">Selectează o categorie</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
 
-                    <br /><br />
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary px-4 py-2 font-montserrat" type="submit">
+                                <i class="bi bi-pencil-square"></i> Postează
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label for="CategoryId">Selectati categoria</label>
-                    <br />
-                    <select asp-for="CategoryId" asp-items="Model.Categ" class="form-control">
-                        <option value="">Selectati categoria</option>
-                    </select>
-
-                    <span asp-validation-for="CategoryId" class="text-danger"></span>
-
-                    <br />
-                </div>
-                <br />
-                <button class="btn btn-success" type="submit">Adauga postare</button>
-
-            </form>
+            </div>
         </div>
     </div>
 </div>
-
-

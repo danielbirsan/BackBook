@@ -8,36 +8,41 @@
     </div>
 }
 
-<br />
+<div class="container mt-5">
+    <!-- Add Bookmark Button -->
+    <div class="d-flex justify-content-end mb-4">
+        <a asp-controller="Bookmarks" asp-action="New" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm">
+            <i class="bi bi-plus-circle"></i> Adăugare Bookmark
+        </a>
+    </div>
 
-<a asp-controller="Bookmarks" asp-action="New" class="btn btn-success rounded-pill mb-5">
-    <i class="bi bi-plus"></i> Adăugare bookmark
-</a>
+    <!-- Bookmarks Grid -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        @foreach (var bookmark in ViewBag.Bookmarks)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 rounded-3">
+                    <div class="card-body d-flex flex-column">
+                        <!-- Bookmark Title -->
+                        <h5 class="card-title text-primary font-montserrat">@bookmark.Name</h5>
 
-<div class="row">
-
-    @foreach (var bookmark in ViewBag.Bookmarks)
-    {
-        <div class="col-4 mb-4">
-
-            <div class="card">
-
-                <div class="card-body">
-                    
-                    <h5 class="card-title" name="Name">@bookmark.Name</h5>
-
+                        <!-- Admin Information -->
                         @if (ViewBag.EsteAdmin)
                         {
-                            <div><i class="bi bi-person"> Creat de: </i> @bookmark.User.UserName</div>
-                        }        
+                            <div class="text-muted mt-2">
+                                <i class="bi bi-person"></i> Creat de: <span class="fw-bold">@bookmark.User.UserName</span>
+                            </div>
+                        }
 
-                    <br />
-
-                    <a asp-controller="Bookmarks" asp-action="Show" asp-route-id="@bookmark.Id" class="btn alert-success">Afisare Colectie</a>
-
+                        <!-- Show Collection Button -->
+                        <div class="mt-auto pt-3">
+                            <a asp-controller="Bookmarks" asp-action="Show" asp-route-id="@bookmark.Id" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-eye"></i> Afișare Colecție
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-
+        }
+    </div>
 </div>

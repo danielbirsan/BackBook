@@ -1,43 +1,51 @@
 ﻿@model proiect_daw.Models.Bookmark
 
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Bookmark Details -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-3 p-4 mb-4">
+                <h3 class="card-title text-primary mb-3" asp-for="Name">
+                    <i class="bi bi-bookmark-heart"></i> @Model.Name
+                </h3>
 
-<div class="row">
+                @if (ViewBag.EsteAdmin)
+                {
+                    <p class="text-muted">
+                        <i class="bi bi-person-circle"></i> Creat de: @Model.User.UserName
+                    </p>
+                }
 
-    <div class="col-12">
-
-        <h5 class="card-title mt-5 mb-3" asp-for="Name">@Model.Name</h5>
-       
-
-        @if (ViewBag.EsteAdmin)
-        {
-            <i class="bi bi-person"> Creat de: </i> @Model.User.UserName
-           
-        }
-
-        <br /><br />
-        Articole in colectie:
-        <br /><br />
-
-        
-    </div>
-    <br />
-
-    @if(Model.PostBookmarks.Count > 0)
-
-    @foreach (var postBookmark in Model.PostBookmarks)
-    {
-        <div class="col-12">
-            <div class="card" style="width: 100%;">
-            @*<img src="..." class="card-img-top" alt="..."> *@
-
-                <div class="card-body">
-
-                    <partial name="PostInfo" model="postBookmark.Post" />
-
-                </div>
+                <p class="fw-bold mt-4">
+                    <i class="bi bi-collection"></i> Postari in colectie:
+                </p>
             </div>
-            <br /> <br />
         </div>
-    }
-    
+    </div>
+
+    <!-- Collection of Posts -->
+    <div class="row gy-4 justify-content-center">
+        @if (Model.PostBookmarks.Count > 0)
+        {
+            @foreach (var postBookmark in Model.PostBookmarks)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm border-0 rounded-3 h-100">
+                        <!-- Post Info Partial -->
+                        <div class="card-body">
+                            <partial name="PostInfo" model="postBookmark.Post" />
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <p class="text-muted mt-4">
+                    <i class="bi bi-exclamation-circle"></i> Nu exista articole in aceasta colectie.
+                </p>
+            </div>
+        }
+    </div>
 </div>

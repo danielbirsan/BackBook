@@ -24,7 +24,7 @@ body {
 .navbar {
     background-color: #ffffff !important;
     border: none !important;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1) !important;
+   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.3s ease-in-out;
     position: fixed;
     width: 100%;
@@ -113,8 +113,6 @@ a.nav-link {
     width: 100%;
     text-align: center;
     font-size: 0.875rem;
-    background-color: #ffffff;
-    box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.1);
     padding: 10px;
     color: #6c757d;
 }
@@ -174,3 +172,15 @@ a.nav-link {
     }
 }
 
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+.gy-4 > [class*="col-"] {
+    margin-top: 20px;
+}

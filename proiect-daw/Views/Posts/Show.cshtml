@@ -81,81 +81,62 @@
                         </div>
                     }
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
 
+                <!-- Comments Section -->
+                <div class="comments-section my-4">
+                    @foreach (var comm in Model.Comments)
+                    {
+                        <div class="card mb-3 border-0 shadow-sm rounded-3 animate__animated animate__fadeIn">
+                            <div class="card-body w-100">
+                                <p class="mb-1">@comm.Content</p>
+                                <small class="text-muted w-100">@comm.Date</small>
+                                <strong class="d-block">
+                                    <i class="bi bi-person"></i> @comm.User.UserName
+                                </strong>
 
-<!-- Comments Section -->
-<div class="comments-section my-4">
-    @foreach (var comm in Model.Comments)
-    {
-        <div class="card mb-3 border-0 shadow-sm rounded-3 animate__animated animate__fadeIn">
-            <div class="card-body">
-                <p class="mb-1">@comm.Content</p>
-                <small class="text-muted">@comm.Date</small>
-                <strong class="d-block">
-                    <i class="bi bi-person"></i> @comm.User.UserName
-                </strong>
+                                <!-- Comment Actions -->
+                                @if (comm.UserId == ViewBag.UserCurent || ViewBag.EsteAdmin == true)
+                                {
+                                    <div class="d-flex mt-2">
+                                        <a class="btn btn-outline-secondary btn-sm me-2" asp-controller="Comments" asp-action="Edit" asp-route-id="@comm.Id">
+                                            <i class="bi bi-pencil-square"></i> Editeaza
+                                        </a>
+                                        <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id">
+                                            <button class="btn btn-outline-danger btn-sm" type="submit">
+                                                <i class="bi bi-trash"></i> Sterge
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
 
-                <!-- Comment Actions -->
-                @if (comm.UserId == ViewBag.UserCurent || ViewBag.EsteAdmin == true)
-                {
-                    <div class="d-flex mt-2">
-                        <a class="btn btn-outline-secondary btn-sm me-2" asp-controller="Comments" asp-action="Edit" asp-route-id="@comm.Id">
-                            <i class="bi bi-pencil-square"></i> Editeaza
-                        </a>
-                        <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id">
-                            <button class="btn btn-outline-danger btn-sm" type="submit">
-                                <i class="bi bi-trash"></i> Sterge
+                <!-- Add Comment Form -->
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body">
+                        <form method="post" asp-controller="Posts" asp-action="Show">
+                            <input type="hidden" name="PostId" value="@Model.Id" />
+                            <label for="commentContent" class="form-label">Adauga un comentariu</label>
+                            <textarea id="commentContent" name="Content" class="form-control mb-2" rows="3" placeholder="Scrie un comentariu..."></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                            <button class="btn btn-primary btn-sm mt-2 w-100" type="submit">
+                                <i class="bi bi-chat-dots"></i> Posteaza
                             </button>
                         </form>
                     </div>
-                }
+                </div>
+
             </div>
         </div>
-    }
-</div>
 
-<!-- Add Comment Form -->
-<div class="card shadow-sm border-0 rounded-3">
-    <div class="card-body">
-        <form method="post" asp-controller="Posts" asp-action="Show">
-            <input type="hidden" name="PostId" value="@Model.Id" />
-            <label for="commentContent" class="form-label">Adauga un comentariu</label>
-            <textarea id="commentContent" name="Content" class="form-control mb-2" rows="3" placeholder="Scrie un comentariu..."></textarea>
-            <span asp-validation-for="Content" class="text-danger"></span>
-            <button class="btn btn-primary btn-sm mt-2 w-100" type="submit">
-                <i class="bi bi-chat-dots"></i> Posteaza
-            </button>
-        </form>
     </div>
+
 </div>
 
-<!-- Custom CSS for Modern Look -->
-<style>
-    .comments-section {
-        max-width: 700px;
-        margin: auto;
-    }
 
-    .card {
-        transition: transform 0.2s ease-in-out;
-    }
 
-        .card:hover {
-            transform: scale(1.02);
-        }
-
-    .btn {
-        transition: all 0.2s ease-in-out;
-    }
-
-        .btn:hover {
-            transform: scale(1.05);
-        }
-</style>
 
 <!-- Animate.css for Animations -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />

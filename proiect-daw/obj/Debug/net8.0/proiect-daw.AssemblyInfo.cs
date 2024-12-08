@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("proiect-daw")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9fa3e804fba576c433ba191b1d3f1e343ab2f147")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+04d964c1049601a40f357540314324b8a5225c16")]
 [assembly: System.Reflection.AssemblyProductAttribute("proiect-daw")]
 [assembly: System.Reflection.AssemblyTitleAttribute("proiect-daw")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

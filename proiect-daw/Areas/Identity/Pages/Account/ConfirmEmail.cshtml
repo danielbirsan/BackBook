@@ -1,5 +1,4 @@
 ﻿@page
-@using proiect
 @model ConfirmEmailModel
 @{
     ViewData["Title"] = "Confirm email";
@@ -7,3 +6,16 @@
 
 <h1>@ViewData["Title"]</h1>
 <partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<input type="hidden" id="statusCode" value="@TempData["status"]" />
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var statusCode = document.getElementById("statusCode").value;
+        if (statusCode == 1) {
+            setTimeout(function () {
+                window.location.href = 'Login';
+            }, 5000);
+        }
+    });
+</script>

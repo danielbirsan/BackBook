@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using proiect_daw.Models;
 
-namespace proiect-daw.Areas.Identity.Pages.Account
+namespace proiect_daw.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailModel : PageModel
     {
@@ -45,7 +45,17 @@ namespace proiect-daw.Areas.Identity.Pages.Account
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+
+            if(result.Succeeded)
+            {
+                StatusMessage = "Thank you for confirming your email. You'll be shortly redirected to login into your account.";
+                TempData["status"] = 1;
+            }
+            else
+            {
+                StatusMessage = "Error confirming your email.";
+                TempData["status"] = 0;
+            }
             return Page();
         }
     }

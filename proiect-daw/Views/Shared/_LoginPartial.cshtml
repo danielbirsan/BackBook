@@ -47,4 +47,16 @@
         </div>
     </div>
 </nav>
-<div style="margin-top: 56px;"></div> <!-- Spacer to account for fixed navbar height -->
+
+
+<!--button add post in right corner-->
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="btn-right">
+        <form asp-controller="Posts" asp-action="New" method="get">
+            <button type="submit" class="btn btn-primary">
+                +
+            </button>
+        </form>
+    </div>
+}

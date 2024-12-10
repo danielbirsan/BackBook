@@ -207,7 +207,7 @@ namespace proiectdaw.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("PrivateProfile")
+                    b.Property<bool>("PrivateProfile")
                         .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")

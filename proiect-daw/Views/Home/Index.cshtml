@@ -1,47 +1,6 @@
 ﻿
 <div class="container my-4">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-8">
-            <div class="card shadow-sm">
-                <!-- Post Header -->
-                <div class="card-header bg-white d-flex align-items-center">
-                    <img src="/path/to/profile-pic-placeholder.jpg" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
-                    <div>
-                        <strong>
-                             Andrei Popescu
-
-                        </strong> <!-- Replace with dynamic author name -->
-                        <small class="text-muted d-block">2 hours ago</small> <!-- Replace with dynamic timestamp -->
-                    </div>
-                </div>
-
-                <!-- Post Content -->
-                <div class="card-body">
-                    <h5 class="mb-3">@Html.Raw(ViewBag.FirstPost.Title)</h5>
-                    <p>@Html.Raw(ViewBag.FirstPost.Content)</p>
-                    <div class="text-center">
-                        <img src="https://icon-library.com/images/newspaper-png-icon/newspaper-png-icon-15.jpg" class="img-fluid rounded" alt="Post Image">
-                    </div>
-                </div>
-
-                <!-- Post Footer -->
-                <div class="card-footer bg-white d-flex justify-content-between">
-                    <div>
-                        <button class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-hand-thumbs-up"></i> Like
-                        </button>
-                        <button class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-chat"></i> Comment
-                        </button>
-                        <button class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-share"></i> Share
-                        </button>
-                    </div>
-                    <a href="/Posts/Show/@ViewBag.FirstPost.Id" class="btn btn-outline-success btn-sm">View Post</a>
-                </div>
-            </div>
-        </div>
-    </div>
+   
 </div>
 
 
@@ -49,41 +8,6 @@
 
 
 <div class="container my-4">
-    <div class="row justify-content-center">
-        @foreach (var post in ViewBag.Posts)
-        {
-            <div class="col-12 col-md-8 mb-4">
-                <div class="card shadow-sm">
-                    <!-- Post Header -->
-                    <div class="card-header bg-light d-flex align-items-center">
-                        <img src="/path/to/profile-pic-placeholder.jpg" alt="Profile" class="rounded-circle me-3" width="40" height="40">
-                        <div>
-                            <strong>@Html.Raw(post.Author)</strong>
-                            <small class="text-muted d-block">@Html.Raw(post.Timestamp)</small>
-                        </div>
-                    </div>
-
-                    <!-- Post Content -->
-                    <div class="card-body">
-                        <h5 class="mb-3">@Html.Raw(post.Title)</h5>
-                        <p class="text-secondary">@Html.Raw(post.Content)</p>
-                    </div>
-
-                    <!-- Post Footer -->
-                    <div class="card-footer bg-light d-flex justify-content-between">
-                        <a class="btn btn-outline-primary btn-sm" href="/Posts/Show/@post.Id">View Post</a>
-                        <div>
-                            <button class="btn btn-sm btn-outline-secondary me-2">
-                                <i class="bi bi-hand-thumbs-up"></i> Like
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-chat"></i> Comment
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+    
 </div>
 

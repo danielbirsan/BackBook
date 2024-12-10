@@ -1,0 +1,101 @@
+﻿<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to bottom right, #6a11cb, #2575fc);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .content-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 50px;
+        flex-wrap: wrap;
+        height: 70vh;
+    }
+
+    .buttons-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .buttons-container button {
+            background: #ff7e5f;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .buttons-container button:hover {
+                background: #feb47b;
+                transform: scale(1.1);
+            }
+
+        .buttons-container h3 {
+            margin: 0;
+            color: #ffdfba;
+            font-size: 1.5rem;
+        }
+
+    .image-container img {
+        height: 100%;
+        max-height: 70vh;
+        border-radius: 10px;
+    }
+
+    footer {
+        margin-top: auto;
+        background-color: #111;
+        padding: 20px 0;
+        color: #aaa;
+        text-align: center;
+    }
+
+    .footer .font-logo {
+        font-weight: bold;
+        color: #ff7e5f;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    main {
+        margin-top: 30px;
+    }
+</style>
+<body>
+    <div class="content-section container">
+        <div class="buttons-container">
+            <button id="login" type="submit" class="btn btn-lg">Login</button>
+            <h3>or</h3>
+            <button id="register" type="submit" class="btn btn-lg">Register</button>
+        </div>
+        <div class="image-container">
+            <img src="./logo.webp" alt="Background Image" />
+        </div>
+    </div>
+
+    <script>
+        const button1 = document.getElementById('login');
+        const button2 = document.getElementById('register');
+
+        button1.addEventListener('click', () => {
+            window.location.href = 'Identity/Account/Login';
+        });
+
+        button2.addEventListener('click', () => {
+            window.location.href = 'Identity/Account/Register';
+        });
+    </script>
+</body>

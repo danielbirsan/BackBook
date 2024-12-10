@@ -8,7 +8,7 @@ using proiect_daw.Data;
 
 #nullable disable
 
-namespace proiect_daw.Data.Migrations
+namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot

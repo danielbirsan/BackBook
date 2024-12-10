@@ -105,10 +105,9 @@ namespace proiect_daw.Controllers
                     user.FirstName = newData.FirstName;
                     user.LastName = newData.LastName;
                     user.PhoneNumber = newData.PhoneNumber;
-                    
 
-                    // Cautam toate rolurile din baza de date
-                    var roles = db.Roles.ToList();
+                // Cautam toate rolurile din baza de date
+                var roles = db.Roles.ToList();
 
                     foreach (var role in roles)
                     {

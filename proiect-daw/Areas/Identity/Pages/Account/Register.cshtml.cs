@@ -129,6 +129,7 @@ namespace proiect_daw.Areas.Identity.Pages.Account
 
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
+                user.PrivateProfile = false;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 

@@ -104,7 +104,7 @@ namespace proiect_daw.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/Home/Index");
+            returnUrl ??= Url.Content("~/Posts/Index");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
@@ -116,7 +116,7 @@ namespace proiect_daw.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return RedirectToPage(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {

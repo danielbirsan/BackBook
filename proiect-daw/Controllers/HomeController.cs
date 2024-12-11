@@ -61,10 +61,19 @@ namespace proiect_daw.Controllers
 
         public IActionResult Welcome()
         {
-            return View();
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+            else
+            {
+                return View();
+            }
         }
 
-        public IActionResult Privacy()
+    
+
+    public IActionResult Privacy()
         {
             return View();
         }

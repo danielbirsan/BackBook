@@ -266,7 +266,7 @@ namespace proiect_daw.Controllers
         // Doar utilizatorii cu rolul de Editor si Admin pot adauga postari in platforma
         // [HttpGet] - care se executa implicit
 
-        [Authorize(Roles = "Editor,Admin")]
+        [Authorize(Roles = "User,Editor,Admin")]
         public IActionResult New()
         {
             Post post = new Post();

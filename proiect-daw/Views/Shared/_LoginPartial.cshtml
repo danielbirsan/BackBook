@@ -52,11 +52,28 @@
 <!--button add post in right corner-->
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class="btn-right">
-        <form asp-controller="Posts" asp-action="New" method="get">
+    <div class="btn-container">
+        <form asp-controller="Posts" asp-action="New" method="get" class="d-inline">
             <button type="submit" class="btn btn-primary">
                 +
             </button>
         </form>
+        <form asp-controller="Groups" asp-action="New" method="get" class="d-inline">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-people-fill"></i> New group
+            </button>
+        </form>
     </div>
 }
+
+<style>
+    .btn-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+    }
+    .btn-container form {
+        display: inline-block;
+        margin-left: 5px;
+    }
+</style>

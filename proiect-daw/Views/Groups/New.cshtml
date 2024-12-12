@@ -1,0 +1,41 @@
+﻿@model proiect_daw.Models.Group
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Create Group Card -->
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-light text-center py-3">
+                    <h5 class="font-montserrat mb-0">Creează un grup</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-action="New" asp-controller="Groups">
+                        <!-- Validation Summary -->
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <!-- Group Title -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label font-montserrat">Nume</label>
+                            <input asp-for="Name" class="form-control" placeholder="Adaugă un nume..." />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <!-- Group Description -->
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label font-montserrat">Descriere</label>
+                            <textarea asp-for="Description" class="form-control summernote" placeholder="Descrierea grupului..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary px-4 py-2 font-montserrat" type="submit">
+                                <i class="bi bi-pencil-square"></i> Crează
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

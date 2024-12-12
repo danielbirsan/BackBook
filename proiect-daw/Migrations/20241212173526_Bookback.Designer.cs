@@ -12,8 +12,8 @@ using proiect_daw.Data;
 namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241210152149_BookBack")]
-    partial class BookBack
+    [Migration("20241212173526_Bookback")]
+    partial class Bookback
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -184,6 +184,9 @@ namespace proiectdaw.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -224,6 +227,8 @@ namespace proiectdaw.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -303,6 +308,32 @@ namespace proiectdaw.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("proiect_daw.Models.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("proiect_daw.Models.Post", b =>
@@ -418,6 +449,13 @@ namespace proiectdaw.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("proiect_daw.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("proiect_daw.Models.Group", null)
+                        .WithMany("Users")
+                        .HasForeignKey("GroupId");
+                });
+
             modelBuilder.Entity("proiect_daw.Models.Bookmark", b =>
                 {
                     b.HasOne("proiect_daw.Models.ApplicationUser", "User")
@@ -497,6 +535,11 @@ namespace proiectdaw.Migrations
             modelBuilder.Entity("proiect_daw.Models.Category", b =>
                 {
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("proiect_daw.Models.Group", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("proiect_daw.Models.Post", b =>

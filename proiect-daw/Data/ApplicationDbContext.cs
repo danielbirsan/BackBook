@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using static proiect_daw.Models.PostBookmarks;
+using Microsoft.Identity.Client;
 
 namespace proiect_daw.Data
 {
@@ -19,6 +20,8 @@ namespace proiect_daw.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Bookmark> Bookmarks { get; set; }
         public DbSet<PostBookmark> PostBookmarks { get; set; }
+
+        public DbSet<Group> Groups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -11,9 +11,12 @@ namespace proiect_daw.Controllers
     public class GroupsController : Controller
     {
         private readonly ApplicationDbContext db;
-        public GroupsController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public GroupsController(ApplicationDbContext context,
+                                UserManager<ApplicationUser> userManager)
         {
             db = context;
+            _userManager = userManager; 
         }
 
         public IActionResult New()
@@ -134,6 +137,7 @@ namespace proiect_daw.Controllers
             var sanitizer = new HtmlSanitizer();
 
             group.Date = DateTime.Now;
+            group.Moderator = _userManager.GetUserId(User);
 
 
             if (ModelState.IsValid)

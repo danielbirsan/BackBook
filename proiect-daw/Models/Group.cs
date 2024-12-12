@@ -15,7 +15,9 @@ namespace proiect_daw.Models
         public string? Description { get; set; }
 
 
-        public string? Moderator { get; set; }
+        public string? ModeratorId { get; set; }
+
+        public string? ModeratorName { get; set; }
 
         public DateTime Date { get; set; }
 

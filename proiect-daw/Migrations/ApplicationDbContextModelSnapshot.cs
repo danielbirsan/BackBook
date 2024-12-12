@@ -319,12 +319,13 @@ namespace proiectdaw.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Moderator")
-                        .IsRequired()
+                    b.Property<string>("ModeratorId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModeratorName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

@@ -4,17 +4,11 @@
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
             <div class="card shadow-sm border-0">
-                <!-- Post Header -->
-                <div class="card-header bg-white d-flex align-items-center">
-                    <div>
-                        <small class="text-muted d-block">@Model.Date.ToString("MMMM dd, yyyy HH:mm")</small> <!-- Dynamic formatted date -->
-                    </div>
-                </div>
-
                 <!-- Post Body -->
                 <div class="card-body">
-                    <h5 class="fw-bold">@Model.Name</h5>
-                    <p>@Html.Raw(Model.Description)</p>
+                    <h4 class="fw-bold">@Model.Name</h4>
+                    <h5>@Html.Raw(Model.Description)</h5>
+                    <p>Moderator: @Model.ModeratorName</p>
                 </div>
 
                 <!-- Post Footer -->
@@ -24,7 +18,7 @@
                             <i class="bi bi-person-add"></i> Join
                         </button>
                     </div>
-                    <small class="text-muted">Posted on @Model.Date.ToString("MMMM dd, yyyy")</small>
+                    <small class="text-muted">Created on @Model.Date.ToString("MMMM dd, yyyy")</small>
                 </div>
             </div>
         </div>

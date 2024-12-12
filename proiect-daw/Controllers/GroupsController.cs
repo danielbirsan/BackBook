@@ -132,12 +132,16 @@ namespace proiect_daw.Controllers
         // Se adauga articolul in baza de date
         // Doar utilizatorii cu rolul Editor si Admin pot adauga postari in platforma
         [HttpPost]
-        public IActionResult New(Group group)
+        public async Task<IActionResult> New(Group group)
         {
             var sanitizer = new HtmlSanitizer();
 
             group.Date = DateTime.Now;
-            group.Moderator = _userManager.GetUserId(User);
+            group.ModeratorId = _userManager.GetUserId(User);
+
+            var user = await _userManager.GetUserAsync(User);
+
+            group.ModeratorName = user.LastName + " " + user.FirstName;
 
 
             if (ModelState.IsValid)

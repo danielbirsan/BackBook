@@ -12,7 +12,7 @@ using proiect_daw.Data;
 namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241212184138_Backbook")]
+    [Migration("20241212185804_Backbook")]
     partial class Backbook
     {
         /// <inheritdoc />
@@ -322,12 +322,13 @@ namespace proiectdaw.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Moderator")
-                        .IsRequired()
+                    b.Property<string>("ModeratorId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModeratorName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

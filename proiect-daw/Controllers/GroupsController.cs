@@ -12,11 +12,12 @@ namespace proiect_daw.Controllers
     {
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly GroupMembership _groupMembership;
         public GroupsController(ApplicationDbContext context,
                                 UserManager<ApplicationUser> userManager)
         {
             db = context;
-            _userManager = userManager; 
+            _userManager = userManager;
         }
 
         public IActionResult New()
@@ -52,7 +53,6 @@ namespace proiect_daw.Controllers
                 search = Convert.ToString(HttpContext.Request.Query["search"]).Trim(); // eliminam spatiile libere 
 
                 grupuri = grupuri.Where(g => g.Name.Contains(search) || g.Description.Contains(search));
-
             }
 
             ViewBag.SearchString = search;
@@ -112,11 +112,23 @@ namespace proiect_daw.Controllers
         public IActionResult Show(int id)
         {
             var group = db.Groups.FirstOrDefault(g => g.Id == id);
+            var userId = _userManager.GetUserId(User);
 
             if (group == null)
             {
                 // Handle the case when the post is not found
                 return NotFound();
+            }
+
+            var ceva = db.GroupMemberships.FirstOrDefault(gm => gm.GroupId == id && gm.UserId == userId);
+
+            if(ceva == null)
+            {
+                ViewBag.isPendingApproval = null;
+            }
+            else
+            {
+                ViewBag.isPendingApproval = ceva.PendingApproval;
             }
 
             if (TempData.ContainsKey("message"))
@@ -126,6 +138,24 @@ namespace proiect_daw.Controllers
             }
 
             return View(group);
+        }
+
+        [HttpPost]
+        public IActionResult Join(int groupId)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            GroupMembership groupMembership = new GroupMembership
+            {
+                GroupId = groupId,
+                UserId = userId,
+                PendingApproval = true
+            };
+
+            db.GroupMemberships.Add(groupMembership);
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
 

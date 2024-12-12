@@ -12,7 +12,7 @@ using proiect_daw.Data;
 namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241212185804_Backbook")]
+    [Migration("20241212212033_Backbook")]
     partial class Backbook
     {
         /// <inheritdoc />
@@ -216,6 +216,9 @@ namespace proiectdaw.Migrations
                     b.Property<bool>("PrivateProfile")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfileDescription")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -339,6 +342,33 @@ namespace proiectdaw.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("proiect_daw.Models.GroupMembership", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("PendingApproval")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GroupMemberships");
                 });
 
             modelBuilder.Entity("proiect_daw.Models.Post", b =>
@@ -483,6 +513,25 @@ namespace proiectdaw.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("proiect_daw.Models.GroupMembership", b =>
+                {
+                    b.HasOne("proiect_daw.Models.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("proiect_daw.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
 
                     b.Navigation("User");
                 });

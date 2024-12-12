@@ -27,6 +27,33 @@
                     <h5 class="fw-bold">Group Description</h5>
                     <p class="text-secondary">@Model.Description</p>
 
+                    @if (ViewBag.isPendingApproval == null)
+                    {
+                        <form method="post" asp-action="Join" asp-controller="Groups">
+                            <input type="hidden" name="groupId" value="@Model.Id" />
+                            <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                                <div>
+                                    <button class="btn btn-outline-primary btn-sm" type="submit">
+                                        <i class="bi bi-person-add"></i> Join
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                            @if (ViewBag.isPendingApproval == true)
+                            {
+                                <small class="text-muted">Waiting for moderator approval.</small>
+                            }
+                            else
+                            {
+                                <small class="text-muted">You are already a member of this group.</small>
+                            }
+                        </div>
+                    }
+
                     <!-- Group Members Section -->
                     <h6 class="mt-4">Group Members:</h6>
                     <ul class="list-group list-group-flush">

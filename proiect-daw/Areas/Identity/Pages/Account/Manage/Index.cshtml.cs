@@ -1,11 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,52 +11,38 @@ namespace proiect_daw.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public IndexModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+        public IndexModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            Username = string.Empty; // Initialize to avoid CS8618
+            StatusMessage = string.Empty; // Initialize to avoid CS8618
+            Input = new InputModel(); // Initialize to avoid CS8618
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string Username { get; set; }
 
-        public bool PrivateProfile { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Phone]
             [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            public string PhoneNumber { get; set; } = string.Empty; // Initialize to avoid CS8618
 
-            [Display(Name = "PrivateProfile")]
+            [Display(Name = "Private Profile")]
             public bool PrivateProfile { get; set; }
+
+
+            [Display(Name = "Profile Description")]
+            public string ProfileDescription { get; set; } = string.Empty; // Initialize to avoid CS8618
+
+            [Display(Name = "Profile Photo")]
+            public IFormFile? ProfilePhoto { get; set; } // Mark as nullable to avoid CS8618
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -71,12 +50,12 @@ namespace proiect_daw.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
-            Username = userName;
-
+            Username = userName ?? string.Empty; // Handle possible null reference
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber,
-                PrivateProfile = user.PrivateProfile
+                PhoneNumber = phoneNumber ?? string.Empty, // Handle possible null reference
+                PrivateProfile = user.PrivateProfile,
+                ProfileDescription = user.ProfileDescription ?? string.Empty // Handle possible null reference
             };
         }
 
@@ -124,6 +103,33 @@ namespace proiect_daw.Areas.Identity.Pages.Account.Manage
                 if (!updateResult.Succeeded)
                 {
                     StatusMessage = "Unexpected error when trying to set profile visibility.";
+                    return RedirectToPage();
+                }
+            }
+
+            if (user.ProfileDescription != Input.ProfileDescription)
+            {
+                user.ProfileDescription = Input.ProfileDescription;
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to set profile description.";
+                    return RedirectToPage();
+                }
+            }
+
+            if (Input.ProfilePhoto != null)
+            {
+                var filePath = Path.Combine("wwwroot/images/profiles", $"{user.Id}.jpg");
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await Input.ProfilePhoto.CopyToAsync(stream);
+                }
+                user.ProfilePhoto = $"/images/profiles/{user.Id}.jpg";
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to set profile photo.";
                     return RedirectToPage();
                 }
             }

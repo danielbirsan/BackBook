@@ -26,7 +26,7 @@ namespace proiect_daw.Models
         public bool PrivateProfile { get; set; }
 
         public string? ProfileDescription { get; set; }
-
+        public string? ProfilePhoto { get; set; }
         // variabila in care vom retine rolurile existente in baza de date
         // pentru popularea unui dropdown list
         [NotMapped]

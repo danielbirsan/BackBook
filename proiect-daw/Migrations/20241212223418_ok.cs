@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace proiectdaw.Migrations
 {
     /// <inheritdoc />
-    public partial class Backbook : Migration
+    public partial class ok : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -85,6 +85,7 @@ namespace proiectdaw.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrivateProfile = table.Column<bool>(type: "bit", nullable: false),
                     ProfileDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfilePhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GroupId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

@@ -9,21 +9,35 @@
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        <form id="profile-form" method="post">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
                 <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
                 <label asp-for="Username" class="form-label"></label>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
+                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+           
+            <div class="form-floating mb-3">
+                <textarea asp-for="Input.ProfileDescription" class="form-control" placeholder="Please enter your profile description." rows="4"></textarea>
+                <label asp-for="Input.ProfileDescription" class="form-label"></label>
+                <span asp-validation-for="Input.ProfileDescription" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.ProfilePhoto" class="form-label">Profile Photo</label>
+                <input asp-for="Input.ProfilePhoto" class="form-control" type="file" />
+                <span asp-validation-for="Input.ProfilePhoto" class="text-danger"></span>
             </div>
             <div class="form-check form-switch mb-3">
                 <input asp-for="Input.PrivateProfile" class="form-check-input" type="checkbox" id="profileVisibilityToggle">
                 <label class="form-check-label" for="profileVisibilityToggle">Private Profile</label>
             </div>
+
+
             <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </form>
     </div>

@@ -216,6 +216,9 @@ namespace proiectdaw.Migrations
                     b.Property<string>("ProfileDescription")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ProfilePhoto")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 

@@ -12,8 +12,8 @@ using proiect_daw.Data;
 namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241212212033_Backbook")]
-    partial class Backbook
+    [Migration("20241212223418_ok")]
+    partial class ok
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -217,6 +217,9 @@ namespace proiectdaw.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfileDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")

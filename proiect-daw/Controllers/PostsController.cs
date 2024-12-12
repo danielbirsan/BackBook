@@ -101,8 +101,13 @@ namespace proiect_daw.Controllers
             // Numarul paginii este valoarea parametrului page din ruta
             // /Posts/Index?page=valoare
 
-            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+            var pageQuery = HttpContext.Request.Query["page"].ToString();
+            int currentPage = 1; // Default to the first page if parsing fails
 
+            if (!string.IsNullOrEmpty(pageQuery) && int.TryParse(pageQuery, out int parsedPage))
+            {
+                currentPage = parsedPage;
+            }
             // Pentru prima pagina offsetul o sa fie zero
             // Pentru pagina 2 o sa fie 3 
             // Asadar offsetul este egal cu numarul de postari care au fost deja afisate pe paginile anterioare

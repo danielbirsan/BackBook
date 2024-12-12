@@ -18,6 +18,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white d-flex align-items-center" title="Find" id="Find" role="button" asp-controller="Users" asp-action="Index">
+                        Cautare
+                    </a>
+                </li>
+
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <li class="nav-item dropdown">

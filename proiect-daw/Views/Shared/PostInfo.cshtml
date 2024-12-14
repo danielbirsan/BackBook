@@ -1,5 +1,9 @@
 ﻿@model proiect_daw.Models.Post
 
+@{
+    var currentUserId = ViewData["CurrentUserId"] as string;
+}
+
 <div class="container my-4">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
@@ -28,13 +32,34 @@
                 <!-- Post Footer -->
                 <div class="card-footer bg-white d-flex justify-content-between align-items-center">
                     <div>
-                        <form method="post" asp-controller="Posts" asp-action="ToggleLike">
-                            <input type="hidden" name="PostId" value="@Model.Id" />
-                            <input type="hidden" name="UserId" value="@ViewBag.UserCurent" />
-                            <button class="btn btn-sm @(Model.Likes != null && Model.Likes.Any(l => l.UserId == ViewBag.UserCurent) ? "btn-primary" : "btn-outline-primary")" type="submit">
-                                <i class="bi bi-hand-thumbs-up"></i> @(Model.Likes != null && Model.Likes.Any(l => l.UserId == ViewBag.UserCurent) ? "Unlike" : "Like") (@Model.LikesCount)
-                            </button>
-                        </form>
+                       <form method="post" asp-controller="Posts" asp-action="ToggleLike">
+    <input type="hidden" name="PostId" value="@Model.Id" />
+    <input type="hidden" name="UserId" value="@currentUserId" />
+    <button class="btn btn-sm like-button @(Model.Likes != null && Model.Likes.Any(l => l.UserId == currentUserId) ? "btn-blue" : "btn-outline-primary")" type="submit">
+        <i class="bi bi-hand-thumbs-up"></i>
+        @(Model.Likes != null && Model.Likes.Any(l => l.UserId == currentUserId) ? "Liked" : "Like") (@Model.LikesCount)
+    </button>
+</form>
+
+<style>
+    .like-button.btn-blue {
+        background-color: #1877f2; /* Facebook blue */
+        color: #ffffff;
+        border-color: #1877f2;
+    }
+
+    .like-button.btn-outline-primary {
+        background-color: transparent;
+        color: #1877f2;
+        border-color: #1877f2;
+    }
+
+    .like-button:hover {
+        opacity: 0.9; /* Slight hover effect for better UX */
+    }
+</style>
+
+
                         <a href="@Url.Action("Show", "Posts", new { id = Model.Id })#commentForm" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-chat"></i> Comment
                         </a>
@@ -51,6 +76,9 @@
 
 <!-- Animate.css for Animations -->
 <script>
+    var currentUserId = '@currentUserId';
+    console.log(currentUserId);
+
     document.getElementById('shareButton').addEventListener('click', function () {
         var url = window.location.href;
         navigator.clipboard.writeText(url).then(function () {

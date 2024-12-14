@@ -140,6 +140,10 @@ namespace proiect_daw.Controllers
                 ViewBag.PaginationBaseUrl = "/Posts/Index/?page";
             }
 
+            ViewBag.UserCurent = _userManager.GetUserId(User);
+            
+
+
             return View();
         }
 
@@ -493,7 +497,7 @@ namespace proiect_daw.Controllers
             return View();
         }
 
-
+        [HttpPost]
         public IActionResult ToggleLike(string userID, int postID)
         {
             var post = db.Posts.Include(p => p.Likes).FirstOrDefault(p => p.Id == postID);
@@ -523,7 +527,7 @@ namespace proiect_daw.Controllers
 
             db.SaveChanges();
 
-            return Redirect("/Posts/Show?id=" + postID);
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
 

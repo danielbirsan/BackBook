@@ -24,6 +24,10 @@ namespace proiect_daw.Models
                     return; // baza de date contine deja roluri
                 }
 
+                //add category Default
+
+              
+
 
                 // CREAREA ROLURILOR IN BD
                 // daca nu contine roluri, acestea se vor crea

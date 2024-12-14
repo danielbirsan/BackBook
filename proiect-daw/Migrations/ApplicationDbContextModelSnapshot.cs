@@ -371,6 +371,33 @@ namespace proiectdaw.Migrations
                     b.ToTable("GroupMemberships");
                 });
 
+            modelBuilder.Entity("proiect_daw.Models.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("proiect_daw.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -380,7 +407,6 @@ namespace proiectdaw.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("CategoryId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -389,6 +415,9 @@ namespace proiectdaw.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -536,13 +565,30 @@ namespace proiectdaw.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("proiect_daw.Models.Like", b =>
+                {
+                    b.HasOne("proiect_daw.Models.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("proiect_daw.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("proiect_daw.Models.Post", b =>
                 {
                     b.HasOne("proiect_daw.Models.Category", "Category")
                         .WithMany("Posts")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("proiect_daw.Models.ApplicationUser", "User")
                         .WithMany("Posts")
@@ -599,6 +645,8 @@ namespace proiectdaw.Migrations
             modelBuilder.Entity("proiect_daw.Models.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Likes");
 
                     b.Navigation("PostBookmarks");
                 });

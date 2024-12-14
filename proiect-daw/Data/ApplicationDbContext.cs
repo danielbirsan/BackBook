@@ -23,6 +23,7 @@ namespace proiect_daw.Data
         public DbSet<GroupMembership> GroupMemberships { get; set; }
 
         public DbSet<Group> Groups { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

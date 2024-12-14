@@ -200,7 +200,7 @@ namespace proiect_daw.Controllers
             {
                 db.Comments.Add(comment);
                 db.SaveChanges();
-                return Redirect("/Posts/Show/" + comment.PostId);
+                return Redirect("/Posts/Show?id=" + comment.PostId);
             }
             else 
             {
@@ -281,13 +281,24 @@ namespace proiect_daw.Controllers
 
         // Se adauga articolul in baza de date
         // Doar utilizatorii cu rolul Editor si Admin pot adauga postari in platforma
+        // GetDefaultCategory
+        public Category GetDefaultCategory()
+        {
+            return db.Categories.FirstOrDefault() ?? new Category { CategoryName = "Default" };
+        }
+
         [HttpPost]
-        [Authorize(Roles = "Editor,Admin")]
+        [Authorize(Roles = "User,Editor,Admin")]
         public IActionResult New(Post post)
         {
             var sanitizer = new HtmlSanitizer();
 
             post.Date = DateTime.Now;
+            post.LikesCount = 0;
+            if (post.Category == null)
+            {
+                post.Category = GetDefaultCategory(); 
+            }
 
             // preluam Id-ul utilizatorului care posteaza articolul
             post.UserId = _userManager.GetUserId(User);
@@ -340,6 +351,8 @@ namespace proiect_daw.Controllers
                 return RedirectToAction("Index");
             }  
         }
+        [HttpPost]
+        
 
         // Se adauga articolul modificat in baza de date
         // Se verifica rolul utilizatorilor care au dreptul sa editeze (Editor si Admin)
@@ -415,6 +428,8 @@ namespace proiect_daw.Controllers
                 return RedirectToAction("Index");
             }    
         }
+        
+
 
         // Conditiile de afisare pentru butoanele de editare si stergere
         // butoanele aflate in view-uri
@@ -477,5 +492,41 @@ namespace proiect_daw.Controllers
         {
             return View();
         }
+
+
+        public IActionResult ToggleLike(string userID, int postID)
+        {
+            var post = db.Posts.Include(p => p.Likes).FirstOrDefault(p => p.Id == postID);
+            var user = db.Users.Find(userID);
+
+            if (post == null || user == null)
+            {
+                return NotFound();
+            }
+
+            var existingLike = post.Likes.FirstOrDefault(l => l.UserId == userID);
+            if (existingLike != null)
+            {
+                post.Likes.Remove(existingLike);
+                post.LikesCount--;
+            }
+            else
+            {
+                post.Likes.Add(new Like
+                {
+                    UserId = userID,
+                    PostId = postID,
+                    Date = DateTime.Now
+                });
+                post.LikesCount++;
+            }
+
+            db.SaveChanges();
+
+            return Redirect("/Posts/Show?id=" + postID);
+        }
+
+
+
     }
 }

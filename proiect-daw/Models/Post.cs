@@ -23,8 +23,6 @@ namespace proiect_daw.Models
 
         public DateTime Date { get; set; }
 
-        [Required(ErrorMessage = "Categoria este obligatorie")]
-        // cheie externa (FK) - un articol are asociata o categorie
         public int? CategoryId { get; set; }
 
         // PASUL 6: useri si roluri
@@ -43,9 +41,13 @@ namespace proiect_daw.Models
 
         // relatia many-to-many dintre Post si Bookmark
         public virtual ICollection<PostBookmark>? PostBookmarks { get; set; }
-
+        public int LikesCount { get; set; }
+        public virtual ICollection<Like>? Likes { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem>? Categ { get; set; }
+
+
+        
 
         /*
          * 

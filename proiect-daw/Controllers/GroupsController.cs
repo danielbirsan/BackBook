@@ -13,6 +13,7 @@ namespace proiect_daw.Controllers
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly GroupMembership _groupMembership;
+       
         public GroupsController(ApplicationDbContext context,
                                 UserManager<ApplicationUser> userManager)
         {
@@ -30,10 +31,11 @@ namespace proiect_daw.Controllers
         // din care fac parte
         // Pentru fiecare articol se afiseaza si userul care a postat articolul respectiv
         // [HttpGet] care se executa implicit
-        [Authorize(Roles = "User,Editor,Admin")]
         public IActionResult Index()
         {
-            var grupuri = db.Groups.AsQueryable();
+            var userId = _userManager.GetUserId(User);
+
+            var groupMemberships = db.GroupMemberships.Where(gm => gm.UserId == userId);
 
             // ViewBag.OriceDenumireSugestiva
             // ViewBag.Posts = posts;
@@ -47,6 +49,7 @@ namespace proiect_daw.Controllers
             // MOTOR DE CAUTARE
 
             var search = "";
+            var grupuri = db.Groups.AsQueryable();
 
             if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
             {
@@ -54,6 +57,10 @@ namespace proiect_daw.Controllers
 
                 grupuri = grupuri.Where(g => g.Name.Contains(search) || g.Description.Contains(search));
             }
+
+            var join = from g in grupuri
+                       join gm in groupMemberships on g.Id equals gm.GroupId
+                       select g;
 
             ViewBag.SearchString = search;
 
@@ -64,7 +71,7 @@ namespace proiect_daw.Controllers
 
             // Fiind un numar variabil de postari, verificam de fiecare data utilizand 
             // metoda Count()
-            int totalItems = grupuri.Count();
+            int totalItems = join.Count();
 
             // Se preia pagina curenta din View-ul asociat
             // Numarul paginii este valoarea parametrului page din ruta
@@ -85,13 +92,14 @@ namespace proiect_daw.Controllers
 
             // Se preiau postarile corespunzatoare pentru fiecare pagina la care ne aflam 
             // in functie de offset
-            var paginatedPosts = grupuri.Skip(offset).Take(_perPage).ToList();
+            var paginatedPosts = join.Skip(offset).Take(_perPage).ToList();
 
             // Preluam numarul ultimei pagini
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
 
             // Trimitem postarile cu ajutorul unui ViewBag catre View-ul corespunzator
-            ViewBag.Groups = paginatedPosts;
+            ViewBag.OwnGroups = paginatedPosts;
+            ViewBag.Groups = grupuri.ToList();
 
             // DACA AVEM AFISAREA PAGINATA IMPREUNA CU SEARCH
 

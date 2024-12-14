@@ -8,36 +8,70 @@
 }
 
 <div class="container mt-5">
-    <h3>Group: @Model.Name</h3>
-    <p>@Model.Description</p>
+    <div class="text-center mb-5">
+        <h2 class="display-4 text-primary">@Model.Name</h2>
+        <p class="lead text-muted">@Model.Description</p>
+    </div>
 
     @if (TempData["Message"] != null)
     {
-        <div class="alert @TempData["messageType"]">
+        <div class="alert @TempData["messageType"] alert-dismissible fade show" role="alert">
             @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
-    <h4>Users in this Group</h4>
-    <div class="row">
-        @foreach (var user in ViewBag.Users)
-        {
-            <div class="col-md-4">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">@user.FirstName @user.LastName</h5>
-                        <p class="card-text">@user.Email</p>
-                        @if (isModerator && user.Id != Model.ModeratorId)
-                        {
-                            <form asp-controller="Groups" asp-action="RemoveUser" method="post" class="d-inline">
-                                <input type="hidden" name="groupId" value="@Model.Id" />
-                                <input type="hidden" name="userId" value="@user.Id" />
-                                <button type="submit" class="btn btn-danger">Remove</button>
-                            </form>
-                        }
+    <div class="my-4">
+        <h4 class="text-success mb-4">Members</h4>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var user in ViewBag.Users)
+            {
+                <div class="col">
+                    <div class="card shadow-lg border-light rounded-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fs-5 text-primary">@user.FirstName @user.LastName</h5>
+                            <p class="card-text text-muted">@user.Email</p>
+
+                            @if (isModerator && user.Id != Model.ModeratorId)
+                            {
+                                <form asp-controller="Groups" asp-action="RemoveUser" method="post" class="d-inline">
+                                    <input type="hidden" name="groupId" value="@Model.Id" />
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-person-x-fill"></i> Remove
+                                    </button>
+                                </form>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
+
+        <!-- Join Group Form or Member Status -->
+        <div class="mt-4">
+            @if (ViewBag.isPendingApproval == null)
+            {
+                <form method="post" asp-action="Join" asp-controller="Groups" class="text-center">
+                    <input type="hidden" name="groupId" value="@Model.Id" />
+                    <button class="btn btn-primary btn-lg" type="submit">
+                        <i class="bi bi-person-add"></i> Join Group
+                    </button>
+                </form>
+            }
+            else
+            {
+                <div class="text-center mt-3">
+                    @if (ViewBag.isPendingApproval == true)
+                    {
+                        <small class="text-warning">Waiting for moderator approval...</small>
+                    }
+                    else
+                    {
+                        <small class="text-success">You are already a member of this group.</small>
+                    }
+                </div>
+            }
+        </div>
     </div>
 </div>

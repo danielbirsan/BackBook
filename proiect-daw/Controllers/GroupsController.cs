@@ -131,6 +131,14 @@ namespace proiect_daw.Controllers
                 ViewBag.isPendingApproval = ceva.PendingApproval;
             }
 
+            var users = db.GroupMemberships
+                            .Where(gm => gm.GroupId == id && !gm.PendingApproval)
+                            .Include(gm => gm.User)
+                            .Select(gm => gm.User)
+                            .ToList();
+
+            ViewBag.Users = users;
+
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.Message = TempData["message"];
@@ -181,6 +189,15 @@ namespace proiect_daw.Controllers
 
                 db.Groups.Add(group);
                 db.SaveChanges();
+
+                db.GroupMemberships.Add(new GroupMembership
+                {
+                    GroupId = group.Id,
+                    UserId = group.ModeratorId,
+                    PendingApproval = false
+                });
+                db.SaveChanges();
+
                 TempData["message"] = "Grupul a fost adaugat";
                 TempData["messageType"] = "alert-success";
                 return RedirectToAction("Index");
@@ -191,6 +208,38 @@ namespace proiect_daw.Controllers
             }
 
             return View(group);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveUser(int groupId, string userId)
+        {
+            var group = await db.Groups.FindAsync(groupId);
+            var currentUserId = _userManager.GetUserId(User);
+
+            if (group == null || group.ModeratorId != currentUserId)
+            {
+                TempData["message"] = "You are not authorized to remove users from this group.";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Show", new { id = groupId });
+            }
+
+            var groupMembership = await db.GroupMemberships
+                .FirstOrDefaultAsync(gm => gm.GroupId == groupId && gm.UserId == userId);
+
+            if (groupMembership != null)
+            {
+                db.GroupMemberships.Remove(groupMembership);
+                await db.SaveChangesAsync();
+                TempData["message"] = "User removed from the group successfully.";
+                TempData["messageType"] = "alert-success";
+            }
+            else
+            {
+                TempData["message"] = "User not found in the group.";
+                TempData["messageType"] = "alert-danger";
+            }
+
+            return RedirectToAction("Show", new { id = groupId });
         }
 
         public IActionResult GroupInfo()

@@ -24,7 +24,7 @@ body {
 .navbar {
     background-color: #ffffff !important;
     border: none !important;
-   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.3s ease-in-out;
     position: fixed;
     width: 100%;
@@ -32,8 +32,13 @@ body {
     z-index: 1000;
 }
 
-    .navbar:hover {
-        background-color: #eef2f7 !important;
+.nav-item {
+    transition: background-color 0.2s ease-in-out; /* Add transition for background color */
+}
+
+    .nav-item:hover {
+        background-color: #5c5c5c !important;
+        border-radius: 5px;
     }
 
 header {
@@ -48,7 +53,7 @@ a.nav-link {
 }
 
     a.nav-link:hover {
-        color: #0056b3 !important;
+        color: #0056b3 ;!important
         text-decoration: none;
     }
 

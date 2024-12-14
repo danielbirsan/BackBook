@@ -1,114 +1,43 @@
-﻿@model proiect_daw.Models.Group
+﻿@using Microsoft.AspNetCore.Identity
+@model proiect_daw.Models.Group
+@inject UserManager<ApplicationUser> UserManager
 
-@if (TempData["message"] != null)
-{
-    <div class="alert @ViewBag.Alert p-3 rounded-3 text-center mb-4">
-        @ViewBag.Message
-    </div>
+@{
+    var currentUserId = UserManager.GetUserId(User);
+    var isModerator = Model.ModeratorId == currentUserId;
 }
 
-<div class="container my-4">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-8">
-            <div class="card shadow-sm border-0">
-                <!-- Group Header -->
-                <div class="card-header bg-white d-flex align-items-center">
-                    <img src="/path/to/group-pic-placeholder.jpg" alt="Group Picture" class="rounded-circle me-3" width="50" height="50">
-                    <div>
-                        <strong>
-                            @Model.Name
-                        </strong>
-                        <small class="text-muted d-block">Created on: @Model.Date.ToString("MMMM dd, yyyy")</small>
+<div class="container mt-5">
+    <h3>Group: @Model.Name</h3>
+    <p>@Model.Description</p>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert @TempData["messageType"]">
+            @TempData["Message"]
+        </div>
+    }
+
+    <h4>Users in this Group</h4>
+    <div class="row">
+        @foreach (var user in ViewBag.Users)
+        {
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@user.FirstName @user.LastName</h5>
+                        <p class="card-text">@user.Email</p>
+                        @if (isModerator && user.Id != Model.ModeratorId)
+                        {
+                            <form asp-controller="Groups" asp-action="RemoveUser" method="post" class="d-inline">
+                                <input type="hidden" name="groupId" value="@Model.Id" />
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button type="submit" class="btn btn-danger">Remove</button>
+                            </form>
+                        }
                     </div>
                 </div>
-
-                <!-- Group Body -->
-                <div class="card-body">
-                    <h5 class="fw-bold">Group Description</h5>
-                    <p class="text-secondary">@Model.Description</p>
-
-                    @if (ViewBag.isPendingApproval == null)
-                    {
-                        <form method="post" asp-action="Join" asp-controller="Groups">
-                            <input type="hidden" name="groupId" value="@Model.Id" />
-                            <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                                <div>
-                                    <button class="btn btn-outline-primary btn-sm" type="submit">
-                                        <i class="bi bi-person-add"></i> Join
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    }
-                    else
-                    {
-                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                            @if (ViewBag.isPendingApproval == true)
-                            {
-                                <small class="text-muted">Waiting for moderator approval.</small>
-                            }
-                            else
-                            {
-                                <small class="text-muted">You are already a member of this group.</small>
-                            }
-                        </div>
-                    }
-
-                    <!-- Group Members Section -->
-                    <h6 class="mt-4">Group Members:</h6>
-                    <ul class="list-group list-group-flush">
-                        @if (Model.Users != null && Model.Users.Any())
-                        {
-                            foreach (var user in Model.Users)
-                            {
-                                <li class="list-group-item d-flex align-items-center">
-                                    <i class="bi bi-person-circle me-2"></i>
-                                    @user.UserName
-                                </li>
-                            }
-                        }
-                        else
-                        {
-                            <li class="list-group-item text-muted">No members in this group.</li>
-                        }
-                    </ul>
-
-                    <!-- Add Member Section -->
-                    @if (ViewBag.EsteAdmin == true)
-                    {
-                        <form method="post" asp-controller="Groups" asp-action="AddMember" class="mt-4">
-                            <input type="hidden" name="GroupId" value="@Model.Id" />
-                            <div class="input-group">
-                                <input type="text" name="UserName" class="form-control form-control-sm" placeholder="Enter username">
-                                <button class="btn btn-outline-success btn-sm" type="submit">
-                                    <i class="bi bi-person-plus"></i> Add Member
-                                </button>
-                            </div>
-                        </form>
-                    }
-                </div>
-
-                <!-- Group Footer -->
-                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                    <!-- Edit/Delete Actions -->
-                    @if (ViewBag.EsteAdmin == true)
-                    {
-                        <div class="d-flex">
-                            <a class="btn btn-outline-primary btn-sm me-2" asp-controller="Groups" asp-action="Edit" asp-route-id="@Model.Id">
-                                <i class="bi bi-pencil"></i> Edit Group
-                            </a>
-                            <form method="post" asp-controller="Groups" asp-action="Delete" asp-route-id="@Model.Id" class="m-0">
-                                <button class="btn btn-outline-danger btn-sm" type="submit">
-                                    <i class="bi bi-trash"></i> Delete Group
-                                </button>
-                            </form>
-                        </div>
-                    }
-                </div>
             </div>
-        </div>
+        }
     </div>
 </div>
-
-<!-- Animate.css for Animations -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />

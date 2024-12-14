@@ -1,0 +1,34 @@
+﻿@model proiect_daw.Models.Group
+
+<div class="container mt-5">
+    <h3>Users Waiting for Approval</h3>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="row">
+        @foreach (var membership in ViewBag.groupMemberships)
+        {
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@membership.User.FirstName @membership.User.LastName</h5>
+                        <p class="card-text">@membership.User.Email</p>
+                        <form asp-controller="GroupMemberships" asp-action="ApproveMembership" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@membership.Id" />
+                            <button class="btn btn-success">Approve</button>
+                        </form>
+                        <form asp-controller="GroupMemberships" asp-action="RejectMembership" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@membership.Id" />
+                            <button class="btn btn-danger">Reject</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

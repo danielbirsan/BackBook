@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace proiectdaw.Migrations
 {
     /// <inheritdoc />
-    public partial class @as : Migration
+    public partial class Backbook : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

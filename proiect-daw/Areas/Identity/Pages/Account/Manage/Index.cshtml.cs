@@ -37,7 +37,6 @@ namespace proiect_daw.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Private Profile")]
             public bool PrivateProfile { get; set; }
 
-
             [Display(Name = "Profile Description")]
             public string ProfileDescription { get; set; } = string.Empty; // Initialize to avoid CS8618
 
@@ -138,5 +137,6 @@ namespace proiect_daw.Areas.Identity.Pages.Account.Manage
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
         }
+
     }
 }

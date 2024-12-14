@@ -109,6 +109,7 @@ namespace proiect_daw.Areas.Identity.Pages.Account
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.PrivateProfile = false;
+                user.ProfilePhoto = "/images/profiles/default.jpg"; // Set default profile picture
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -148,6 +149,7 @@ namespace proiect_daw.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
 
         private ApplicationUser CreateUser()
         {

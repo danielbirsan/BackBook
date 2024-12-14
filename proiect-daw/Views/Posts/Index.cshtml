@@ -27,9 +27,13 @@
 {
     <div class="card">
 
-        <partial name="PostInfo" model="post"></partial>
 
-        <a class="btn btn-primary btn-sm" asp-controller="Posts" asp-action="Show" asp-route-id="@post.Id">Afisare</a>
+        <a style="text-decoration:none; color:black" 
+            asp-controller="Posts" asp-action="Show" asp-route-id="@post.Id">
+
+
+            <partial name="PostInfo" model="post"></partial>
+        </a>
 
     </div>
 

@@ -13,7 +13,7 @@
             <div class="card shadow-sm border-0">
                 <!-- Post Header -->
                 <div class="card-header bg-white d-flex align-items-center">
-                    <img src="/path/to/profile-pic-placeholder.jpg" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
+                    <img src="@Model.User?.ProfilePhoto" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
                     <div>
                         <strong>
                             @Model.User
@@ -61,10 +61,10 @@
                             </button>
                         </form>
 
-                        <button class="btn btn-outline-secondary btn-sm">
+                        <button id="commentButton" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-chat"></i> Comment
                         </button>
-                        <button class="btn btn-outline-secondary btn-sm">
+                        <button id="shareButton" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-share"></i> Share
                         </button>
                     </div>
@@ -118,7 +118,7 @@
                 </div>
 
                 <!-- Add Comment Form -->
-                <div class="card shadow-sm border-0 rounded-3">
+                <div id="commentForm" class="card shadow-sm border-0 rounded-3">
                     <div class="card-body">
                         <form method="post" asp-controller="Posts" asp-action="Show">
                             <input type="hidden" name="PostId" value="@Model.Id" />
@@ -138,4 +138,18 @@
 </div>
 
 <!-- Animate.css for Animations -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<script>
+    document.getElementById('shareButton').addEventListener('click', function () {
+        var url = window.location.href;
+        navigator.clipboard.writeText(url).then(function () {
+            alert('URL copied to clipboard');
+        }, function (err) {
+            console.error('Could not copy text: ', err);
+        });
+    });
+
+    document.getElementById('commentButton').addEventListener('click', function () {
+        var commentForm = document.getElementById('commentForm');
+        commentForm.scrollIntoView({ behavior: 'smooth' });
+    });
+</script>

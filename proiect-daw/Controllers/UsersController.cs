@@ -107,6 +107,9 @@ namespace proiect_daw.Controllers
                 user.FirstName = newData.FirstName;
                 user.LastName = newData.LastName;
                 user.PhoneNumber = newData.PhoneNumber;
+                user.PrivateProfile = newData.PrivateProfile;
+                user.ProfileDescription = newData.ProfileDescription;
+                user.ProfilePhoto = newData.ProfilePhoto;
 
                 // Cautam toate rolurile din baza de date
                 var roles = db.Roles.ToList();

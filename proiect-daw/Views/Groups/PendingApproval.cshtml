@@ -23,11 +23,11 @@
                         <p class="card-text"><span class="badge bg-info">Group: @membership.Group.Name</span></p>
 
                         <div class="d-flex justify-content-center mt-3">
-                            <form asp-controller="GroupMemberships" asp-action="ApproveMembership" method="post" class="me-2">
+                            <form asp-controller="Groups" asp-action="ApproveMembership" method="post" class="me-2">
                                 <input type="hidden" name="id" value="@membership.Id" />
                                 <button class="btn btn-success btn-sm w-100">Approve</button>
                             </form>
-                            <form asp-controller="GroupMemberships" asp-action="RejectMembership" method="post">
+                            <form asp-controller="Groups" asp-action="RejectMembership" method="post">
                                 <input type="hidden" name="id" value="@membership.Id" />
                                 <button class="btn btn-danger btn-sm w-100">Reject</button>
                             </form>

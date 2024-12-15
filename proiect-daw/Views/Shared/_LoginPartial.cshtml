@@ -37,7 +37,7 @@
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <li class="nav-item dropdown">
-                        <form asp-controller="GroupMemberships" asp-action="PendingApproval" method="get" class="d-inline">
+                        <form asp-controller="Groups" asp-action="PendingApproval" method="get" class="d-inline">
                             <button type="submit" class="btn">
                                 <i class="bi bi-bell text-white"></i>
                             </button>

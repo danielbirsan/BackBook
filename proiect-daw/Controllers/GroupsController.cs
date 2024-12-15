@@ -284,7 +284,7 @@ namespace proiect_daw.Controllers
         {
             var comment = db.GroupMessages.FirstOrDefault(c => c.Id == id);
 
-            return View(comment); // Pass the comment to the view
+            return View(comment);
         }
 
         [HttpPost]
@@ -293,14 +293,11 @@ namespace proiect_daw.Controllers
             Console.WriteLine("AICIIIII==========================");
             var comment = db.GroupMessages.FirstOrDefault(comment => comment.Id == model.Id);
 
-            // Update the comment's content
             comment.Content = model.Content;
            
-            // Save changes to the database
             db.GroupMessages.Update(comment);
             db.SaveChanges();
 
-            // Redirect to the group details page
             return RedirectToAction("Show", new { id = comment.GroupId });
         }
 
@@ -328,6 +325,62 @@ namespace proiect_daw.Controllers
         private List<Group> GetGroups()
         {
             return db.Groups.OrderByDescending(a => a.Date).ToList();
+        }
+
+
+        public IActionResult PendingApproval()
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var moderatedGroups = db.Groups.Where(g => g.ModeratorId == userId).Select(g => g.Id).ToList();
+
+            ViewBag.groupMemberships = db.GroupMemberships
+                .Where(gm => moderatedGroups.Contains(gm.GroupId) && gm.PendingApproval)
+                .Include(gm => gm.User)
+                .Include(gm => gm.Group)
+                .ToList();
+
+            return View();
+        }
+
+        public async Task<bool> HasPendingApprovalRequestsAsync()
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var moderatedGroups = await db.Groups
+                .Where(g => g.ModeratorId == userId)
+                .Select(g => g.Id)
+                .ToListAsync();
+
+            return await db.GroupMemberships
+                .AnyAsync(gm => moderatedGroups.Contains(gm.GroupId) && gm.PendingApproval);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveMembership(int id)
+        {
+            var membership = await db.GroupMemberships.FindAsync(id);
+            if (membership != null)
+            {
+                membership.PendingApproval = false;
+                db.GroupMemberships.Update(membership);
+                await db.SaveChangesAsync();
+                TempData["SuccessMessage"] = "User approved successfully.";
+            }
+            return RedirectToAction("PendingApproval");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectMembership(int id)
+        {
+            var membership = await db.GroupMemberships.FindAsync(id);
+            if (membership != null)
+            {
+                db.GroupMemberships.Remove(membership);
+                await db.SaveChangesAsync();
+                TempData["SuccessMessage"] = "User rejected successfully.";
+            }
+            return RedirectToAction("PendingApproval");
         }
     }  
 }

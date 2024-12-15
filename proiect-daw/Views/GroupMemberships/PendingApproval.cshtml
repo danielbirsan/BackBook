@@ -1,34 +1,62 @@
 ﻿@model proiect_daw.Models.Group
 
 <div class="container mt-5">
-    <h3>Users Waiting for Approval</h3>
+    <h3 class="text-center text-primary mb-4">Users Waiting for Approval</h3>
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
-    <div class="row">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (var membership in ViewBag.groupMemberships)
         {
-            <div class="col-md-4">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">@membership.User.FirstName @membership.User.LastName</h5>
-                        <p class="card-text">@membership.User.Email</p>
-                        <form asp-controller="GroupMemberships" asp-action="ApproveMembership" method="post" class="d-inline">
-                            <input type="hidden" name="id" value="@membership.Id" />
-                            <button class="btn btn-success">Approve</button>
-                        </form>
-                        <form asp-controller="GroupMemberships" asp-action="RejectMembership" method="post" class="d-inline">
-                            <input type="hidden" name="id" value="@membership.Id" />
-                            <button class="btn btn-danger">Reject</button>
-                        </form>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <img src="@membership.User?.ProfilePhoto" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
+                        <h5 class="card-title fw-bold text-dark">@membership.User.FirstName @membership.User.LastName</h5>
+                        <p class="card-text text-muted mb-1">@membership.User.Email</p>
+                        <p class="card-text"><span class="badge bg-info">Group: @membership.Group.Name</span></p>
+
+                        <div class="d-flex justify-content-center mt-3">
+                            <form asp-controller="GroupMemberships" asp-action="ApproveMembership" method="post" class="me-2">
+                                <input type="hidden" name="id" value="@membership.Id" />
+                                <button class="btn btn-success btn-sm w-100">Approve</button>
+                            </form>
+                            <form asp-controller="GroupMemberships" asp-action="RejectMembership" method="post">
+                                <input type="hidden" name="id" value="@membership.Id" />
+                                <button class="btn btn-danger btn-sm w-100">Reject</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
+<style>
+    h3 {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 1px;
+    }
+
+    .card {
+        border: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    .btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+</style>

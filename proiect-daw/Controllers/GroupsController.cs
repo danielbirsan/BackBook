@@ -26,6 +26,15 @@ namespace proiect_daw.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult PostComment(GroupMessage groupMessage)
+        {
+            db.GroupMessages.Add(groupMessage);
+            db.SaveChanges();
+
+            return RedirectToAction("Show", new { id = groupMessage.GroupId });
+        }
+
 
         // Se afiseaza lista tuturor postarilor impreuna cu categoria 
         // din care fac parte
@@ -98,7 +107,8 @@ namespace proiect_daw.Controllers
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
 
             // Trimitem postarile cu ajutorul unui ViewBag catre View-ul corespunzator
-            ViewBag.OwnGroups = paginatedPosts;
+            ViewBag.OwnGroups = (paginatedPosts.Count == 0 ? null : paginatedPosts);
+
             ViewBag.Groups = grupuri.ToList();
 
             // DACA AVEM AFISAREA PAGINATA IMPREUNA CU SEARCH
@@ -144,7 +154,13 @@ namespace proiect_daw.Controllers
                             .Include(gm => gm.User)
                             .Select(gm => gm.User)
                             .ToList();
+            
+            var messages = db.GroupMessages
+                            .Where(gm => gm.GroupId == id)
+                            .Include(gm => gm.User)
+                            .ToList();
 
+            ViewBag.GroupMessages = messages;
             ViewBag.Users = users;
 
             if (TempData.ContainsKey("message"))
@@ -250,11 +266,62 @@ namespace proiect_daw.Controllers
             return RedirectToAction("Show", new { id = groupId });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> RemoveComment(int groupId, int messageId)
+        {
+            var comment = await db.GroupMessages.FirstOrDefaultAsync(c => c.Id == messageId);
+
+            db.GroupMessages.Remove(comment);
+            await db.SaveChangesAsync();
+
+            TempData["message"] = "Comentariul a fost sters.";
+            TempData["messageType"] = "alert-success";
+            return RedirectToAction("Show", new { id = groupId });
+        }
+
+        [HttpGet]
+        public IActionResult EditComment(int id)
+        {
+            var comment = db.GroupMessages.FirstOrDefault(c => c.Id == id);
+
+            return View(comment); // Pass the comment to the view
+        }
+
+        [HttpPost]
+        public IActionResult EditComment(GroupMessage model)
+        {
+            Console.WriteLine("AICIIIII==========================");
+            var comment = db.GroupMessages.FirstOrDefault(comment => comment.Id == model.Id);
+
+            // Update the comment's content
+            comment.Content = model.Content;
+           
+            // Save changes to the database
+            db.GroupMessages.Update(comment);
+            db.SaveChanges();
+
+            // Redirect to the group details page
+            return RedirectToAction("Show", new { id = comment.GroupId });
+        }
+
+        [HttpPost]
+        public IActionResult LeaveGroup(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+            var groupMembership = db.GroupMemberships.FirstOrDefault(gm => gm.GroupId == id && gm.UserId == userId);
+            if (groupMembership != null)
+            {
+                db.GroupMemberships.Remove(groupMembership);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
         public IActionResult GroupInfo()
         {
             var groups = GetGroups();
             ViewBag.Groups = groups ?? new List<Group>();
-            ViewBag.SearchString = ""; // Initialize other ViewBag properties as needed
+            ViewBag.SearchString = "";
             return View();
         }
 

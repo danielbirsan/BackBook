@@ -44,11 +44,33 @@
                         </form>
                     </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center" title="Manage" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            @firstName @lastName
+                    <li class="nav-item dropdown d-flex align-items-center">
+                        <!-- Profile Photo -->
+                        <a class="nav-link text-white d-flex align-items-center p-0"
+                           title="Manage"
+                           id="userDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <img src="@user?.ProfilePhoto"
+                                 alt="Profile Picture"
+                                 class="rounded-circle me-2"
+                                 width="40" height="40">
+
+                        </a>
+
+                        <!-- Name and Dropdown Toggle -->
+                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center p-0"
+                           title="Manage"
+                           id="userDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <span class="me-1">@firstName @lastName</span>
                             <i class="ms-2 bi bi-gear-fill"></i> <!-- Settings Icon -->
                         </a>
+
+                        <!-- Dropdown Menu -->
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li>
                                 <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage Account">Account Settings</a>
@@ -60,6 +82,7 @@
                             </li>
                         </ul>
                     </li>
+
                 }
                 else
                 {

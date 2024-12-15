@@ -11,6 +11,16 @@
     <div class="text-center mb-5">
         <h2 class="display-4 text-primary">@Model.Name</h2>
         <p class="lead text-muted">@Model.Description</p>
+    
+        @if (ViewBag.isPendingApproval == false)
+        {
+            <form asp-controller="Groups" asp-action="LeaveGroup" method="post" class="d-inline">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-danger btn-sm">
+                    Leave group
+                </button>
+            </form>
+        }
     </div>
 
     @if (TempData["Message"] != null)
@@ -21,6 +31,89 @@
         </div>
     }
 
+    @if (ViewBag.isPendingApproval == false)
+    {
+        <h4>Comments</h4>
+        <div class="row">
+            @foreach (var message in ViewBag.GroupMessages)
+            {
+                <div class="col-md-12">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <img src="@message.User.ProfilePhoto" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
+                            <h5 class="card-title">@message.User.FirstName @message.User.LastName</h5>
+                            <p class="card-text">@message.Content</p>
+
+                            @if (isModerator || message.User.Id == currentUserId)
+                            {
+                                <form asp-controller="Groups" asp-action="RemoveComment" method="post" class="d-inline">
+                                    <input type="hidden" name="groupId" value="@message.Group.Id" />
+                                    <input type="hidden" name="messageId" value="@message.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-person-x-fill"></i> Delete
+                                    </button>
+                                </form>
+
+                                @if (message.User.Id == currentUserId)
+                                {
+                                    <form asp-controller="Groups" asp-action="EditComment" method="get" class="d-inline">
+                                        <input type="hidden" name="id" value="@message.Id" />
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-person-x-fill"></i> Edit
+                                        </button>
+                                    </form>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Add Comment Form -->
+            <div class="card shadow-sm border-0 rounded-3 mt-4">
+                <div class="card-body">
+                    <form method="post" asp-controller="Groups" asp-action="PostComment">
+                        <input type="hidden" name="GroupId" value="@Model.Id" />
+                        <input type="hidden" name="UserId" value="@currentUserId" />
+                        <div class="mb-3">
+                            <label for="commentContent" class="form-label">Add a Comment</label>
+                            <textarea id="commentContent" name="Content" class="form-control" rows="3" placeholder="Write your comment here..."></textarea>
+                        </div>
+                        <button class="btn btn-primary btn-sm mt-2 w-100" type="submit">
+                            <i class="bi bi-chat-dots"></i> Post Comment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Join Group Form or Member Status -->
+    <div class="mt-4">
+        @if (ViewBag.isPendingApproval == null)
+        {
+            <form method="post" asp-action="Join" asp-controller="Groups" class="text-center">
+                <input type="hidden" name="groupId" value="@Model.Id" />
+                <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="bi bi-person-add"></i> Join Group
+                </button>
+            </form>
+        }
+        else
+        {
+            <div class="text-center mt-3">
+                @if (ViewBag.isPendingApproval == true)
+                {
+                    <small class="text-warning">Waiting for moderator approval...</small>
+                }
+                else
+                {
+                    <small class="text-success">You are already a member of this group.</small>
+                }
+            </div>
+        }
+    </div>
+
     <div class="my-4">
         <h4 class="text-success mb-4">Members</h4>
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -29,6 +122,7 @@
                 <div class="col">
                     <div class="card shadow-lg border-light rounded-3">
                         <div class="card-body text-center">
+                            <img src="@user?.ProfilePhoto" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
                             <h5 class="card-title fs-5 text-primary">@user.FirstName @user.LastName</h5>
                             <p class="card-text text-muted">@user.Email</p>
 
@@ -44,32 +138,6 @@
                             }
                         </div>
                     </div>
-                </div>
-            }
-        </div>
-
-        <!-- Join Group Form or Member Status -->
-        <div class="mt-4">
-            @if (ViewBag.isPendingApproval == null)
-            {
-                <form method="post" asp-action="Join" asp-controller="Groups" class="text-center">
-                    <input type="hidden" name="groupId" value="@Model.Id" />
-                    <button class="btn btn-primary btn-lg" type="submit">
-                        <i class="bi bi-person-add"></i> Join Group
-                    </button>
-                </form>
-            }
-            else
-            {
-                <div class="text-center mt-3">
-                    @if (ViewBag.isPendingApproval == true)
-                    {
-                        <small class="text-warning">Waiting for moderator approval...</small>
-                    }
-                    else
-                    {
-                        <small class="text-success">You are already a member of this group.</small>
-                    }
                 </div>
             }
         </div>

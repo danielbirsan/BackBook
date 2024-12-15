@@ -23,5 +23,7 @@ namespace proiect_daw.Models
 
         public virtual ICollection<ApplicationUser>? Users { get; set; }
 
+        public virtual ICollection<GroupMessage>? GroupMessages { get; set; }
+
     }
 }

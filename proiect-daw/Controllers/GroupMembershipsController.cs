@@ -33,7 +33,8 @@ namespace proiect_daw.Controllers
             // Get the group memberships that are pending approval for the moderated groups
             ViewBag.groupMemberships = db.GroupMemberships
                 .Where(gm => moderatedGroups.Contains(gm.GroupId) && gm.PendingApproval)
-                .Include(gm => gm.User) // Include the user details
+                .Include(gm => gm.User)
+                .Include(gm => gm.Group)
                 .ToList();
 
             return View();

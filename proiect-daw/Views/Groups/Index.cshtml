@@ -1,8 +1,7 @@
 ﻿
 @{
     var searchQuery = ViewBag.SearchString;
-
-	bool hasSearched = searchQuery.Length != 0;
+    bool hasSearched = searchQuery.Length != 0;
 }
 
 @if (ViewBag.Message != null)
@@ -24,21 +23,24 @@
 
 @if(!hasSearched) 
 {
-    <br />
-    <h2>Grupurile tale</h2>
-    <br />
-    @foreach (var group in ViewBag.OwnGroups)
+    if(ViewBag.OwnGroups != null)
     {
-        <div class="card">
-
-            <partial name="GroupInfo" model="group" />
-
-            <a class="btn btn-primary btn-sm" asp-controller="Groups" asp-action="Show" asp-route-id="@group.Id">Afisare</a>
-
-        </div>
-
         <br />
+        <h2>Grupurile tale</h2>
         <br />
+        @foreach (var group in ViewBag.OwnGroups)
+        {
+            <div class="card">
+
+                <partial name="GroupInfo" model="group" />
+
+                <a class="btn btn-primary btn-sm" asp-controller="Groups" asp-action="Show" asp-route-id="@group.Id">Afisare</a>
+
+            </div>
+
+            <br />
+            <br />
+        }
     }
 
     <br />

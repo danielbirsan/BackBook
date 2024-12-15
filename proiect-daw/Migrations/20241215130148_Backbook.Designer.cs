@@ -12,7 +12,7 @@ using proiect_daw.Data;
 namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241214114002_Backbook")]
+    [Migration("20241215130148_Backbook")]
     partial class Backbook
     {
         /// <inheritdoc />
@@ -374,6 +374,34 @@ namespace proiectdaw.Migrations
                     b.ToTable("GroupMemberships");
                 });
 
+            modelBuilder.Entity("proiect_daw.Models.GroupMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GroupMessages");
+                });
+
             modelBuilder.Entity("proiect_daw.Models.Like", b =>
                 {
                     b.Property<int>("Id")
@@ -550,6 +578,25 @@ namespace proiectdaw.Migrations
                 });
 
             modelBuilder.Entity("proiect_daw.Models.GroupMembership", b =>
+                {
+                    b.HasOne("proiect_daw.Models.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("proiect_daw.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("proiect_daw.Models.GroupMessage", b =>
                 {
                     b.HasOne("proiect_daw.Models.Group", "Group")
                         .WithMany()

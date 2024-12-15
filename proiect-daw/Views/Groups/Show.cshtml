@@ -8,21 +8,23 @@
 }
 
 <div class="container mt-5">
+    <!-- Group Header -->
     <div class="text-center mb-5">
-        <h2 class="display-4 text-primary">@Model.Name</h2>
+        <h2 class="display-4 text-primary fw-bold">@Model.Name</h2>
         <p class="lead text-muted">@Model.Description</p>
-    
+
         @if (ViewBag.isPendingApproval == false)
         {
             <form asp-controller="Groups" asp-action="LeaveGroup" method="post" class="d-inline">
                 <input type="hidden" name="id" value="@Model.Id" />
-                <button type="submit" class="btn btn-danger btn-sm">
-                    Leave group
+                <button type="submit" class="btn btn-outline-danger btn-lg mt-3">
+                    <i class="bi bi-box-arrow-right"></i> Leave Group
                 </button>
             </form>
         }
     </div>
 
+    <!-- Flash Messages -->
     @if (TempData["Message"] != null)
     {
         <div class="alert @TempData["messageType"] alert-dismissible fade show" role="alert">
@@ -31,39 +33,44 @@
         </div>
     }
 
+    <!-- Comments Section -->
     @if (ViewBag.isPendingApproval == false)
     {
-        <h4>Comments</h4>
+        <h4 class="text-success mb-4">Comments</h4>
         <div class="row">
             @foreach (var message in ViewBag.GroupMessages)
             {
                 <div class="col-md-12">
-                    <div class="card mb-3">
-                        <div class="card-body">
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body d-flex align-items-start">
                             <img src="@message.User.ProfilePhoto" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
-                            <h5 class="card-title">@message.User.FirstName @message.User.LastName</h5>
-                            <p class="card-text">@message.Content</p>
-
-                            @if (isModerator || message.User.Id == currentUserId)
-                            {
-                                <form asp-controller="Groups" asp-action="RemoveComment" method="post" class="d-inline">
-                                    <input type="hidden" name="groupId" value="@message.Group.Id" />
-                                    <input type="hidden" name="messageId" value="@message.Id" />
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="bi bi-person-x-fill"></i> Delete
-                                    </button>
-                                </form>
-
-                                @if (message.User.Id == currentUserId)
-                                {
-                                    <form asp-controller="Groups" asp-action="EditComment" method="get" class="d-inline">
-                                        <input type="hidden" name="id" value="@message.Id" />
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-person-x-fill"></i> Edit
-                                        </button>
-                                    </form>
-                                }
-                            }
+                            <div class="w-100">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title mb-0">@message.User.FirstName @message.User.LastName</h5>
+                                    @if (isModerator || message.User.Id == currentUserId)
+                                    {
+                                        <div>
+                                            <form asp-controller="Groups" asp-action="RemoveComment" method="post" class="d-inline">
+                                                <input type="hidden" name="groupId" value="@message.Group.Id" />
+                                                <input type="hidden" name="messageId" value="@message.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                            @if (message.User.Id == currentUserId)
+                                            {
+                                                <form asp-controller="Groups" asp-action="EditComment" method="get" class="d-inline">
+                                                    <input type="hidden" name="id" value="@message.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                                <p class="card-text mt-2">@message.Content</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,7 +86,7 @@
                             <label for="commentContent" class="form-label">Add a Comment</label>
                             <textarea id="commentContent" name="Content" class="form-control" rows="3" placeholder="Write your comment here..."></textarea>
                         </div>
-                        <button class="btn btn-primary btn-sm mt-2 w-100" type="submit">
+                        <button class="btn btn-primary btn-lg mt-2 w-100" type="submit">
                             <i class="bi bi-chat-dots"></i> Post Comment
                         </button>
                     </form>
@@ -88,41 +95,38 @@
         </div>
     }
 
-    <!-- Join Group Form or Member Status -->
-    <div class="mt-4">
+    <!-- Join Group or Membership Status -->
+    <div class="mt-4 text-center">
         @if (ViewBag.isPendingApproval == null)
         {
-            <form method="post" asp-action="Join" asp-controller="Groups" class="text-center">
+            <form method="post" asp-action="Join" asp-controller="Groups" class="">
                 <input type="hidden" name="groupId" value="@Model.Id" />
-                <button class="btn btn-primary btn-lg" type="submit">
+                <button class="btn btn-success btn-lg px-4" type="submit">
                     <i class="bi bi-person-add"></i> Join Group
                 </button>
             </form>
         }
         else
         {
-            <div class="text-center mt-3">
+            <div class="mt-3">
                 @if (ViewBag.isPendingApproval == true)
                 {
-                    <small class="text-warning">Waiting for moderator approval...</small>
-                }
-                else
-                {
-                    <small class="text-success">You are already a member of this group.</small>
+                    <small class="text-warning">Waiting for approval...</small>
                 }
             </div>
         }
     </div>
 
+    <!-- Members Section -->
     <div class="my-4">
-        <h4 class="text-success mb-4">Members</h4>
+        <h4 class="text-primary fw-bold mb-4">Members</h4>
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             @foreach (var user in ViewBag.Users)
             {
                 <div class="col">
-                    <div class="card shadow-lg border-light rounded-3">
+                    <div class="card shadow-lg border-light rounded-3 h-100">
                         <div class="card-body text-center">
-                            <img src="@user?.ProfilePhoto" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
+                            <img src="@user?.ProfilePhoto" alt="Profile Picture" class="rounded-circle mb-3" width="70" height="70">
                             <h5 class="card-title fs-5 text-primary">@user.FirstName @user.LastName</h5>
                             <p class="card-text text-muted">@user.Email</p>
 
@@ -131,7 +135,7 @@
                                 <form asp-controller="Groups" asp-action="RemoveUser" method="post" class="d-inline">
                                     <input type="hidden" name="groupId" value="@Model.Id" />
                                     <input type="hidden" name="userId" value="@user.Id" />
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
                                         <i class="bi bi-person-x-fill"></i> Remove
                                     </button>
                                 </form>

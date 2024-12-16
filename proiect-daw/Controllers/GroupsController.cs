@@ -290,7 +290,6 @@ namespace proiect_daw.Controllers
         [HttpPost]
         public IActionResult EditComment(GroupMessage model)
         {
-            Console.WriteLine("AICIIIII==========================");
             var comment = db.GroupMessages.FirstOrDefault(comment => comment.Id == model.Id);
 
             comment.Content = model.Content;
@@ -305,6 +304,17 @@ namespace proiect_daw.Controllers
         public IActionResult LeaveGroup(int id)
         {
             var userId = _userManager.GetUserId(User);
+            var groupModerator = db.Groups.FirstOrDefault(g => g.Id == id).ModeratorId;
+
+            if (userId == groupModerator) // daca moderatorul da leave din grup atunci se sterge grupul
+            {
+                db.Groups.Remove(db.Groups.FirstOrDefault(g => g.Id == id));
+                db.GroupMemberships.RemoveRange(db.GroupMemberships.Where(gm => gm.GroupId == id));
+                db.GroupMessages.RemoveRange(db.GroupMessages.Where(gm => gm.GroupId == id));
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
             var groupMembership = db.GroupMemberships.FirstOrDefault(gm => gm.GroupId == id && gm.UserId == userId);
             if (groupMembership != null)
             {

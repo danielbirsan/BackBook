@@ -72,6 +72,14 @@ namespace proiect_daw.Areas.Identity.Pages.Account
             public string LastName { get; set; }
 
             [Required]
+            [Display(Name = "PhoneNumber")]
+            public string PhoneNumber { get; set; }
+
+            [Required]
+            [Display(Name = "Description")]
+            public string Description { get; set; }
+
+            [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
@@ -109,6 +117,8 @@ namespace proiect_daw.Areas.Identity.Pages.Account
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.PrivateProfile = false;
+                user.ProfileDescription = Input.Description;
+                user.PhoneNumber = Input.PhoneNumber;  
                 user.ProfilePhoto = "/images/profiles/default.jpg"; // Set default profile picture
 
                 var result = await _userManager.CreateAsync(user, Input.Password);

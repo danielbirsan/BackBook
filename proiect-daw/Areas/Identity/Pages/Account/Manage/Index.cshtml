@@ -4,6 +4,7 @@
     ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
+<link rel="stylesheet" href="~/css/register.css" />
 
 <h3>@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
@@ -20,7 +21,7 @@
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
-           
+
             <div class="form-floating mb-3">
                 <textarea asp-for="Input.ProfileDescription" class="form-control" placeholder="Please enter your profile description." rows="4"></textarea>
                 <label asp-for="Input.ProfileDescription" class="form-label"></label>
@@ -29,20 +30,86 @@
 
             <div class="mb-3">
                 <label asp-for="Input.ProfilePhoto" class="form-label">Profile Photo</label>
-                <input asp-for="Input.ProfilePhoto" class="form-control" type="file" />
+                <div class="containerr">
+                    <div class="folder">
+                        <div class="front-side">
+                            <div class="tip"></div>
+                            <div class="cover"></div>
+                        </div>
+                        <div class="back-side cover"></div>
+                    </div>
+                    <label class="custom-file-upload">
+                        <input asp-for="Input.ProfilePhoto" type="file" id="profilePhotoInput" />
+                        <span id="fileLabel">Choose a file</span>
+                    </label>
+                    <ul id="uploadedFilesList" style="list-style-type: none; padding: 0; margin-top: 10px;">
+                        <!-- Uploaded files will be appended here -->
+                    </ul>
+                </div>
                 <span asp-validation-for="Input.ProfilePhoto" class="text-danger"></span>
             </div>
-            <div class="form-check form-switch mb-3">
-                <input asp-for="Input.PrivateProfile" class="form-check-input" type="checkbox" id="profileVisibilityToggle">
-                <label class="form-check-label" for="profileVisibilityToggle">Private Profile</label>
+
+            @section Scripts {
+                <partial name="_ValidationScriptsPartial" />
+                <script>
+                    document.getElementById('profilePhotoInput').addEventListener('change', function (event) {
+                        var file = event.target.files[0];
+                        if (file) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                var img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.style.maxWidth = '50px';
+                                img.style.marginRight = '10px';
+
+                                var li = document.createElement('li');
+                                li.appendChild(img);
+                                li.appendChild(document.createTextNode(file.name));
+
+                                var ul = document.getElementById('uploadedFilesList');
+                                ul.innerHTML = ''; // Clear previous entries
+                                ul.appendChild(li);
+
+                                document.getElementById('fileLabel').style.display = 'none';
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                </script>
+            }
+
+            <div class="row justify-content-start align-items-center">
+                <div class="toggle-wrapper d-flex align-items-center">
+                    <input asp-for="Input.PrivateProfile" class="toggle-checkbox" type="checkbox">
+                    <div class="toggle-container">
+                        <div class="toggle-button">
+                            <div class="toggle-button-circles-container">
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                                <div class="toggle-button-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <label for="profileVisibilityToggle" class="ms-3 small">Private Profile</label>
+                </div>
             </div>
 
-
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">
+                <span class="transition"></span>
+                <span class="gradient"></span>
+                <span class="label">
+                    Save
+                </span>
+            </button>
         </form>
     </div>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

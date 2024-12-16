@@ -9,24 +9,27 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using static proiect_daw.Models.PostBookmarks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Localization;
 
 namespace proiect_daw.Controllers
 {
     [Authorize]
     public class PostsController : Controller
     {
-        // PASUL 10: useri si roluri 
+        private readonly IStringLocalizer<HomeController> _localizer;
 
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         public PostsController(ApplicationDbContext context,
                                 UserManager<ApplicationUser> userManager,
-                                RoleManager<IdentityRole> roleManager)
+                                RoleManager<IdentityRole> roleManager,
+                                IStringLocalizer<HomeController> localizer)
         {
             db = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _localizer = localizer;
         }
 
         // Se afiseaza lista tuturor postarilor impreuna cu categoria 

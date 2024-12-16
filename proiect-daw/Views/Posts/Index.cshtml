@@ -1,66 +1,70 @@
 ﻿
-<br />
-<h2 class="text-center">Afisare</h2>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <br />
+<h2 class="text-center">@Localizer["Header_Display"]</h2>
+<br />
 
-@if(ViewBag.Message != null)
+@if (ViewBag.Message != null)
 {
-    <div class="alert-success p-3 rounded-3 text-center mb-5 @ViewBag.Alert">
-        @ViewBag.Message
+    <div class="alert alert-success p-3 rounded-3 text-center mb-5 @ViewBag.Alert">
+        @Localizer["Message_Success"]: @ViewBag.Message
     </div>
 }
-
 <br />
 
-@* Motorul de cautare *@
+@* Search Form *@
 <form method="GET">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search topics or keywords" name="search"
+        <input type="text" class="form-control" placeholder="@Localizer["Placeholder_Search"]" name="search"
                value="@ViewBag.SearchString">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <button class="btn btn-outline-success" type="submit">@Localizer["Button_Search"]</button>
     </div>
 </form>
 
-
-@foreach (var post in ViewBag.Posts)
+@* Posts List *@
+@if (ViewBag.Posts != null && ViewBag.Posts.Count > 0)
 {
-    <div class="card">
-
-
-        <a style="text-decoration:none; color:black"
-           asp-controller="Posts" asp-action="Show" asp-route-id="@post.Id">
-            @{
-                ViewData["CurrentUserId"] = ViewBag.UserCurent;
-                ViewData["Likes"] = ViewData[$"Likes_{post.Id}"];
-            }
-            <partial name="PostInfo" model="post" viewdata="ViewData"></partial>
-        </a>
-
+    @foreach (var post in ViewBag.Posts)
+    {
+        <div class="card mb-4">
+            <a style="text-decoration:none; color:black"
+               asp-controller="Posts" asp-action="Show" asp-route-id="@post.Id">
+                @{
+                    ViewData["CurrentUserId"] = ViewBag.UserCurent;
+                    ViewData["Likes"] = ViewData[$"Likes_{post.Id}"];
+                }
+                <partial name="PostInfo" model="post" viewdata="ViewData"></partial>
+            </a>
+        </div>
+    }
+}
+else
+{
+    <div class="text-center text-muted">
+        <p>@Localizer["Message_NoPostsFound"]</p>
     </div>
-
-    <br />
-    <br />
 }
 
-
+@* Pagination *@
 <div>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
+    <nav aria-label="@Localizer["Navigation_Pages"]">
+        <ul class="pagination justify-content-center">
             <li class="page-item">
-                <a class="page-link" href="@ViewBag.PaginationBaseUrl=1" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
+                <a class="page-link" href="@ViewBag.PaginationBaseUrl=1" aria-label="@Localizer["Navigation_Previous"]">
+                    <span aria-hidden="true">@Localizer["Navigation_Previous"]</span>
                 </a>
             </li>
-
             @for (int i = 1; i <= ViewBag.lastPage; i++)
             {
-                <li class="page-item"> <a class="page-link" href="@ViewBag.PaginationBaseUrl=@i">@(i)</a> </li>
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="@ViewBag.PaginationBaseUrl=@i">@i</a>
+                </li>
             }
-
             <li class="page-item">
-                <a class="page-link" href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
+                <a class="page-link" href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="@Localizer["Navigation_Next"]">
+                    <span aria-hidden="true">@Localizer["Navigation_Next"]</span>
                 </a>
             </li>
         </ul>

@@ -27,13 +27,23 @@
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.FirstName" class="form-control" autocomplete="firstname" aria-required="true" placeholder="Andrew" />
-                <label asp-for="Input.FirstName">Firstname</label>
+                <label asp-for="Input.FirstName">First name</label>
                 <span asp-validation-for="Input.FirstName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.LastName" class="form-control" autocomplete="lastname" aria-required="true" placeholder="John" />
-                <label asp-for="Input.LastName">Lastname</label>
+                <label asp-for="Input.LastName">Last name</label>
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="phonenumber" aria-required="true" placeholder="0712345678" />
+                <label asp-for="Input.PhoneNumber">Phone number</label>
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Description" class="form-control" autocomplete="description" aria-required="true" placeholder="Tell something about you!" />
+                <label asp-for="Input.Description">Description</label>
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Password" type="password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Password" />

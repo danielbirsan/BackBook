@@ -64,12 +64,37 @@ namespace proiect_daw.Controllers
 
         public async Task<ActionResult> Show(string id)
         {
-            ApplicationUser user = db.Users.Find(id);
+            ApplicationUser user = await db.Users
+                                           .Include(u => u.Posts)
+                                           .ThenInclude(p => p.Likes)
+                                           .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
             var roles = await _userManager.GetRolesAsync(user);
 
             ViewBag.Roles = roles;
-
             ViewBag.UserCurent = await _userManager.GetUserAsync(User);
+            ViewBag.UserPosts = user.Posts;
+
+            // Get the current user's ID
+            var currentUserId = _userManager.GetUserId(User);
+            ViewBag.UserCurent = currentUserId;
+            // Create a dictionary to store the like status for each post
+            var postLikes = new Dictionary<int, bool>();
+
+            foreach (var post in user.Posts)
+            {
+                // Check if the current user has liked the post
+                var hasLiked = post.Likes.Any(like => like.UserId == currentUserId);
+                postLikes[post.Id] = hasLiked;
+                ViewData[$"Likes_{post.Id}"] = hasLiked;
+            }
+
+            ViewBag.PostLikes = postLikes;
 
             return View(user);
         }
@@ -172,6 +197,7 @@ namespace proiect_daw.Controllers
 
             return RedirectToAction("Index");
         }
+
 
         [NonAction]
         public IEnumerable<SelectListItem> GetAllRoles()

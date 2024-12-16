@@ -143,8 +143,31 @@ namespace proiect_daw.Controllers
                 ViewBag.PaginationBaseUrl = "/Posts/Index/?page";
             }
 
-            ViewBag.UserCurent = _userManager.GetUserId(User);
-            
+
+            var postsList = db.Posts.Include(p => p.Likes).ToList();
+            var currentUserId = _userManager.GetUserId(User);
+            var postLikes = new Dictionary<int, bool>();
+            var likedPhotos = new List<string>();
+
+            ViewBag.UserCurent = currentUserId;
+
+            foreach (var post in postsList)
+            {
+                // Check if the current user has liked the post
+                var hasLiked = post.Likes.Any(like => like.UserId == currentUserId);
+                postLikes[post.Id] = hasLiked;
+                ViewData[$"Likes_{post.Id}"] = hasLiked;
+
+                // If the post has been liked by the current user, add the photo to the likedPhotos list
+                if (hasLiked && !string.IsNullOrEmpty(post.Id.ToString()))
+                {
+                    likedPhotos.Add(post.Id.ToString());
+                }
+            }
+
+
+            ViewBag.LikedPhotos = likedPhotos;
+
 
 
             return View();
@@ -501,16 +524,19 @@ namespace proiect_daw.Controllers
         }
 
         [HttpPost]
-        public IActionResult ToggleLike(string userID, int postID)
+        [Route("Posts/ToggleLike")]
+        [HttpPost]
+        public JsonResult ToggleLike(string userID, int postID)
         {
             var post = db.Posts.Include(p => p.Likes).FirstOrDefault(p => p.Id == postID);
             var user = db.Users.Find(userID);
 
             if (post == null || user == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Post or User not found." });
             }
 
+            var hasLiked = false;
             var existingLike = post.Likes.FirstOrDefault(l => l.UserId == userID);
             if (existingLike != null)
             {
@@ -526,13 +552,27 @@ namespace proiect_daw.Controllers
                     Date = DateTime.Now
                 });
                 post.LikesCount++;
+                hasLiked = true;
             }
 
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                // Handle the concurrency exception
+                // Reload the entity and retry the operation or inform the user
+            }
 
-            return Redirect(Request.Headers["Referer"].ToString());
+
+            return Json(new
+            {
+                success = true,
+                likesCount = post.LikesCount,
+                hasLiked = hasLiked
+            });
         }
-
 
 
     }

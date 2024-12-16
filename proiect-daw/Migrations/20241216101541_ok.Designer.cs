@@ -12,8 +12,8 @@ using proiect_daw.Data;
 namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241215130148_Backbook")]
-    partial class Backbook
+    [Migration("20241216101541_ok")]
+    partial class ok
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -599,7 +599,7 @@ namespace proiectdaw.Migrations
             modelBuilder.Entity("proiect_daw.Models.GroupMessage", b =>
                 {
                     b.HasOne("proiect_daw.Models.Group", "Group")
-                        .WithMany()
+                        .WithMany("GroupMessages")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -689,6 +689,8 @@ namespace proiectdaw.Migrations
 
             modelBuilder.Entity("proiect_daw.Models.Group", b =>
                 {
+                    b.Navigation("GroupMessages");
+
                     b.Navigation("Users");
                 });
 

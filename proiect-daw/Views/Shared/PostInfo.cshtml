@@ -12,8 +12,8 @@
                 <div class="card-header bg-white d-flex align-items-center">
                     <img src="@Model.User?.ProfilePhoto" alt="@Model.User?.UserName's profile picture" class="rounded-circle me-3" width="50" height="50">
                     <div>
-                        <strong>@Model.User?.UserName</strong> <!-- Replace with dynamic user name -->
-                        <small class="text-muted d-block">@Model.Date.ToString("MMMM dd, yyyy HH:mm")</small> <!-- Dynamic formatted date -->
+                        <strong>@Model.User?.UserName</strong>
+                        <small class="text-muted d-block">@Model.Date.ToString("MMMM dd, yyyy HH:mm")</small>
                     </div>
                 </div>
 
@@ -21,26 +21,45 @@
                 <div class="card-body">
                     <h5 class="fw-bold">@Model.Title</h5>
                     <p>@Html.Raw(Model.Content)</p>
-                    <div>
-                        @if (Model.Category != null)
-                        {
-                            <span class="badge bg-secondary"><i class="bi bi-globe"></i> @Model.Category.CategoryName</span>
-                        }
-                    </div>
+                    @if (Model.Category != null)
+                    {
+                        <span class="badge bg-secondary">
+                            <i class="bi bi-globe"></i> @Model.Category.CategoryName
+                        </span>
+                    }
                 </div>
 
                 <!-- Post Footer -->
                 <div class="card-footer bg-white d-flex justify-content-between align-items-center">
                     <div>
-                       <form method="post" asp-controller="Posts" asp-action="ToggleLike">
-    <input type="hidden" name="PostId" value="@Model.Id" />
-    <input type="hidden" name="UserId" value="@currentUserId" />
-    <button class="btn btn-sm like-button @(Model.Likes != null && Model.Likes.Any(l => l.UserId == currentUserId) ? "btn-blue" : "btn-outline-primary")" type="submit">
-        <i class="bi bi-hand-thumbs-up"></i>
-        @(Model.Likes != null && Model.Likes.Any(l => l.UserId == currentUserId) ? "Liked" : "Like") (@Model.LikesCount)
-    </button>
-</form>
+                        <!-- Like Button -->
+                        <form method="post" asp-controller="Posts" asp-action="ToggleLike" class="d-inline">
+                            <input type="hidden" name="PostId" value="@Model.Id" />
+                            <input type="hidden" name="UserId" value="@currentUserId" />
+                            <button class="btn btn-sm like-button @(Model.Likes != null && Model.Likes.Any(l => l.UserId == currentUserId) ? "btn-blue" : "btn-outline-primary")" type="submit">
+                                <i class="bi bi-hand-thumbs-up"></i>
+                                @(Model.Likes != null && Model.Likes.Any(l => l.UserId == currentUserId) ? "Liked" : "Like") (@Model.LikesCount)
+                            </button>
+                        </form>
 
+                        <!-- Comment Button -->
+                        <a href="@Url.Action("Show", "Posts", new { id = Model.Id })#commentForm" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-chat"></i> Comment
+                        </a>
+
+                        <!-- Share Button -->
+                        <button id="shareButton" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-share"></i> Share
+                        </button>
+                    </div>
+                    <small class="text-muted">Posted on @Model.Date.ToString("MMMM dd, yyyy")</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Like Button Styling -->
 <style>
     .like-button.btn-blue {
         background-color: #1877f2; /* Facebook blue */
@@ -59,22 +78,7 @@
     }
 </style>
 
-
-                        <a href="@Url.Action("Show", "Posts", new { id = Model.Id })#commentForm" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-chat"></i> Comment
-                        </a>
-                        <button id="shareButton" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-share"></i> Share
-                        </button>
-                    </div>
-                    <small class="text-muted">Posted on @Model.Date.ToString("MMMM dd, yyyy")</small>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Animate.css for Animations -->
+<!-- Share Button Script -->
 <script>
     var currentUserId = '@currentUserId';
     console.log(currentUserId);
@@ -83,7 +87,7 @@
         var url = window.location.href;
         navigator.clipboard.writeText(url).then(function () {
             alert('URL copied to clipboard');
-        }, function (err) {
+        }).catch(function (err) {
             console.error('Could not copy text: ', err);
         });
     });

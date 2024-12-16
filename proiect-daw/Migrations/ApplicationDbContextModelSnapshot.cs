@@ -596,7 +596,7 @@ namespace proiectdaw.Migrations
             modelBuilder.Entity("proiect_daw.Models.GroupMessage", b =>
                 {
                     b.HasOne("proiect_daw.Models.Group", "Group")
-                        .WithMany()
+                        .WithMany("GroupMessages")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -686,6 +686,8 @@ namespace proiectdaw.Migrations
 
             modelBuilder.Entity("proiect_daw.Models.Group", b =>
                 {
+                    b.Navigation("GroupMessages");
+
                     b.Navigation("Users");
                 });
 

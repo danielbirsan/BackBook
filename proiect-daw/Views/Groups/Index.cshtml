@@ -17,7 +17,12 @@
 <form method="GET">
     <div class="input-group mb-3">
         <input type="text" class="form-control" placeholder="Search topics or keywords" name="search" value="@ViewBag.SearchString">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <button type="submit">
+            <span class="transition"></span>
+            <span class="gradient"></span>
+            <span class="label">  Search</span>
+            
+           </button>
     </div>
 </form>
 
@@ -71,24 +76,30 @@ else
 
 
 <div>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item">
+    <nav aria-label="Navigare" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!-- Previous Button -->
+            <li class="page-item @((ViewBag.currentPage == 1) ? "disabled" : "")">
                 <a class="page-link" href="@ViewBag.PaginationBaseUrl=1" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
+            <!-- Page Numbers -->
             @for (int i = 1; i <= ViewBag.lastPage; i++)
             {
-                <li class="page-item"> <a class="page-link" href="@ViewBag.PaginationBaseUrl=@i">@(i)</a> </li>
+                <li class="page-item @(i == ViewBag.currentPage ? "active" : "")">
+                    <a class="page-link" href="@ViewBag.PaginationBaseUrl=@i">@(i)</a>
+                </li>
             }
 
-            <li class="page-item">
+            <!-- Next Button -->
+            <li class="page-item @((ViewBag.currentPage == ViewBag.lastPage) ? "disabled" : "")">
                 <a class="page-link" href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         </ul>
     </nav>
+
 </div>

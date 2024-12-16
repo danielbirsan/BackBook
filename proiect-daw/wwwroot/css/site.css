@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Permanent+Marker&family=Roboto:wght@300;500&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 /* Global Font Settings */
 html {
     font-size: 14px;
@@ -20,42 +20,12 @@ body {
     line-height: 1.6;
 }
 
-/* Navbar */
-.navbar {
-    background-color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.3s ease-in-out;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-}
-
-.nav-item {
-    transition: background-color 0.2s ease-in-out; /* Add transition for background color */
-}
-
-    .nav-item:hover {
-        background-color: #5c5c5c !important;
-        border-radius: 5px;
-    }
 
 header {
     margin-top: 12vh;
 }
 
-a.nav-link {
-    color: #0056b3 !important;
-    font-weight: 500;
-    font-family: 'Montserrat', sans-serif;
-    transition: color 0.3s ease;
-}
-
-    a.nav-link:hover {
-        color: #0056b3 ;!important
-        text-decoration: none;
-    }
+=
 
 .logoutbtn {
     color: #007bff !important;
@@ -110,6 +80,11 @@ a.nav-link {
         transform: scale(1);
     }
 
+
+
+    main .btn{
+        margin:10px;
+    }
 /* Button Focus */
 .btn:focus,
 .btn:active:focus,
@@ -144,7 +119,7 @@ a.nav-link {
 }
 
 .font-logo {
-    font-family: 'Permanent Marker', cursive;
+    font-family: "Pixelify Sans", sans-serif;
     color: #007bff;
     transition: color 0.3s ease;
 }

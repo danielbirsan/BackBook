@@ -207,6 +207,31 @@ namespace proiect_daw.Controllers
                 ViewBag.Alert = TempData["messageType"];
             }
 
+            var postsList = db.Posts.Include(p => p.Likes).ToList();
+            var currentUserId = _userManager.GetUserId(User);
+            var postLikes = new Dictionary<int, bool>();
+            var likedPhotos = new List<string>();
+
+            ViewBag.UserCurent = currentUserId;
+
+            foreach (var postt in postsList)
+            {
+                // Check if the current user has liked the post
+                var hasLiked = postt.Likes.Any(like => like.UserId == currentUserId);
+                postLikes[postt.Id] = hasLiked;
+                ViewData[$"Likes_{postt.Id}"] = hasLiked;
+
+                // If the post has been liked by the current user, add the photo to the likedPhotos list
+                if (hasLiked && !string.IsNullOrEmpty(postt.Id.ToString()))
+                {
+                    likedPhotos.Add(postt.Id.ToString());
+                }
+            }
+
+
+            ViewBag.LikedPhotos = likedPhotos;
+
+
             return View(post);
         }
 
@@ -525,18 +550,16 @@ namespace proiect_daw.Controllers
 
         [HttpPost]
         [Route("Posts/ToggleLike")]
-        [HttpPost]
-        public JsonResult ToggleLike(string userID, int postID)
+        public IActionResult ToggleLike(string userID, int postID)
         {
             var post = db.Posts.Include(p => p.Likes).FirstOrDefault(p => p.Id == postID);
             var user = db.Users.Find(userID);
 
             if (post == null || user == null)
             {
-                return Json(new { success = false, message = "Post or User not found." });
+                return NotFound();
             }
 
-            var hasLiked = false;
             var existingLike = post.Likes.FirstOrDefault(l => l.UserId == userID);
             if (existingLike != null)
             {
@@ -552,27 +575,13 @@ namespace proiect_daw.Controllers
                     Date = DateTime.Now
                 });
                 post.LikesCount++;
-                hasLiked = true;
             }
 
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                // Handle the concurrency exception
-                // Reload the entity and retry the operation or inform the user
-            }
+            db.SaveChanges();
 
-
-            return Json(new
-            {
-                success = true,
-                likesCount = post.LikesCount,
-                hasLiked = hasLiked
-            });
+            return Redirect(Request.Headers["Referer"].ToString());
         }
+
 
 
     }

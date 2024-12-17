@@ -1,13 +1,8 @@
 ﻿@model proiect_daw.Models.Post
 
-<!-- Include Summernote CSS -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
-
-<!-- Include jQuery (full version) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Include Summernote JS -->
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+<!-- Include the Quill library -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -30,10 +25,38 @@
 
                         <!-- Post Content -->
                         <div class="mb-3">
-                            <label asp-for="Content" class="form-label font-montserrat">Content</label>
-                            <textarea id="summernote" asp-for="Content" class="form-control"></textarea>
-                            <span asp-validation-for="Content" class="text-danger"></span>
-                        </div>
+    <label asp-for="Content" class="form-label font-montserrat">Content</label>
+    <div id="editor">
+        <p>Hello World!</p>
+        <p>Some initial <strong>bold</strong> text</p>
+        <p><br /></p>
+    </div>
+    <textarea id="Content" name="Content" style="display:none;"></textarea>
+    <span asp-validation-for="Content" class="text-danger"></span>
+</div>
+
+<script>
+const quill = new Quill('#editor', {
+    theme: 'snow',
+    placeholder: 'Write your content here...',
+    modules: {
+        toolbar: [
+            [{ 'header': '1' }, { 'header': '2' }, { 'header': '3' }, { 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['bold', 'italic', 'underline', 'strike'],
+            ['link', 'image', 'video'],
+            ['clean']
+        ]
+    }
+});
+
+
+    // Update the hidden textarea with the content of the Quill editor
+    quill.on('text-change', function() {
+        document.querySelector('textarea[name="Content"]').value = quill.root.innerHTML;
+    });
+</script>
+
 
                     
                         <!-- Submit Button -->
@@ -49,22 +72,4 @@
     </div>
 </div>
 
-<!-- Summernote Initialization Script -->
-<script>
-    $(document).ready(function () {
-        $('#summernote').summernote({
-            placeholder: 'Write your content here...',
-            tabsize: 2,
-            height: 200, 
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-    });
-</script>
+

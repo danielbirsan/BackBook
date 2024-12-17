@@ -383,7 +383,7 @@ namespace proiect_daw.Controllers
         // Editorii pot edita doar postarile proprii (cele pe care ei le-au postat)
         // [HttpGet] - se executa implicit
 
-        [Authorize(Roles = "Editor,Admin")]
+        [Authorize(Roles = "Editor,Admin,User")]
         public IActionResult Edit(int id)
         {
 
@@ -458,7 +458,7 @@ namespace proiect_daw.Controllers
         // Adminii pot sterge orice articol de baza de date
 
         [HttpPost]
-        [Authorize(Roles = "Editor,Admin")]
+        [Authorize(Roles = "Editor,Admin, User")]
         public ActionResult Delete(int id)
         {
             // Post post = db.Posts.Find(id);

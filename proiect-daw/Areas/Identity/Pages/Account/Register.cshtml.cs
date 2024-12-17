@@ -61,19 +61,23 @@ namespace proiect_daw.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
+            [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "The email address is not valid.")]
             public string Email { get; set; }
 
             [Required]
             [Display(Name = "FirstName")]
+            [RegularExpression(@"^[A-Za-z]+$", ErrorMessage = "The first name is not valid.")]
             public string FirstName { get; set; }
 
             [Required]
             [Display(Name = "LastName")]
+            [RegularExpression(@"^[A-Za-z]+$", ErrorMessage = "The last name is not valid.")]
             public string LastName { get; set; }
 
-            [Required]
             [Display(Name = "PhoneNumber")]
+            [RegularExpression(@"^\+?[0-9]\d{1,14}$", ErrorMessage = "The phone number is not valid.")]
             public string PhoneNumber { get; set; }
+
 
             [Required]
             [Display(Name = "Description")]

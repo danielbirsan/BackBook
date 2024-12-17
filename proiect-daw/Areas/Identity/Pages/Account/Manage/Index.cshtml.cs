@@ -52,9 +52,10 @@ namespace proiect_daw.Areas.Identity.Pages.Account.Manage
             Username = userName ?? string.Empty; // Handle possible null reference
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber ?? string.Empty, // Handle possible null reference
+                PhoneNumber = user.PhoneNumber ?? string.Empty, // Handle possible null reference
                 PrivateProfile = user.PrivateProfile,
-                ProfileDescription = user.ProfileDescription ?? string.Empty // Handle possible null reference
+                ProfileDescription = user.ProfileDescription ?? string.Empty// Handle possible null reference
+            
             };
         }
 

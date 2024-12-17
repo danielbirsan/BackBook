@@ -1,12 +1,21 @@
 ﻿@model proiect_daw.Models.Post
 
+<!-- Include Summernote CSS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
+
+<!-- Include jQuery (full version) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Summernote JS -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <!-- Create Post Card -->
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-light text-center py-3">
-                    <h5 class="font-montserrat mb-0">Creează o postare</h5>
+                    <h5 class="font-montserrat mb-0">Create a post</h5>
                 </div>
                 <div class="card-body">
                     <form method="post" asp-action="New" asp-controller="Posts">
@@ -14,36 +23,23 @@
                         <div asp-validation-summary="All" class="text-danger"></div>
                         <!-- Post Title -->
                         <div class="mb-3">
-                            <label asp-for="Title" class="form-label font-montserrat">Titlu</label>
-                            <input asp-for="Title" class="form-control" placeholder="Adaugă un titlu..." />
+                            <label asp-for="Title" class="form-label font-montserrat">Title</label>
+                            <input asp-for="Title" class="form-control" placeholder="Add title..." />
                             <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
 
                         <!-- Post Content -->
                         <div class="mb-3">
-                            <label asp-for="Content" class="form-label font-montserrat">Conținut</label>
-                            <textarea asp-for="Content" class="form-control summernote" placeholder="Scrie ceva..."></textarea>
+                            <label asp-for="Content" class="form-label font-montserrat">Content</label>
+                            <textarea id="summernote" asp-for="Content" class="form-control"></textarea>
                             <span asp-validation-for="Content" class="text-danger"></span>
                         </div>
 
-                        <!-- Post Category -->
-                        <div class="mb-3">
-                            <label for="CategoryId" class="form-label font-montserrat">Categorie</label>
-                            <select asp-for="CategoryId" asp-items="Model.Categ" class="form-select">
-                                <option value="">Selectează o categorie</option>
-                            </select>
-                            <span asp-validation-for="CategoryId" class="text-danger"></span>
-                        </div>
-
+                    
                         <!-- Submit Button -->
                         <div class="d-flex justify-content-end">
                             <button class="btn btn-primary px-4 py-2 font-montserrat" type="submit">
-                                <span class="transition"></span>
-                                <span class="gradient"></span>
-                                <span class="label">
-
-                                    <i class="bi bi-pencil-square"></i> Postează
-                                    </span>
+                                <i class="bi bi-pencil-square"></i> Postează
                             </button>
                         </div>
                     </form>
@@ -52,3 +48,23 @@
         </div>
     </div>
 </div>
+
+<!-- Summernote Initialization Script -->
+<script>
+    $(document).ready(function () {
+        $('#summernote').summernote({
+            placeholder: 'Write your content here...',
+            tabsize: 2,
+            height: 200, 
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+    });
+</script>

@@ -40,8 +40,9 @@ namespace proiect_daw.Controllers
             {
                 TempData["message"] = "Nu aveti dreptul sa stergeti comentariul";
                 TempData["messageType"] = "alert-danger";
-                return Redirect("Posts/Show?id=" + comm.PostId);
-            }    
+                return Redirect(Url.Action("Show", "Posts", new { id = comm.PostId }));
+
+            }
         }
 
         [Authorize(Roles = "User,Editor,Admin")]
@@ -57,7 +58,8 @@ namespace proiect_daw.Controllers
             {
                 TempData["message"] = "Nu aveti dreptul sa editati comentariul";
                 TempData["messageType"] = "alert-danger";
-                return Redirect("../Posts/Show?id=" + comm.PostId);
+                return Redirect(Url.Action("Show", "Posts", new { id = comm.PostId }));
+
 
             }
         }

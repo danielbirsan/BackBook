@@ -40,16 +40,19 @@
 {
     @foreach (var post in ViewBag.Posts)
     {
-        <div class="card mb-4">
-            <a style="text-decoration:none; color:black"
+        <div class="mb-4" style="max-width: 900px; max-height: 400px; margin: 0 auto; overflow: hidden;
+margin-bottom: 2px black;
+">
+            <a style="text-decoration:none; color:black; display: block;"
                asp-controller="Posts" asp-action="Show" asp-route-id="@post.Id">
                 @{
                     ViewData["CurrentUserId"] = ViewBag.UserCurent;
                     ViewData["Likes"] = ViewData[$"Likes_{post.Id}"];
                 }
-                <partial name="PostInfo" model="post" viewdata="ViewData"></partial>
+                <partial  name="PostInfo" model="post" viewdata="ViewData"></partial>
             </a>
         </div>
+
     }
 }
 else

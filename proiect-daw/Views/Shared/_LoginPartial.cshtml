@@ -1,28 +1,33 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using proiect_daw.Data
 
-
 <!-- PASUL 7: useri si roluri -->
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject ApplicationDbContext db
-
 @{
     var user = await UserManager.GetUserAsync(User);
     var firstName = user?.FirstName;
     var lastName = user?.LastName;
 
     bool hasGroupRequestsToAccept = false;
+    int pendingFollowRequestsCount = 0;
 
     if (user != null)
     {
-		var moderatorOf = db.Groups
-			                    .Where(g => g.ModeratorId == user.Id)
-			                    .ToList();
+        // Check for group requests to accept
+        var moderatorOf = db.Groups
+                            .Where(g => g.ModeratorId == user.Id)
+                            .ToList();
 
         hasGroupRequestsToAccept = db.GroupMemberships
-                                        .Where(gm => moderatorOf.Select(g => g.Id).Contains(gm.GroupId) && gm.PendingApproval == true)
-                                        .Any();
+                                     .Where(gm => moderatorOf.Select(g => g.Id).Contains(gm.GroupId) && gm.PendingApproval == true)
+                                     .Any();
+
+        // Calculate the number of pending follow requests
+        pendingFollowRequestsCount = db.FollowRequests
+                                       .Where(fr => fr.ReceiverId == user.Id && fr.PendingApproval == true)
+                                       .Count();
     }
 }
 
@@ -69,8 +74,14 @@
                     </li>
                     <li class="nav-item dropdown">
                         <form asp-controller="Users" asp-action="PendingFollows" method="get" class="d-inline">
-                            <button type="submit" class="btn hover-underline-animation">
+                            <button type="submit" class="btn hover-underline-animation position-relative">
                                 <i class="bi bi-person-plus text-white"></i>
+                                @if (@pendingFollowRequestsCount > 0)
+                                {
+                                    <span class="position-absolute top-10 start-90 translate-middle p-1 bg-danger border border-light rounded-circle">
+                                        <span class="visually-hidden">New requests</span>
+                                    </span>
+                                }
                             </button>
                         </form>
                     </li>
@@ -130,7 +141,7 @@
                 <span class="transition"></span>
                 <span class="gradient"></span>
                 <span class="label"> +</span>
-                
+
             </button>
 
         </form>
@@ -138,7 +149,7 @@
             <button type="submit" class="btn btn-primary">
                 <span class="transition"></span>
                 <span class="gradient"></span>
-                <span class="label"> 
+                <span class="label">
                     <i class="bi bi-people-fill"></i> New group
                 </span>
             </button>
@@ -152,8 +163,9 @@
         bottom: 20px;
         right: 20px;
     }
-    .btn-container form {
-        display: inline-block;
-        margin-left: 5px;
-    }
+
+        .btn-container form {
+            display: inline-block;
+            margin-left: 5px;
+        }
 </style>

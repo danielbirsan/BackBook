@@ -12,8 +12,8 @@ using proiect_daw.Data;
 namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241219112258_Backbook")]
-    partial class Backbook
+    [Migration("20241219125620_qwe")]
+    partial class qwe
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

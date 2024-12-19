@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-6 offset-3">
 
-            <form method="post" asp-action="Edit" asp-controller="Posts" asp-route-id="@Model.Id">
+            <form method="post" asp-action="Edit" asp-controller="Posts" asp-route-id="@Model.Id" enctype="multipart/form-data">
                 <!-- Validation Summary -->
                 <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -24,17 +24,13 @@
 
                 <br />
 
-                <!-- Content Field with Quill -->
+                <!-- Content Field -->
                 <div class="form-group">
                     <label asp-for="Content" class="form-label">Continut</label>
-                    <div id="editor">{!! Model.Content !!}</div>
-                    <textarea id="Content" name="Content" style="display:none;"></textarea>
+                    <div id="editor"></div>
+                    <textarea id="Content" name="Content" style="display:none;">@Model.Content</textarea>
                     <span asp-validation-for="Content" class="text-danger"></span>
                 </div>
-
-                <br />
-
-             
 
                 <br />
 
@@ -53,18 +49,55 @@
         theme: 'snow',
         placeholder: 'Edit your content...',
         modules: {
-            toolbar: [
-                [{ 'header': '1' }, { 'header': '2' }, { 'header': '3' }, { 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                ['bold', 'italic', 'underline', 'strike'],
-                ['link', 'image', 'video'],
-                ['clean']
-            ]
+            toolbar: {
+                container: [
+                    [{ 'header': '1' }, { 'header': '2' }, { 'header': '3' }, { 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ],
+                handlers: {
+                    image: function () {
+                        const input = document.createElement('input');
+                        input.setAttribute('type', 'file');
+                        input.setAttribute('accept', 'image/*');
+                        input.click();
+
+                        input.onchange = async () => {
+                            const file = input.files[0];
+                            if (file) {
+                                const formData = new FormData();
+                                formData.append('image', file);
+
+                                try {
+                                    const response = await fetch('/Posts/UploadImage', {
+                                        method: 'POST',
+                                        body: formData
+                                    });
+
+                                    if (response.ok) {
+                                        const data = await response.json();
+                                        const range = quill.getSelection();
+                                        quill.insertEmbed(range.index, 'image', data.imageUrl);
+                                    } else {
+                                        alert('Image upload failed.');
+                                    }
+                                } catch (error) {
+                                    console.error('Error uploading image:', error);
+                                    alert('An error occurred while uploading the image.');
+                                }
+                            }
+                        };
+                    }
+                }
+            }
         }
     });
 
     // Pre-fill the Quill editor with the existing content
-    quill.root.innerHTML = `{!! Model.Content !!}`;
+    const content = document.querySelector('textarea[name="Content"]').value;
+    quill.root.innerHTML = content;
 
     // Update the hidden textarea with Quill content on change
     quill.on('text-change', function () {

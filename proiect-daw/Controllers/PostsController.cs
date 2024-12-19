@@ -293,9 +293,6 @@ namespace proiect_daw.Controllers
             return View(post);
         }
 
-        // Se adauga articolul in baza de date
-        // Doar utilizatorii cu rolul Editor si Admin pot adauga postari in platforma
-        // GetDefaultCategory
         public Category GetDefaultCategory()
         {
             return db.Categories.FirstOrDefault() ?? new Category { CategoryName = "Default" };
@@ -338,126 +335,106 @@ namespace proiect_daw.Controllers
             }
         }
 
-        // Se editeaza un articol existent in baza de date impreuna cu categoria din care face parte
-        // Categoria se selecteaza dintr-un dropdown
-        // Se afiseaza formularul impreuna cu datele aferente articolului din baza de date
-        // Doar utilizatorii cu rolul de Editor si Admin pot edita postari
-        // Adminii pot edita orice articol din baza de date
-        // Editorii pot edita doar postarile proprii (cele pe care ei le-au postat)
-        // [HttpGet] - se executa implicit
 
-        [Authorize(Roles = "Editor,Admin,User")]
+        [Authorize(Roles = "User,Editor,Admin")]
         public IActionResult Edit(int id)
         {
+            var post = db.Posts.Include("Category").FirstOrDefault(p => p.Id == id);
 
-            Post post = db.Posts.Include("Category")
-                                         .Where(art => art.Id == id)
-                                         .First();
-
-            post.Categ = GetAllCategories();
-
-            if ((post.UserId == _userManager.GetUserId(User)) || 
-                User.IsInRole("Admin"))
+            if (post == null)
             {
-                return View(post);
-            }
-            else
-            {    
-                
-                TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unui post care nu va apartine";
+                TempData["message"] = "Postarea nu a fost găsită.";
                 TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
-            }  
+            }
+
+            if (!IsAuthorizedToEditOrDelete(post))
+            {
+                TempData["message"] = "Nu aveți permisiunea să modificați această postare.";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index");
+            }
+
+            post.Categ = GetAllCategories();
+            return View(post);
         }
-        [HttpPost]
 
-
-        // Se adauga articolul modificat in baza de date
-        // Se verifica rolul utilizatorilor care au dreptul sa editeze (Editor si Admin)
         [HttpPost]
-        [Authorize(Roles = "Editor,Admin")]
-        public IActionResult Edit(int id, Post requestPost)
+        [Authorize(Roles = "User,Editor,Admin")]
+        public IActionResult Edit(int id, Post updatedPost)
         {
-            // Sanitize the content to prevent XSS vulnerabilities
             var sanitizer = new HtmlSanitizer();
             sanitizer.AllowedTags.Add("img");
             sanitizer.AllowedAttributes.Add("src");
             sanitizer.AllowedAttributes.Add("alt");
 
-            // Find the post in the database
-            Post post = db.Posts.Find(id);
+            var post = db.Posts.Find(id);
             if (post == null)
             {
-                TempData["message"] = "Postarea nu a fost găsită";
+                TempData["message"] = "Postarea nu a fost găsită.";
                 TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
 
-            // Ensure the user has permission to edit
-            if (post.UserId != _userManager.GetUserId(User) && !User.IsInRole("Admin"))
+            if (!IsAuthorizedToEditOrDelete(post))
             {
-                TempData["message"] = "Nu aveți dreptul să modificați această postare";
+                TempData["message"] = "Nu aveți permisiunea să modificați această postare.";
                 TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
 
-            // Update the post if the model state is valid
             if (ModelState.IsValid)
             {
-                post.Title = requestPost.Title;
-                post.Content = sanitizer.Sanitize(requestPost.Content);
+                post.Title = updatedPost.Title;
+                post.Content = sanitizer.Sanitize(updatedPost.Content);
                 post.Date = DateTime.Now;
-                post.CategoryId = requestPost.CategoryId;
+                post.CategoryId = updatedPost.CategoryId;
 
                 db.SaveChanges();
 
-                TempData["message"] = "Postarea a fost modificată cu succes";
+                TempData["message"] = "Postarea a fost modificată cu succes.";
                 TempData["messageType"] = "alert-success";
                 return RedirectToAction("Index");
             }
 
-            // Reassign categories and return the view if validation fails
-            requestPost.Categ = GetAllCategories();
-            return View(requestPost);
+            updatedPost.Categ = GetAllCategories();
+            return View(updatedPost);
         }
-
-
-        // Se sterge un articol din baza de date 
-        // Utilizatorii cu rolul de Editor sau Admin pot sterge postari
-        // Editorii pot sterge doar postarile publicate de ei
-        // Adminii pot sterge orice articol de baza de date
 
         [HttpPost]
-        [Authorize(Roles = "Editor,Admin, User")]
+        [Authorize(Roles = "User,Editor,Admin")]
         public ActionResult Delete(int id)
         {
-            // Post post = db.Posts.Find(id);
+            var post = db.Posts.Include("Comments").FirstOrDefault(p => p.Id == id);
 
-            Post post = db.Posts.Include("Comments")
-                                         .Where(art => art.Id == id)
-                                         .First();
-
-            if ((post.UserId == _userManager.GetUserId(User))
-                    || User.IsInRole("Admin"))
+            if (post == null)
             {
-                db.Posts.Remove(post);
-                db.SaveChanges();
-                TempData["message"] = "Postarea a fost stearsa";
-                TempData["messageType"] = "alert-success";
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                TempData["message"] = "Nu aveti dreptul sa stergeti o postare care nu va apartine";
+                TempData["message"] = "Postarea nu a fost găsită.";
                 TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
-            }    
+            }
+
+            if (!IsAuthorizedToEditOrDelete(post))
+            {
+                TempData["message"] = "Nu aveți permisiunea să ștergeți această postare.";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index");
+            }
+
+            db.Posts.Remove(post);
+            db.SaveChanges();
+
+            TempData["message"] = "Postarea a fost ștearsă cu succes.";
+            TempData["messageType"] = "alert-success";
+            return RedirectToAction("Index");
         }
-        
 
+        private bool IsAuthorizedToEditOrDelete(Post post)
+        {
+            var currentUserId = _userManager.GetUserId(User);
+            return post.UserId == currentUserId || User.IsInRole("Admin");
+        }
 
-        // Conditiile de afisare pentru butoanele de editare si stergere
-        // butoanele aflate in view-uri
         private void SetAccessRights()
         {
             ViewBag.AfisareButoane = false;
@@ -493,26 +470,10 @@ namespace proiect_daw.Controllers
                     Text = category.CategoryName
                 });
             }
-            /* Sau se poate implementa astfel: 
-             * 
-            foreach (var category in categories)
-            {
-                var listItem = new SelectListItem();
-                listItem.Value = category.Id.ToString();
-                listItem.Text = category.CategoryName;
-
-                selectList.Add(listItem);
-             }*/
-
-
-            // returnam lista de categorii
+  
             return selectList;
         }
 
-        // Metoda utilizata pentru exemplificarea Layout-ului
-        // Am adaugat un nou Layout in Views -> Shared -> numit _LayoutNou.cshtml
-        // Aceasta metoda are un View asociat care utilizeaza noul layout creat
-        // in locul celui default generat de framework numit _Layout.cshtml
         public IActionResult IndexNou()
         {
             return View();
@@ -555,29 +516,33 @@ namespace proiect_daw.Controllers
         [Authorize(Roles = "User,Editor,Admin")]
         public async Task<IActionResult> UploadImage(IFormFile image)
         {
-            if (image != null && image.Length > 0)
+            if (image == null || image.Length == 0)
+                return BadRequest(new { error = "Invalid image file." });
+
+            try
             {
-                var filePath = Path.Combine("wwwroot/uploads", Path.GetFileName(image.FileName));
-
-                // Ensure the uploads directory exists
-                if (!Directory.Exists("wwwroot/uploads"))
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+                if (!Directory.Exists(uploadsFolder))
                 {
-                    Directory.CreateDirectory("wwwroot/uploads");
+                    Directory.CreateDirectory(uploadsFolder);
                 }
 
-                // Save the image file to server
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    await image.CopyToAsync(stream);
+                    await image.CopyToAsync(fileStream);
                 }
 
-                // Return the URL of the uploaded image
-                return Json(new { imageUrl = Url.Content("~/uploads/" + Path.GetFileName(image.FileName)) });
+                var imageUrl = Url.Content("~/uploads/" + uniqueFileName);
+                return Json(new { imageUrl });
             }
-
-            return BadRequest("No image provided.");
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while uploading the image.", details = ex.Message });
+            }
         }
-
 
 
     }

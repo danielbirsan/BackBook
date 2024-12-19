@@ -13,7 +13,7 @@
                     <h5 class="font-montserrat mb-0">Create a post</h5>
                 </div>
                 <div class="card-body">
-                    <form method="post" asp-action="New" asp-controller="Posts">
+                    <form method="post" asp-action="New" asp-controller="Posts" enctype="multipart/form-data">
                         <!-- Validation Summary -->
                         <div asp-validation-summary="All" class="text-danger"></div>
                         <!-- Post Title -->
@@ -25,40 +25,71 @@
 
                         <!-- Post Content -->
                         <div class="mb-3">
-    <label asp-for="Content" class="form-label font-montserrat">Content</label>
-    <div id="editor">
-        <p>Hello World!</p>
-        <p>Some initial <strong>bold</strong> text</p>
-        <p><br /></p>
-    </div>
-    <textarea id="Content" name="Content" style="display:none;"></textarea>
-    <span asp-validation-for="Content" class="text-danger"></span>
-</div>
+                            <label asp-for="Content" class="form-label font-montserrat">Content</label>
+                            <div id="editor">
+                             
+                            </div>
+                            <textarea id="Content" name="Content" style="display:none;"></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
 
-<script>
-const quill = new Quill('#editor', {
-    theme: 'snow',
-    placeholder: 'Write your content here...',
-    modules: {
-        toolbar: [
-            [{ 'header': '1' }, { 'header': '2' }, { 'header': '3' }, { 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            ['bold', 'italic', 'underline', 'strike'],
-            ['link', 'image', 'video'],
-            ['clean']
-        ]
-    }
-});
+                        <script>
+                            const quill = new Quill('#editor', {
+                                theme: 'snow',
+                                placeholder: 'Write your content here...',
+                                modules: {
+                                    toolbar: {
+                                        container: [
+                                            [{ 'header': '1' }, { 'header': '2' }, { 'header': '3' }, { 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+                                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                            ['bold', 'italic', 'underline', 'strike'],
+                                            ['link', 'image', 'video'],
+                                            ['clean']
+                                        ],
+                                        handlers: {
+                                            image: function () {
+                                                const input = document.createElement('input');
+                                                input.setAttribute('type', 'file');
+                                                input.setAttribute('accept', 'image/*');
+                                                input.click();
 
+                                                input.onchange = async () => {
+                                                    const file = input.files[0];
+                                                    if (file) {
+                                                        const formData = new FormData();
+                                                        formData.append('image', file);
 
-    // Update the hidden textarea with the content of the Quill editor
-    quill.on('text-change', function() {
-        document.querySelector('textarea[name="Content"]').value = quill.root.innerHTML;
-    });
-</script>
+                                                        try {
+                                                            const response = await fetch('/Posts/UploadImage', {
+                                                                method: 'POST',
+                                                                body: formData
+                                                            });
 
+                                                            if (response.ok) {
+                                                                const data = await response.json();
+                                                                const range = quill.getSelection();
+                                                                quill.insertEmbed(range.index, 'image', data.imageUrl);
+                                                            } else {
+                                                                alert('Image upload failed.');
+                                                            }
+                                                        } catch (error) {
+                                                            console.error('Error uploading image:', error);
+                                                            alert('An error occurred while uploading the image.');
+                                                        }
+                                                    }
+                                                };
+                                            }
+                                        }
+                                    }
+                                }
+                            });
 
-                    
+                            // Update the hidden textarea with the content of the Quill editor
+                            quill.on('text-change', function () {
+                                document.querySelector('textarea[name="Content"]').value = quill.root.innerHTML;
+                            });
+                        </script>
+
                         <!-- Submit Button -->
                         <div class="d-flex justify-content-end">
                             <button class="btn btn-primary px-4 py-2 font-montserrat" type="submit">
@@ -71,5 +102,3 @@ const quill = new Quill('#editor', {
         </div>
     </div>
 </div>
-
-

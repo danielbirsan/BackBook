@@ -4,61 +4,70 @@
 
 <br />
 
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-6 offset-3">
 
             <form method="post" asp-action="Edit" asp-controller="Posts" asp-route-id="@Model.Id">
-                <!-- 
-                    Metoda 2 prin care se trimite id-ul catre Controller
-                <input type="hidden" asp-for="Id" />  -->
-
+                <!-- Validation Summary -->
                 <div asp-validation-summary="All" class="text-danger"></div>
 
+                <!-- Title Field -->
                 <div class="form-group">
-                    <label asp-for="Title" class="form-label">Titlu </label>
-                    <br />
+                    <label asp-for="Title" class="form-label">Titlu</label>
                     <input asp-for="Title" class="form-control" />
-
                     <span asp-validation-for="Title" class="text-danger"></span>
-
-                    <br /><br />
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="Content" class="form-label">Continut </label>
-                    <br />
-                    <textarea asp-for="Content" class="form-control summernote"></textarea>
+                <br />
 
+                <!-- Content Field with Quill -->
+                <div class="form-group">
+                    <label asp-for="Content" class="form-label">Continut</label>
+                    <div id="editor">{!! Model.Content !!}</div>
+                    <textarea id="Content" name="Content" style="display:none;"></textarea>
                     <span asp-validation-for="Content" class="text-danger"></span>
-
-                    <br /><br />
                 </div>
 
-                <div class="form-group">
-                    <label for="CategoryId">Selectati categoria</label>
-                    <br />
-                    <select asp-for="CategoryId" asp-items="Model.Categ" class="form-control">
-                        <option value="">Selectati categoria</option>
-                    </select>
+                <br />
 
-                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+             
 
-                    <br />
-                </div>
+                <br />
 
+                <!-- Submit Button -->
                 <button class="btn btn-sm btn-success" type="submit">
-                    <span class="transition"></span>
-                    <span class="gradient"></span>
-                    <span class="label">
-                        Modify</span>
-
-
-
+                    Modify
                 </button>
-
             </form>
         </div>
     </div>
 </div>
 
+<script>
+    // Initialize Quill editor
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: 'Edit your content...',
+        modules: {
+            toolbar: [
+                [{ 'header': '1' }, { 'header': '2' }, { 'header': '3' }, { 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['bold', 'italic', 'underline', 'strike'],
+                ['link', 'image', 'video'],
+                ['clean']
+            ]
+        }
+    });
+
+    // Pre-fill the Quill editor with the existing content
+    quill.root.innerHTML = `{!! Model.Content !!}`;
+
+    // Update the hidden textarea with Quill content on change
+    quill.on('text-change', function () {
+        document.querySelector('textarea[name="Content"]').value = quill.root.innerHTML;
+    });
+</script>

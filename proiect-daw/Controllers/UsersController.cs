@@ -188,62 +188,86 @@ namespace proiect_daw.Controllers
         public IActionResult Delete(string id)
         {
             var user = db.Users
-                         .Include("Posts")
-                         .Include("Comments")
-                         .Include("Bookmarks")
-                         .Where(u => u.Id == id)
-                         .First();
+                         .Include(u => u.Posts)
+                         .Include(u => u.Comments)
+                         .Include(u => u.Bookmarks)
+                         .Include(u => u.SentFollowRequests)
+                         .Include(u => u.ReceivedFollowRequests)
+                         .FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
 
             // Delete user comments
-            if (user.Comments.Count > 0)
+            if (user.Comments != null && user.Comments.Count > 0)
             {
-                foreach (var comment in user.Comments)
-                {
-                    db.Comments.Remove(comment);
-                }
+                db.Comments.RemoveRange(user.Comments);
             }
 
             // Delete user bookmarks
-            if (user.Bookmarks.Count > 0)
+            if (user.Bookmarks != null && user.Bookmarks.Count > 0)
             {
-                foreach (var bookmark in user.Bookmarks)
-                {
-                    db.Bookmarks.Remove(bookmark);
-                }
+                db.Bookmarks.RemoveRange(user.Bookmarks);
             }
 
             // Delete user posts
-            if (user.Posts.Count > 0)
+            if (user.Posts != null && user.Posts.Count > 0)
             {
-                foreach (var post in user.Posts)
-                {
-                    db.Posts.Remove(post);
-                }
+                db.Posts.RemoveRange(user.Posts);
+            }
+
+            // Delete follow requests where the user is the sender
+            if (user.SentFollowRequests != null && user.SentFollowRequests.Count > 0)
+            {
+                db.FollowRequests.RemoveRange(user.SentFollowRequests);
+            }
+
+            // Delete follow requests where the user is the receiver
+            if (user.ReceivedFollowRequests != null && user.ReceivedFollowRequests.Count > 0)
+            {
+                db.FollowRequests.RemoveRange(user.ReceivedFollowRequests);
             }
 
             db.ApplicationUsers.Remove(user);
-
             db.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
+
         [HttpPost]
         public async Task<IActionResult> SendFollowRequest(string receiverId)
         {
             var senderId = _userManager.GetUserId(User);
+            var receiver = await db.Users.FindAsync(receiverId);
+
+            if (receiver == null)
+            {
+                return NotFound();
+            }
+
             var followRequest = new FollowRequest
             {
                 SenderId = senderId,
                 ReceiverId = receiverId,
-                PendingApproval = true
+                PendingApproval = !receiver.PrivateProfile
             };
 
             db.FollowRequests.Add(followRequest);
             await db.SaveChangesAsync();
 
+            // If the profile is public, accept the follow request automatically
+            if (!receiver.PrivateProfile)
+            {
+                followRequest.PendingApproval = false;
+                await db.SaveChangesAsync();
+            }
+
             return RedirectToAction("Show", new { id = receiverId });
         }
+
 
         [HttpPost]
         public async Task<IActionResult> AcceptFollowRequest(int requestId)

@@ -67,11 +67,11 @@
                     {
                         <div class="d-flex">
                             <a class="btn btn-outline-primary btn-sm me-2" asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">
-                                <i class="bi bi-pencil"></i> Editeaza
+                                <i class="bi bi-pencil"></i> Edit
                             </a>
                             <form method="post" asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id" class="m-0">
                                 <button class="btn btn-outline-danger btn-sm" type="submit">
-                                    <i class="bi bi-trash"></i> Sterge
+                                    <i class="bi bi-trash"></i> Delete
                                 </button>
                             </form>
                         </div>
@@ -96,7 +96,7 @@
                                 {
                                     <div class="d-flex mt-2">
                                         <a class="btn btn-outline-secondary btn-sm me-2" asp-controller="Comments" asp-action="Edit" asp-route-id="@comm.Id">
-                                            <i class="bi bi-pencil-square"></i> Editeaza
+                                            <i class="bi bi-pencil-square"></i> Edit
                                         </a>
                                         <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id">
                                             <button class="btn btn-outline-danger btn-sm" type="submit">

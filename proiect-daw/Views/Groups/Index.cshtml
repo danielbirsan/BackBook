@@ -31,7 +31,7 @@
     if(ViewBag.OwnGroups != null)
     {
         <br />
-        <h2>Grupurile tale</h2>
+        <h2>Your Groups</h2>
         <br />
         @foreach (var group in ViewBag.OwnGroups)
         {
@@ -50,30 +50,28 @@
     }
 
     <br />
-    <h2>Poate te interesează și...</h2>
+    <h2>Others also liked...</h2>
     <br />
 }
 else
 {
     <br />
-    <h2>Grupuri denumite '@ViewBag.SearchString'</h2>
+    <h2>Groups '@ViewBag.SearchString'</h2>
     <b />
 }
 
 @foreach (var group in ViewBag.Groups)
 {
-    <div class="card">
+    if (ViewBag.OwnGroups == null || !ViewBag.OwnGroups.Contains(group))
+    {
+        <a style="text-decoration:none; color:black" asp-controller="Groups" asp-action="Show" asp-route-id="@group.Id">
+            <partial name="GroupInfo" model="group" />
+        </a>
 
-        <partial name="GroupInfo" model="group" />
-
-        <a class="btn btn-primary btn-sm" asp-controller="Groups" asp-action="Show" asp-route-id="@group.Id">Afisare</a>
-
-    </div>
-
-    <br />
-    <br />
+        <br />
+        <br />
+    }
 }
-
 
 
 <div>

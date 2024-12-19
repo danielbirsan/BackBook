@@ -15,22 +15,12 @@ namespace proiect_daw.Models
             serviceProvider.GetRequiredService
             <DbContextOptions<ApplicationDbContext>>()))
             {
-                // Verificam daca in baza de date exista cel putin un rol
-                // insemnand ca a fost rulat codul
-                // De aceea facem return pentru a nu insera rolurile inca o data
-                // Acesta metoda trebuie sa se execute o singura data
+          
                 if (context.Roles.Any())
                 {
                     return; // baza de date contine deja roluri
                 }
 
-                //add category Default
-
-              
-
-
-                // CREAREA ROLURILOR IN BD
-                // daca nu contine roluri, acestea se vor crea
 
                 context.Roles.AddRange(
                 new IdentityRole { Id = "2c5e174e-3b0e-446f-86af-483d56fd7210", Name = "Admin", NormalizedName = "Admin".ToUpper() },

@@ -20,7 +20,11 @@
                 <!-- Post Body -->
                 <div class="card-body">
                     <h5 class="fw-bold">@Model.Title</h5>
-                    <p>@Html.Raw(Model.Content)</p>
+                    <div style="width: 900px; max-height: 400px; overflow: hidden">
+
+
+                        <p>@Html.Raw(Model.Content)</p>
+                    </div>
                     @if (Model.Category != null)
                     {
                         <span class="badge bg-secondary">

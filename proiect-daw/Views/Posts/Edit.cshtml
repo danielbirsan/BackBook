@@ -17,7 +17,7 @@
 
                 <!-- Title Field -->
                 <div class="form-group">
-                    <label asp-for="Title" class="form-label">Titlu</label>
+                    <label asp-for="Title" class="form-label">Title</label>
                     <input asp-for="Title" class="form-control" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
@@ -26,7 +26,7 @@
 
                 <!-- Content Field -->
                 <div class="form-group">
-                    <label asp-for="Content" class="form-label">Continut</label>
+                    <label asp-for="Content" class="form-label">Content</label>
                     <div id="editor"></div>
                     <textarea id="Content" name="Content" style="display:none;">@Model.Content</textarea>
                     <span asp-validation-for="Content" class="text-danger"></span>

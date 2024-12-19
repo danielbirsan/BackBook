@@ -306,6 +306,10 @@ namespace proiect_daw.Controllers
         public IActionResult New(Post post)
         {
             var sanitizer = new HtmlSanitizer();
+            sanitizer.AllowedTags.Add("img");
+            sanitizer.AllowedAttributes.Add("src");
+            sanitizer.AllowedAttributes.Add("alt");
+
 
             post.Date = DateTime.Now;
             post.LikesCount = 0;
@@ -366,7 +370,7 @@ namespace proiect_daw.Controllers
             }  
         }
         [HttpPost]
-        
+
 
         // Se adauga articolul modificat in baza de date
         // Se verifica rolul utilizatorilor care au dreptul sa editeze (Editor si Admin)
@@ -374,40 +378,47 @@ namespace proiect_daw.Controllers
         [Authorize(Roles = "Editor,Admin")]
         public IActionResult Edit(int id, Post requestPost)
         {
+            // Sanitize the content to prevent XSS vulnerabilities
             var sanitizer = new HtmlSanitizer();
+            sanitizer.AllowedTags.Add("img");
+            sanitizer.AllowedAttributes.Add("src");
+            sanitizer.AllowedAttributes.Add("alt");
 
+            // Find the post in the database
             Post post = db.Posts.Find(id);
-
-            if(ModelState.IsValid)
+            if (post == null)
             {
-                if(post.UserId == _userManager.GetUserId(User)
-                    || User.IsInRole("Admin") )
-                {
-                    post.Title = requestPost.Title;
-
-                    requestPost.Content = sanitizer.Sanitize(requestPost.Content);
-
-                    post.Content = requestPost.Content;
-
-                    post.Date = DateTime.Now;
-                    post.CategoryId = requestPost.CategoryId;
-                    TempData["message"] = "Postarea a fost modificata";
-                    TempData["messageType"] = "alert-success";
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                else
-                {                    
-                    TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unui post care nu va apartine";
-                    TempData["messageType"] = "alert-danger";
-                    return RedirectToAction("Index");
-                }
+                TempData["message"] = "Postarea nu a fost găsită";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index");
             }
-            else
+
+            // Ensure the user has permission to edit
+            if (post.UserId != _userManager.GetUserId(User) && !User.IsInRole("Admin"))
             {
-                requestPost.Categ = GetAllCategories();
-                return View(requestPost);
+                TempData["message"] = "Nu aveți dreptul să modificați această postare";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index");
             }
+
+            // Update the post if the model state is valid
+            if (ModelState.IsValid)
+            {
+                post.Title = requestPost.Title;
+                post.Content = sanitizer.Sanitize(requestPost.Content);
+                post.Date = DateTime.Now;
+                post.CategoryId = requestPost.CategoryId;
+
+                db.SaveChanges();
+
+                TempData["message"] = "Postarea a fost modificată cu succes";
+                TempData["messageType"] = "alert-success";
+                return RedirectToAction("Index");
+            }
+
+            // Reassign categories and return the view if validation fails
+            requestPost.Categ = GetAllCategories();
+            return View(requestPost);
         }
 
 
@@ -539,6 +550,32 @@ namespace proiect_daw.Controllers
             db.SaveChanges();
 
             return Redirect(Request.Headers["Referer"].ToString());
+        }
+        [HttpPost]
+        [Authorize(Roles = "User,Editor,Admin")]
+        public async Task<IActionResult> UploadImage(IFormFile image)
+        {
+            if (image != null && image.Length > 0)
+            {
+                var filePath = Path.Combine("wwwroot/uploads", Path.GetFileName(image.FileName));
+
+                // Ensure the uploads directory exists
+                if (!Directory.Exists("wwwroot/uploads"))
+                {
+                    Directory.CreateDirectory("wwwroot/uploads");
+                }
+
+                // Save the image file to server
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await image.CopyToAsync(stream);
+                }
+
+                // Return the URL of the uploaded image
+                return Json(new { imageUrl = Url.Content("~/uploads/" + Path.GetFileName(image.FileName)) });
+            }
+
+            return BadRequest("No image provided.");
         }
 
 

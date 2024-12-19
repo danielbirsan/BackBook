@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using static proiect_daw.Models.PostBookmarks;
-using Microsoft.Identity.Client;
 
 namespace proiect_daw.Data
 {
-    // PASUL 3: useri si roluri
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -22,22 +20,17 @@ namespace proiect_daw.Data
         public DbSet<PostBookmark> PostBookmarks { get; set; }
         public DbSet<GroupMembership> GroupMemberships { get; set; }
         public DbSet<GroupMessage> GroupMessages { get; set; }
-
         public DbSet<Group> Groups { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<FollowRequest> FollowRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // definirea relatiei many-to-many dintre Post si Bookmark
-
             base.OnModelCreating(modelBuilder);
 
-            // definire primary key compus
+            // Define the many-to-many relationship between Post and Bookmark
             modelBuilder.Entity<PostBookmark>()
                 .HasKey(ab => new { ab.Id, ab.PostId, ab.BookmarkId });
-
-
-            // definire relatii cu modelele Bookmark si Post (FK)
 
             modelBuilder.Entity<PostBookmark>()
                 .HasOne(ab => ab.Post)
@@ -48,6 +41,18 @@ namespace proiect_daw.Data
                 .HasOne(ab => ab.Bookmark)
                 .WithMany(ab => ab.PostBookmarks)
                 .HasForeignKey(ab => ab.BookmarkId);
+
+            modelBuilder.Entity<FollowRequest>()
+                .HasOne(fr => fr.Sender)
+                .WithMany(u => u.SentFollowRequests)
+                .HasForeignKey(fr => fr.SenderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<FollowRequest>()
+                .HasOne(fr => fr.Receiver)
+                .WithMany(u => u.ReceivedFollowRequests)
+                .HasForeignKey(fr => fr.ReceiverId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

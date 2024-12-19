@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace proiect_daw.Controllers
 {
@@ -80,11 +83,21 @@ namespace proiect_daw.Controllers
             ViewBag.UserCurent = await _userManager.GetUserAsync(User);
             ViewBag.UserPosts = user.Posts;
 
+          
             // Get the current user's ID
             var currentUserId = _userManager.GetUserId(User);
             ViewBag.UserCurent = currentUserId;
             // Create a dictionary to store the like status for each post
             var postLikes = new Dictionary<int, bool>();
+            // Check if the current user has already sent a follow request
+            var hasSentFollowRequest = db.FollowRequests.Any(fr => fr.SenderId == currentUserId && fr.ReceiverId == id && fr.PendingApproval);
+            ViewBag.HasSentFollowRequest = hasSentFollowRequest;
+
+            ViewBag.IsFollowing = db.FollowRequests.Any(fr => fr.SenderId == currentUserId && fr.ReceiverId == id && !fr.PendingApproval);
+            ViewBag.HasSentFollowRequest = db.FollowRequests.Any(fr => fr.SenderId == currentUserId && fr.ReceiverId == id && fr.PendingApproval);
+            ViewBag.FollowersCount = db.FollowRequests.Count(fr => fr.ReceiverId == id && !fr.PendingApproval);
+            ViewBag.FollowingCount = db.FollowRequests.Count(fr => fr.SenderId == id && !fr.PendingApproval);
+
 
             foreach (var post in user.Posts)
             {
@@ -115,6 +128,23 @@ namespace proiect_daw.Controllers
                                               .First(); // Selectam 1 singur rol
 
             return View(user);
+        }
+
+        private List<SelectListItem> GetAllRoles()
+        {
+            var roles = _roleManager.Roles.ToList();
+            var roleList = new List<SelectListItem>();
+
+            foreach (var role in roles)
+            {
+                roleList.Add(new SelectListItem
+                {
+                    Value = role.Id,
+                    Text = role.Name
+                });
+            }
+
+            return roleList;
         }
 
         [Authorize(Roles = "Admin")]
@@ -198,24 +228,93 @@ namespace proiect_daw.Controllers
             return RedirectToAction("Index");
         }
 
-
-        [NonAction]
-        public IEnumerable<SelectListItem> GetAllRoles()
+        [HttpPost]
+        public async Task<IActionResult> SendFollowRequest(string receiverId)
         {
-            var selectList = new List<SelectListItem>();
-
-            var roles = from role in db.Roles
-                        select role;
-
-            foreach (var role in roles)
+            var senderId = _userManager.GetUserId(User);
+            var followRequest = new FollowRequest
             {
-                selectList.Add(new SelectListItem
-                {
-                    Value = role.Id.ToString(),
-                    Text = role.Name.ToString()
-                });
-            }
-            return selectList;
+                SenderId = senderId,
+                ReceiverId = receiverId,
+                PendingApproval = true
+            };
+
+            db.FollowRequests.Add(followRequest);
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("Show", new { id = receiverId });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AcceptFollowRequest(int requestId)
+        {
+            var followRequest = await db.FollowRequests.FindAsync(requestId);
+            if (followRequest != null)
+            {
+                followRequest.PendingApproval = false;
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Show", new { id = followRequest.ReceiverId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeclineFollowRequest(int requestId)
+        {
+            var followRequest = await db.FollowRequests.FindAsync(requestId);
+            if (followRequest != null)
+            {
+                db.FollowRequests.Remove(followRequest);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Show", new { id = followRequest.ReceiverId });
+        }
+        [HttpPost]
+        public async Task<IActionResult> UndoFollowRequest(string receiverId)
+        {
+            var senderId = _userManager.GetUserId(User);
+            var followRequest = db.FollowRequests.FirstOrDefault(fr => fr.SenderId == senderId && fr.ReceiverId == receiverId && fr.PendingApproval);
+
+            if (followRequest != null)
+            {
+                db.FollowRequests.Remove(followRequest);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Show", new { id = receiverId });
+        }
+        public async Task<IActionResult> PendingFollows()
+        {
+            var currentUserId = _userManager.GetUserId(User);
+
+            // Fetch all pending follow requests for the logged-in user
+            var pendingRequests = db.FollowRequests
+                .Include(fr => fr.Sender)
+                .Where(fr => fr.ReceiverId == currentUserId && fr.PendingApproval)
+                .ToList();
+
+            return View(pendingRequests);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Unfollow(string receiverId)
+        {
+            var senderId = _userManager.GetUserId(User);
+
+            // Find the follow request where the current user is following the target user
+            var followRequest = await db.FollowRequests
+                                        .FirstOrDefaultAsync(fr => fr.SenderId == senderId && fr.ReceiverId == receiverId && !fr.PendingApproval);
+
+            if (followRequest != null)
+            {
+                // Remove the follow request to unfollow the user
+                db.FollowRequests.Remove(followRequest);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Show", new { id = receiverId });
+        }
+
+
     }
 }

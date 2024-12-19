@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace proiectdaw.Migrations
 {
     /// <inheritdoc />
-    public partial class ok : Migration
+    public partial class a : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -85,6 +85,7 @@ namespace proiectdaw.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrivateProfile = table.Column<bool>(type: "bit", nullable: false),
                     ProfileDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfilePhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GroupId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -95,7 +96,6 @@ namespace proiectdaw.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
@@ -212,6 +212,31 @@ namespace proiectdaw.Migrations
                     table.ForeignKey(
                         name: "FK_Bookmarks_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FollowRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PendingApproval = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FollowRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FollowRequests_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_FollowRequests_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
@@ -439,6 +464,16 @@ namespace proiectdaw.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FollowRequests_ReceiverId",
+                table: "FollowRequests",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FollowRequests_SenderId",
+                table: "FollowRequests",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GroupMemberships_GroupId",
                 table: "GroupMemberships",
                 column: "GroupId");
@@ -509,6 +544,9 @@ namespace proiectdaw.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "FollowRequests");
 
             migrationBuilder.DropTable(
                 name: "GroupMemberships");

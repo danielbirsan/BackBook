@@ -12,8 +12,8 @@ using proiect_daw.Data;
 namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241216101541_ok")]
-    partial class ok
+    [Migration("20241219101309_a")]
+    partial class a
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -316,6 +316,34 @@ namespace proiectdaw.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("proiect_daw.Models.FollowRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("PendingApproval")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("FollowRequests");
+                });
+
             modelBuilder.Entity("proiect_daw.Models.Group", b =>
                 {
                     b.Property<int>("Id")
@@ -577,6 +605,25 @@ namespace proiectdaw.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("proiect_daw.Models.FollowRequest", b =>
+                {
+                    b.HasOne("proiect_daw.Models.ApplicationUser", "Receiver")
+                        .WithMany("ReceivedFollowRequests")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("proiect_daw.Models.ApplicationUser", "Sender")
+                        .WithMany("SentFollowRequests")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("proiect_daw.Models.GroupMembership", b =>
                 {
                     b.HasOne("proiect_daw.Models.Group", "Group")
@@ -675,6 +722,10 @@ namespace proiectdaw.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Posts");
+
+                    b.Navigation("ReceivedFollowRequests");
+
+                    b.Navigation("SentFollowRequests");
                 });
 
             modelBuilder.Entity("proiect_daw.Models.Bookmark", b =>

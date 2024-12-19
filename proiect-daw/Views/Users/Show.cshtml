@@ -9,13 +9,37 @@
             <div class="d-flex flex-column align-items-start">
                 <h3 class="mb-1">@Model.UserName</h3>
 
-                @if (Model.PrivateProfile)
+                <div class="mb-3">
+                    <span class="me-3"><strong>Followers:</strong> @ViewBag.FollowersCount</span>
+                    <span><strong>Following:</strong> @ViewBag.FollowingCount</span>
+                </div>
+
+                @if (User.Identity.IsAuthenticated && (string)Model.Id != (string)ViewBag.UserCurent)
                 {
-                    <p class="text-muted">@Model.ProfileDescription</p>
+                    if (ViewBag.IsFollowing)
+                    {
+                        <form asp-controller="Users" asp-action="Unfollow" method="post" asp-route-receiverId="@Model.Id">
+                            <button type="submit" class="btn btn-secondary mt-2">Unfollow</button>
+                        </form>
+                    }
+                    else if (ViewBag.HasSentFollowRequest)
+                    {
+                        <form asp-controller="Users" asp-action="UndoFollowRequest" method="post" asp-route-receiverId="@Model.Id">
+                            <button type="submit" class="btn btn-secondary mt-2">Undo Follow Request</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-controller="Users" asp-action="SendFollowRequest" method="post" asp-route-receiverId="@Model.Id">
+                            <button type="submit" class="btn btn-primary mt-2">Follow</button>
+                        </form>
+                    }
                 }
-                else
+
+                <p class="text-muted">@Model.ProfileDescription</p>
+
+                @if (!Model.PrivateProfile || ViewBag.IsFollowing)
                 {
-                    <p class="text-muted">@Model.ProfileDescription</p>
                     <p>Email: <strong>@Model.Email</strong></p>
                     <p>Phone: <strong>@Model.PhoneNumber</strong></p>
 
@@ -30,6 +54,10 @@
                         </div>
                     }
                 }
+                else
+                {
+                    <p class="text-muted">This profile is private. Follow to see more details.</p>
+                }
             </div>
         </div>
     </div>
@@ -38,35 +66,39 @@
 
     <h4>User Posts</h4>
     <div class="row">
-        @if (Model.Posts != null && Model.Posts.Count > 0)
+        @if (!Model.PrivateProfile || ViewBag.IsFollowing)
         {
-            @foreach (var post in Model.Posts)
+            @if (Model.Posts != null && Model.Posts.Count > 0)
             {
-                <div class="col-md-4 mb-4">
-                    <div class="card mb-4">
-                        <a style="text-decoration:none; color:black"
-                           asp-controller="Posts" asp-action="Show" asp-route-id="@post.Id">
-                            @{
-                                ViewData["CurrentUserId"] = ViewBag.UserCurent;
-                                ViewData["Likes"] = ViewData[$"Likes_{post.Id}"];
-                             
-
-                            }
-                            <partial name="PostInfo" model="post" viewdata="ViewData"></partial>
-                        </a>
+                @foreach (var post in Model.Posts)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card mb-4">
+                            <a style="text-decoration:none; color:black"
+                               asp-controller="Posts" asp-action="Show" asp-route-id="@post.Id">
+                                @{
+                                    ViewData["CurrentUserId"] = ViewBag.UserCurent;
+                                    ViewData["Likes"] = ViewData[$"Likes_{post.Id}"];
+                                }
+                                <partial name="PostInfo" model="post" viewdata="ViewData"></partial>
+                            </a>
+                        </div>
                     </div>
-
-                </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">This user has not posted anything yet.</p>
             }
         }
         else
         {
-            <p class="text-muted">This user has not posted anything yet.</p>
+            <p class="text-muted">This profile is private. Follow to see posts.</p>
         }
     </div>
 
     <div class="d-flex justify-content-between">
-        @if (User.IsInRole("Admin") && (string)Model.Id != ViewBag.UserCurent.Id)
+        @if (User.IsInRole("Admin") && (string)Model.Id != (string)ViewBag.UserCurent)
         {
             <form asp-controller="Users" asp-action="Delete" method="post" asp-route-id="@Model.Id">
                 <button type="submit" class="btn btn-danger">Delete User</button>

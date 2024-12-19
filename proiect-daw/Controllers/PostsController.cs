@@ -37,14 +37,25 @@ namespace proiect_daw.Controllers
         // Pentru fiecare articol se afiseaza si userul care a postat articolul respectiv
         // [HttpGet] care se executa implicit
         [Authorize(Roles = "User,Editor,Admin")]
+
         public IActionResult Index()
         {
-            var postari = db.Posts.Include("Category")
-                                      .Include("User")
-                                      .OrderByDescending(a => a.Date);
+            var currentUserId = _userManager.GetUserId(User);
 
-            // ViewBag.OriceDenumireSugestiva
-            // ViewBag.Posts = posts;
+            // Get the IDs of users the current user is following
+            var followingUserIds = db.FollowRequests
+                .Where(fr => fr.SenderId == currentUserId && !fr.PendingApproval)
+                .Select(fr => fr.ReceiverId)
+                .ToList();
+
+            // Include the current user in the following list to display their own posts
+            followingUserIds.Add(currentUserId);
+
+            // Fetch posts only from public profiles or followed users
+            var postari = db.Posts.Include("Category")
+                                  .Include("User")
+                                  .Where(post => post.User.PrivateProfile == false || followingUserIds.Contains(post.User.Id))
+                                  .OrderByDescending(a => a.Date);
 
             if (TempData.ContainsKey("message"))
             {
@@ -52,100 +63,53 @@ namespace proiect_daw.Controllers
                 ViewBag.Alert = TempData["messageType"];
             }
 
-            // MOTOR DE CAUTARE
-
+            // Search functionality
             var search = "";
 
             if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
             {
-                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim(); // eliminam spatiile libere 
+                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
 
-                // Cautare in articol (Title si Content)
+                List<int> postIds = db.Posts.Where(at => at.Title.Contains(search) || at.Content.Contains(search))
+                                             .Select(a => a.Id)
+                                             .ToList();
 
-                List<int> postIds = db.Posts.Where
-                                        (
-                                         at => at.Title.Contains(search)
-                                         || at.Content.Contains(search)
-                                        ).Select(a => a.Id).ToList();
-
-                // Cautare in comentarii (Content)
                 List<int> postIdsOfCommentsWithSearchString = db.Comments
-                                        .Where
-                                        (
-                                         c => c.Content.Contains(search)
-                                        ).Select(c => (int)c.PostId).ToList();
+                                                                .Where(c => c.Content.Contains(search))
+                                                                .Select(c => (int)c.PostId)
+                                                                .ToList();
 
-                // Se formeaza o singura lista formata din toate id-urile selectate anterior
                 List<int> mergedIds = postIds.Union(postIdsOfCommentsWithSearchString).ToList();
 
-
-                // Lista postarilor care contin cuvantul cautat
-                // fie in articol -> Title si Content
-                // fie in comentarii -> Content
-                postari = db.Posts.Where(post => mergedIds.Contains(post.Id))
-                                      .Include("Category")
-                                      .Include("User")
-                                      .OrderByDescending(a => a.Date);
-
+                postari = postari.Where(post => mergedIds.Contains(post.Id)).OrderByDescending(a => a.Date);
             }
+
 
             ViewBag.SearchString = search;
 
-            // AFISARE PAGINATA
-
-            // Alegem sa afisam 3 postari pe pagina
+            // Pagination logic
             int _perPage = 3;
-
-            // Fiind un numar variabil de postari, verificam de fiecare data utilizand 
-            // metoda Count()
             int totalItems = postari.Count();
-
-            // Se preia pagina curenta din View-ul asociat
-            // Numarul paginii este valoarea parametrului page din ruta
-            // /Posts/Index?page=valoare
-
             var pageQuery = HttpContext.Request.Query["page"].ToString();
-            int currentPage = 1; // Default to the first page if parsing fails
+            int currentPage = 1;
 
             if (!string.IsNullOrEmpty(pageQuery) && int.TryParse(pageQuery, out int parsedPage))
             {
                 currentPage = parsedPage;
             }
-            // Pentru prima pagina offsetul o sa fie zero
-            // Pentru pagina 2 o sa fie 3 
-            // Asadar offsetul este egal cu numarul de postari care au fost deja afisate pe paginile anterioare
-            var offset = 0;
 
-            // Se calculeaza offsetul in functie de numarul paginii la care suntem
-            if (!currentPage.Equals(0))
-            {
-                offset = (currentPage - 1) * _perPage;
-            }
-
-            // Se preiau postarile corespunzatoare pentru fiecare pagina la care ne aflam 
-            // in functie de offset
+            var offset = (currentPage - 1) * _perPage;
             var paginatedPosts = postari.Skip(offset).Take(_perPage).ToList();
 
-            // Preluam numarul ultimei pagini
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
-
-            // Trimitem postarile cu ajutorul unui ViewBag catre View-ul corespunzator
             ViewBag.Posts = paginatedPosts;
 
-            // DACA AVEM AFISAREA PAGINATA IMPREUNA CU SEARCH
+            ViewBag.PaginationBaseUrl = search != ""
+                ? $"/Posts/Index/?search={search}&page"
+                : "/Posts/Index/?page";
 
-            if (search != "")
-            {
-                ViewBag.PaginationBaseUrl = "/Posts/Index/?search=" + search + "&page";
-            }
-            else
-            {
-                ViewBag.PaginationBaseUrl = "/Posts/Index/?page";
-            }
-
-
+            // Likes data preparation
             var postsList = db.Posts.Include(p => p.Likes).ToList();
-            var currentUserId = _userManager.GetUserId(User);
             var postLikes = new Dictionary<int, bool>();
             var likedPhotos = new List<string>();
 
@@ -153,22 +117,17 @@ namespace proiect_daw.Controllers
 
             foreach (var post in postsList)
             {
-                // Check if the current user has liked the post
                 var hasLiked = post.Likes.Any(like => like.UserId == currentUserId);
                 postLikes[post.Id] = hasLiked;
                 ViewData[$"Likes_{post.Id}"] = hasLiked;
 
-                // If the post has been liked by the current user, add the photo to the likedPhotos list
                 if (hasLiked && !string.IsNullOrEmpty(post.Id.ToString()))
                 {
                     likedPhotos.Add(post.Id.ToString());
                 }
             }
 
-
             ViewBag.LikedPhotos = likedPhotos;
-
-
 
             return View();
         }

@@ -1,13 +1,29 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using proiect_daw.Data
+
 
 <!-- PASUL 7: useri si roluri -->
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject ApplicationDbContext db
 
 @{
     var user = await UserManager.GetUserAsync(User);
     var firstName = user?.FirstName;
     var lastName = user?.LastName;
+
+    bool hasGroupRequestsToAccept = false;
+
+    if (user != null)
+    {
+		var moderatorOf = db.Groups
+			                    .Where(g => g.ModeratorId == user.Id)
+			                    .ToList();
+
+        hasGroupRequestsToAccept = db.GroupMemberships
+                                        .Where(gm => moderatorOf.Select(g => g.Id).Contains(gm.GroupId) && gm.PendingApproval == true)
+                                        .Any();
+    }
 }
 
 <head>
@@ -40,7 +56,14 @@
                     <li class="nav-item dropdown">
                         <form asp-controller="Groups" asp-action="PendingApproval" method="get" class="d-inline">
                             <button type="submit" class="btn hover-underline-animation">
-                                <i class="bi bi-bell text-white"></i>
+                                @if (hasGroupRequestsToAccept)
+                                {
+                                    <i class="bi bi-bell-fill text-white"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-bell text-white"></i>
+                                }
                             </button>
                         </form>
                     </li>

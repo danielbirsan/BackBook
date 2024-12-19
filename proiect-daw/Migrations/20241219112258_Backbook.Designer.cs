@@ -12,8 +12,8 @@ using proiect_daw.Data;
 namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241219101309_a")]
-    partial class a
+    [Migration("20241219112258_Backbook")]
+    partial class Backbook
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -358,6 +358,9 @@ namespace proiectdaw.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("GroupPhoto")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModeratorId")
                         .HasColumnType("nvarchar(max)");

@@ -10,6 +10,10 @@
 <div class="container mt-5">
     <!-- Group Header -->
     <div class="text-center mb-5">
+        <div class="mt-3">
+            <img src="@Url.Content(Model.GroupPhoto)" alt="Group Logo" class="img-thumbnail" style="max-width: 200px;" />
+        </div>
+        
         <h2 class="display-4 text-primary fw-bold">@Model.Name</h2>
         <p class="lead text-muted">@Model.Description</p>
 
@@ -21,6 +25,21 @@
                     <i class="bi bi-box-arrow-right"></i> Leave Group
                 </button>
             </form>
+            @if(isModerator)
+            {
+                <form asp-controller="Groups" asp-action="UploadLogo" method="post" enctype="multipart/form-data" class="mt-3">
+                    <input type="hidden" name="id" value="@Model.Id" />
+
+                    <div class="mb-3">
+                        <label for="groupLogo" class="form-label">Upload Group Logo</label>
+                        <input type="file" id="groupLogo" name="groupLogo" class="form-control" accept="image/*" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload"></i> Upload Logo
+                    </button>
+                </form>
+            }
         }
     </div>
 

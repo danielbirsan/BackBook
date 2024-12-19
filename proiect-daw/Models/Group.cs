@@ -25,5 +25,7 @@ namespace proiect_daw.Models
 
         public virtual ICollection<GroupMessage>? GroupMessages { get; set; }
 
+        public string? GroupPhoto { get; set; }
+
     }
 }

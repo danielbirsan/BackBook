@@ -356,6 +356,9 @@ namespace proiectdaw.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("GroupPhoto")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ModeratorId")
                         .HasColumnType("nvarchar(max)");
 

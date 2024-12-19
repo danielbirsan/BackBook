@@ -1,5 +1,6 @@
 ﻿using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -210,6 +211,7 @@ namespace proiect_daw.Controllers
             {
                 group.Name = sanitizer.Sanitize(group.Name);
                 group.Description = sanitizer.Sanitize(group.Description);
+                group.GroupPhoto = "images/groups/default.png";
 
                 db.Groups.Add(group);
                 db.SaveChanges();
@@ -391,6 +393,38 @@ namespace proiect_daw.Controllers
                 TempData["SuccessMessage"] = "User rejected successfully.";
             }
             return RedirectToAction("PendingApproval");
+        }
+
+        [HttpPost]
+        public IActionResult UploadLogo(int id, IFormFile groupLogo)
+        {
+            if(groupLogo == null)
+            {
+                return BadRequest("Invalid logo file.");
+            }
+            var group = db.Groups.Find(id);
+
+            var fileName = Path.GetFileNameWithoutExtension(groupLogo.FileName);
+            var extension = Path.GetExtension(groupLogo.FileName);
+            var uniqueFileName = $"{group.Name}{extension}";
+
+            var uploadsFolder = Path.Combine("wwwroot/images/groups");
+
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            // Save the file
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                groupLogo.CopyTo(stream);
+            }
+
+            if (group != null)
+            {
+                group.GroupPhoto = $"/images/groups/{uniqueFileName}";
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("Show", new { id = id });
         }
     }  
 }

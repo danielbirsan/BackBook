@@ -235,3 +235,7 @@ main{
     background-color: #0056b3; /* Darker shade of primary color */
     transform: scale(1.1);
 }
+
+.btn{
+    margin-right: 5px !important;
+}

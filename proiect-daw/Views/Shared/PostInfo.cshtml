@@ -9,7 +9,7 @@
         <div class="col-12 col-md-8">
             <div class="card shadow-sm border-0">
                 <!-- Post Header -->
-                <div class="card-header bg-white d-flex align-items-center">
+                <div class="card-header d-flex align-items-center">
                     <img src="@Model.User?.ProfilePhoto" alt="@Model.User?.UserName's profile picture" class="rounded-circle me-3" width="50" height="50">
                     <div>
                         <strong>@Model.User.FirstName @Model.User.LastName</strong>
@@ -34,7 +34,7 @@
                 </div>
 
                 <!-- Post Footer -->
-                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                <div class="card-footer d-flex justify-content-between align-items-center">
                     <div>
                         <!-- Like Button -->
                         <form method="post" asp-controller="Posts" asp-action="ToggleLike" class="d-inline">

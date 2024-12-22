@@ -30,9 +30,12 @@
                     }
                     else
                     {
-                        <form asp-controller="Users" asp-action="SendFollowRequest" method="post" asp-route-receiverId="@Model.Id">
-                            <button type="submit" class="btn btn-primary mt-2">Follow</button>
-                        </form>
+                        if(!Model.PrivateProfile)
+                        {
+                            <form asp-controller="Users" asp-action="SendFollowRequest" method="post" asp-route-receiverId="@Model.Id">
+                                <button type="submit" class="btn btn-primary mt-2">Follow</button>
+                            </form>
+                        }
                     }
                 }
 

@@ -38,34 +38,45 @@ namespace proiect_daw.Controllers
         {
             // MOTOR DE CAUTARE
 
+  
+
             var search = "";
 
             if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
             {
                 search = Convert.ToString(HttpContext.Request.Query["search"]).Trim(); // eliminam spatiile libere 
 
+                var excludedUsers = new List<string> { "admin@test.com", "editor@test.com", "user@test.com" };
+                var currentUserName = User.Identity.Name;
+
+                if (!string.IsNullOrEmpty(currentUserName))
+                {
+                    excludedUsers.Add(currentUserName);
+                }
+
                 var searched_users = db.Users
-                     .Where(u => (u.FirstName + " " + u.LastName).Contains(search) ||
-                                 u.UserName.Contains(search) ||
-                                 u.Email.Contains(search))
-                     .OrderBy(u => u.UserName)
-                     .ToList();
+                  .Where(u => (
+                      (u.FirstName + " " + u.LastName).Contains(search) ||
+                      u.UserName.Contains(search) ||
+                      u.Email.Contains(search)
+                  ) && !excludedUsers.Contains(u.UserName))
+                  .OrderBy(u => u.UserName)
+                  .ToList();
 
                 ViewBag.SearchedUsersList = searched_users;
             }
 
             ViewBag.SearchString = search;
 
+            var excludedUsersList = new List<string> { "admin@test.com", "editor@test.com", "user@test.com" };
+            var currentUser = User.Identity.Name;
 
-            var excludedUsers = new List<string> { "admin@test.com", "editor@test.com", "user@test.com" };
-            var currentUserName = User.Identity.Name;
-
-            if (!string.IsNullOrEmpty(currentUserName))
+            if (!string.IsNullOrEmpty(currentUser))
             {
-                excludedUsers.Add(currentUserName);
+                excludedUsersList.Add(currentUser);
             }
             var users = from user in db.Users
-                        where !excludedUsers.Contains(user.UserName)
+                        where !excludedUsersList.Contains(user.UserName)
                         orderby user.UserName
                         select user;
 

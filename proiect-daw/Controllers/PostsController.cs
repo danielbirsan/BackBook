@@ -97,7 +97,7 @@ namespace proiect_daw.Controllers
             {
                 currentPage = parsedPage;
             }
-
+            ViewBag.currentPage = currentPage;
             var offset = (currentPage - 1) * _perPage;
             var paginatedPosts = postari.Skip(offset).Take(_perPage).ToList();
             if (paginatedPosts == null || !paginatedPosts.Any())

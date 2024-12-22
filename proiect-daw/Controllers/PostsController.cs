@@ -100,6 +100,11 @@ namespace proiect_daw.Controllers
 
             var offset = (currentPage - 1) * _perPage;
             var paginatedPosts = postari.Skip(offset).Take(_perPage).ToList();
+            if (paginatedPosts == null || !paginatedPosts.Any())
+            {
+                ViewBag.Message = "No posts available.";
+                ViewBag.Posts = new List<Post>();
+            }
 
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
             ViewBag.Posts = paginatedPosts;

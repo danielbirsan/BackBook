@@ -56,8 +56,14 @@ namespace proiect_daw.Controllers
 
             ViewBag.SearchString = search;
 
-            var excludedUsers = new List<string> { "admin@test.com", "editor@test.com", "user@test.com" };
 
+            var excludedUsers = new List<string> { "admin@test.com", "editor@test.com", "user@test.com" };
+            var currentUserName = User.Identity.Name;
+
+            if (!string.IsNullOrEmpty(currentUserName))
+            {
+                excludedUsers.Add(currentUserName);
+            }
             var users = from user in db.Users
                         where !excludedUsers.Contains(user.UserName)
                         orderby user.UserName
@@ -255,7 +261,7 @@ namespace proiect_daw.Controllers
             {
                 SenderId = senderId,
                 ReceiverId = receiverId,
-                PendingApproval = !receiver.PrivateProfile
+                PendingApproval = receiver.PrivateProfile
             };
 
             db.FollowRequests.Add(followRequest);

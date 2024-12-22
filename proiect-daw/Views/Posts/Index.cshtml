@@ -18,7 +18,7 @@
     <div class="input-group mb-3">
         <input type="text" class="form-control" placeholder="@Localizer["Placeholder_Search"]" name="search"
                value="@ViewBag.SearchString">
-        <button type="submit">
+        <button type="submit" class="btn btn-primary">
             <span class="transition"></span>
             <span class="gradient"></span>
             <span class="label">@Localizer["Button_Search"]</span>
@@ -43,10 +43,40 @@
                 </a>
             </div>
         }
-        @* Spacer at the end of the page *@
-    
     </div>
     <br />
+
+    @* Pagination *@
+    <div class="mb-5">
+        <nav aria-label="@Localizer["Navigation_Pages"]">
+            <ul class="pagination justify-content-center">
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@ViewBag.PaginationBaseUrl=@(ViewBag.CurrentPage - 1)" aria-label="@Localizer["Navigation_Previous"]">
+                            <span aria-hidden="true">@Localizer["Navigation_Previous"]</span>
+                        </a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= ViewBag.lastPage; i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="@ViewBag.PaginationBaseUrl=@i">@i</a>
+                    </li>
+                }
+
+                @if (ViewBag.CurrentPage < ViewBag.lastPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@ViewBag.PaginationBaseUrl=@(ViewBag.CurrentPage + 1)" aria-label="@Localizer["Navigation_Next"]">
+                            <span aria-hidden="true">@Localizer["Navigation_Next"]</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
 }
 else
 {
@@ -54,28 +84,3 @@ else
         <p>@Localizer["Message_NoPostsFound"]</p>
     </div>
 }
-
-@* Pagination *@
-<div class="mb-5">
-    <nav aria-label="@Localizer["Navigation_Pages"]">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="@ViewBag.PaginationBaseUrl=1" aria-label="@Localizer["Navigation_Previous"]">
-                    <span aria-hidden="true">@Localizer["Navigation_Previous"]</span>
-                </a>
-            </li>
-            @for (int i = 1; i <= ViewBag.lastPage; i++)
-            {
-                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-                    <a class="page-link" href="@ViewBag.PaginationBaseUrl=@i">@i</a>
-                </li>
-            }
-            <li class="page-item">
-                <a class="page-link" href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="@Localizer["Navigation_Next"]">
-                    <span aria-hidden="true">@Localizer["Navigation_Next"]</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</div>
-

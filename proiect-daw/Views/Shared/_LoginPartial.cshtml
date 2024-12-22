@@ -45,6 +45,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
+
                     <label id="theme-toggle-button" style="cursor: pointer;">
                         <input type="checkbox" id="toggle" style="display: none;" checked>
                         <svg viewBox="0 0 69.667 44" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
@@ -92,6 +93,7 @@
                             </g>
                         </svg>
                     </label>
+
                 </li>
 
                 <script>
@@ -111,8 +113,8 @@
                     }
 
                     // Handle theme toggle
-                    toggleLabel.addEventListener('click', () => {
-                        if (toggleCheckbox.checked) {
+                    toggleCheckbox.addEventListener('click', () => {
+                        if (!toggleCheckbox.checked) {
                             disableDarkMode();
                             localStorage.setItem('theme', 'light');
                         } else {

@@ -12,8 +12,8 @@ using proiect_daw.Data;
 namespace proiectdaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241219125620_qwe")]
-    partial class qwe
+    [Migration("20241222085517_BackBook")]
+    partial class BackBook
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -372,6 +372,9 @@ namespace proiectdaw.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("PrivateGroup")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

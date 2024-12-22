@@ -27,5 +27,7 @@ namespace proiect_daw.Models
 
         public string? GroupPhoto { get; set; }
 
+        public bool PrivateGroup { get; set; }
+
     }
 }

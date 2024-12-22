@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace proiectdaw.Migrations
 {
     /// <inheritdoc />
-    public partial class qwe : Migration
+    public partial class BackBook : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -49,7 +49,8 @@ namespace proiectdaw.Migrations
                     ModeratorId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ModeratorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    GroupPhoto = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    GroupPhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PrivateGroup = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

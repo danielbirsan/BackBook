@@ -5,162 +5,192 @@
 @{
     var currentUserId = UserManager.GetUserId(User);
     var isModerator = Model.ModeratorId == currentUserId;
+    
+	string visibility = Model.PrivateGroup ? "Private" : "Public";
 }
 
 <div class="container mt-5">
-    <!-- Group Header -->
-    <div class="text-center mb-5">
-        <div class="mt-3">
-            <img src="@Url.Content(Model.GroupPhoto)" alt="Group Logo" class="img-thumbnail" style="max-width: 200px;" />
-        </div>
-
-        <h2 class="display-4 text-primary fw-bold">@Model.Name</h2>
-        <p class="lead text-muted">@Model.Description</p>
-        <p class="text-muted"><strong>Moderator:</strong>@Model.ModeratorName</p>
-
-
-        @if (ViewBag.isPendingApproval == false)
-        {
-            <form asp-controller="Groups" asp-action="LeaveGroup" method="post" class="d-inline">
-                <input type="hidden" name="id" value="@Model.Id" />
-                <button type="submit" class="btn btn-outline-danger btn-lg mt-3">
-                    <i class="bi bi-box-arrow-right"></i> Leave Group
-                </button>
-            </form>
-            @if(isModerator)
-            {
-                <form asp-controller="Groups" asp-action="UploadLogo" method="post" enctype="multipart/form-data" class="mt-3">
-                    <input type="hidden" name="id" value="@Model.Id" />
-
-                    <div class="mb-3">
-                        <label for="groupLogo" class="form-label">Upload Group Logo</label>
-                        <input type="file" id="groupLogo" name="groupLogo" class="form-control" accept="image/*" required />
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-upload"></i> Upload Logo
-                    </button>
-                </form>
-            }
-        }
-    </div>
-
-    <!-- Flash Messages -->
-    @if (TempData["Message"] != null)
-    {
-        <div class="alert @TempData["messageType"] alert-dismissible fade show" role="alert">
-            @TempData["Message"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-    <!-- Comments Section -->
-    @if (ViewBag.isPendingApproval == false)
-    {
-        <h4 class="text-success mb-4">Comments</h4>
-        <div class="row">
-            @foreach (var message in ViewBag.GroupMessages)
-            {
-                <div class="col-md-12">
-                    <div class="card mb-3 shadow-sm border-0">
-                        <div class="card-body d-flex align-items-start">
-                            <img src="@message.User.ProfilePhoto" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
-                            <div class="w-100">
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="card-title mb-0">@message.User.FirstName @message.User.LastName</h5>
-                                    @if (isModerator || message.User.Id == currentUserId)
-                                    {
-                                        <div>
-                                            <form asp-controller="Groups" asp-action="RemoveComment" method="post" class="d-inline">
-                                                <input type="hidden" name="groupId" value="@message.Group.Id" />
-                                                <input type="hidden" name="messageId" value="@message.Id" />
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
-                                            @if (message.User.Id == currentUserId)
-                                            {
-                                                <form asp-controller="Groups" asp-action="EditComment" method="get" class="d-inline">
-                                                    <input type="hidden" name="id" value="@message.Id" />
-                                                    <button type="submit" class="btn btn-sm btn-outline-primary">
-                                                        <i class="bi bi-pencil"></i>
-                                                    </button>
-                                                </form>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                                <p class="card-text mt-2">@message.Content</p>
-                            </div>
-                        </div>
-                    </div>
+    <div class="row">
+        <!-- Left Column: Administrative Settings and Group Information -->
+        <div class="col-md-6">
+            <!-- Group Header -->
+            <div class="text-center mb-5">
+                <div class="mt-3">
+                    <img src="@Url.Content(Model.GroupPhoto)" alt="Group Logo" class="img-thumbnail" style="max-width: 200px;" />
                 </div>
-            }
 
-            <!-- Add Comment Form -->
-            <div class="card shadow-sm border-0 rounded-3 mt-4">
-                <div class="card-body">
-                    <form method="post" asp-controller="Groups" asp-action="PostComment">
-                        <input type="hidden" name="GroupId" value="@Model.Id" />
-                        <input type="hidden" name="UserId" value="@currentUserId" />
-                        <div class="mb-3">
-                            <label for="commentContent" class="form-label">Add a Comment</label>
-                            <textarea id="commentContent" name="Content" class="form-control" rows="3" placeholder="Write your comment here..."></textarea>
-                        </div>
-                        <button class="btn btn-primary btn-lg mt-2 w-100" type="submit">
-                            <i class="bi bi-chat-dots"></i> Post Comment
+                <h2 class="display-4 text-primary fw-bold">@Model.Name</h2>
+                <p class="lead text-muted">@Model.Description</p>
+                <p class="text-muted"><strong>Moderator: </strong> @Model.ModeratorName</p>
+                <p class="text-muted"><strong>Visibility: </strong> @visibility</p>
+                
+
+                @if (ViewBag.isPendingApproval == false)
+                {
+                    <form asp-controller="Groups" asp-action="LeaveGroup" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-outline-danger btn-lg mt-3">
+                            <i class="bi bi-box-arrow-right"></i> Leave Group
                         </button>
                     </form>
+                    @if (isModerator)
+                    {
+                        <form asp-controller="Groups" asp-action="UploadLogo" method="post" enctype="multipart/form-data" class="mt-3">
+                            <input type="hidden" name="id" value="@Model.Id" />
+
+                            <div class="mb-3">
+                                <label for="groupLogo" class="form-label">Upload Group Logo</label>
+                                <input type="file" id="groupLogo" name="groupLogo" class="form-control" accept="image/*" required />
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload"></i> Upload Logo
+                            </button>
+                        </form>
+
+                        <form asp-controller="Groups" asp-action="SetGroupVisibility" method="post">
+                            @if(Model.PrivateGroup)
+                            {
+                                <input type="hidden" name="groupId" value="@Model.Id" />
+                                <input type="hidden" name="toggle" value="false" />
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-unlock-fill"></i>  Set public group
+                                </button>
+                            }
+                            else
+                            {
+                                <input type="hidden" name="groupId" value="@Model.Id" />
+                                <input type="hidden" name="toggle" value="true" />
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-lock-fill"></i>  Set private group
+                                </button>
+                            }
+                        </form>
+                        
+                    }
+                }
+            </div>
+
+            <!-- Flash Messages -->
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert @TempData["messageType"] alert-dismissible fade show" role="alert">
+                    @TempData["Message"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- Join Group or Membership Status -->
+            <div class="mt-4 text-center">
+                @if (ViewBag.isPendingApproval == null)
+                {
+                    <form method="post" asp-action="Join" asp-controller="Groups" class="">
+                        <input type="hidden" name="groupId" value="@Model.Id" />
+                        <button class="btn btn-success btn-lg px-4" type="submit">
+                            <i class="bi bi-person-add"></i> Join Group
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <div class="mt-3">
+                        @if (ViewBag.isPendingApproval == true)
+                        {
+                            <small class="text-warning">Waiting for approval...</small>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- Members Section -->
+            <div class="my-4">
+                <h4 class="text-primary fw-bold mb-4">Members</h4>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    @foreach (var user in ViewBag.Users)
+                    {
+                        <div class="col">
+                            <div class="card shadow-lg border-light rounded-3 h-100">
+                                <div class="card-body text-center">
+                                    <img src="@user?.ProfilePhoto" alt="Profile Picture" class="rounded-circle mb-3" width="70" height="70">
+                                    <h5 class="card-title fs-5 text-primary">@user.FirstName @user.LastName</h5>
+                                    <p class="card-text text-muted">@user.Email</p>
+
+                                    @if (isModerator && user.Id != Model.ModeratorId)
+                                    {
+                                        <form asp-controller="Groups" asp-action="RemoveUser" method="post" class="d-inline">
+                                            <input type="hidden" name="groupId" value="@Model.Id" />
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="bi bi-person-x-fill"></i> Remove
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
-    }
 
-    <!-- Join Group or Membership Status -->
-    <div class="mt-4 text-center">
-        @if (ViewBag.isPendingApproval == null)
-        {
-            <form method="post" asp-action="Join" asp-controller="Groups" class="">
-                <input type="hidden" name="groupId" value="@Model.Id" />
-                <button class="btn btn-success btn-lg px-4" type="submit">
-                    <i class="bi bi-person-add"></i> Join Group
-                </button>
-            </form>
-        }
-        else
-        {
-            <div class="mt-3">
-                @if (ViewBag.isPendingApproval == true)
-                {
-                    <small class="text-warning">Waiting for approval...</small>
-                }
-            </div>
-        }
-    </div>
-
-    <!-- Members Section -->
-    <div class="my-4">
-        <h4 class="text-primary fw-bold mb-4">Members</h4>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var user in ViewBag.Users)
+        <!-- Right Column: Comments Section -->
+        <div class="col-md-6">
+            @if (ViewBag.isPendingApproval == false)
             {
-                <div class="col">
-                    <div class="card shadow-lg border-light rounded-3 h-100">
-                        <div class="card-body text-center">
-                            <img src="@user?.ProfilePhoto" alt="Profile Picture" class="rounded-circle mb-3" width="70" height="70">
-                            <h5 class="card-title fs-5 text-primary">@user.FirstName @user.LastName</h5>
-                            <p class="card-text text-muted">@user.Email</p>
+                <h4 class="text-success mb-4">Comments</h4>
+                <div class="row">
+                    @foreach (var message in ViewBag.GroupMessages)
+                    {
+                        <div class="col-md-12">
+                            <div class="card mb-3 shadow-sm border-0">
+                                <div class="card-body d-flex align-items-start">
+                                    <img src="@message.User.ProfilePhoto" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
+                                    <div class="w-100">
+                                        <div class="d-flex justify-content-between">
+                                            <h5 class="card-title mb-0">@message.User.FirstName @message.User.LastName</h5>
+                                            @if (isModerator || message.User.Id == currentUserId)
+                                            {
+                                                <div>
+                                                    <form asp-controller="Groups" asp-action="RemoveComment" method="post" class="d-inline">
+                                                        <input type="hidden" name="groupId" value="@message.Group.Id" />
+                                                        <input type="hidden" name="messageId" value="@message.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                    @if (message.User.Id == currentUserId)
+                                                    {
+                                                        <form asp-controller="Groups" asp-action="EditComment" method="get" class="d-inline">
+                                                            <input type="hidden" name="id" value="@message.Id" />
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                                <i class="bi bi-pencil"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                        <p class="card-text mt-2">@message.Content</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
 
-                            @if (isModerator && user.Id != Model.ModeratorId)
-                            {
-                                <form asp-controller="Groups" asp-action="RemoveUser" method="post" class="d-inline">
-                                    <input type="hidden" name="groupId" value="@Model.Id" />
-                                    <input type="hidden" name="userId" value="@user.Id" />
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">
-                                        <i class="bi bi-person-x-fill"></i> Remove
-                                    </button>
-                                </form>
-                            }
+                    <!-- Add Comment Form -->
+                    <div class="card shadow-sm border-0 rounded-3 mt-4">
+                        <div class="card-body">
+                            <form method="post" asp-controller="Groups" asp-action="PostComment">
+                                <input type="hidden" name="GroupId" value="@Model.Id" />
+                                <input type="hidden" name="UserId" value="@currentUserId" />
+                                <div class="mb-3">
+                                    <label for="commentContent" class="form-label">Add a Comment</label>
+                                    <textarea id="commentContent" name="Content" class="form-control" rows="3" placeholder="Write your comment here..."></textarea>
+                                </div>
+                                <button class="btn btn-primary btn-lg mt-2 w-100" type="submit">
+                                    <i class="bi bi-chat-dots"></i> Post Comment
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

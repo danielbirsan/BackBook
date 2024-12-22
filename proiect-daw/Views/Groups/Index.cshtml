@@ -62,7 +62,7 @@ else
 
 @foreach (var group in ViewBag.Groups)
 {
-    if (ViewBag.OwnGroups == null || !ViewBag.OwnGroups.Contains(group))
+    if (ViewBag.OwnGroups == null || !ViewBag.OwnGroups.Contains(group) || !group.PrivateGroup)
     {
         <a style="text-decoration:none; color:black" asp-controller="Groups" asp-action="Show" asp-route-id="@group.Id">
             <partial name="GroupInfo" model="group" />

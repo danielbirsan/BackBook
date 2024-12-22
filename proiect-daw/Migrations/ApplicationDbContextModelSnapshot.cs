@@ -370,6 +370,9 @@ namespace proiectdaw.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("PrivateGroup")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("Groups");

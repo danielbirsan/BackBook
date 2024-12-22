@@ -191,6 +191,24 @@ namespace proiect_daw.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SetGroupVisibility(int groupId, bool toggle)
+        {
+            Console.WriteLine("PRIVATE GROUP ========== ", toggle);
+
+            var group = await db.Groups.FindAsync(groupId);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            group.PrivateGroup = toggle;
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("Show", new { id = groupId });
+        }
+
+
 
         // Se adauga articolul in baza de date
         // Doar utilizatorii cu rolul Editor si Admin pot adauga postari in platforma
@@ -211,7 +229,8 @@ namespace proiect_daw.Controllers
             {
                 group.Name = sanitizer.Sanitize(group.Name);
                 group.Description = sanitizer.Sanitize(group.Description);
-                group.GroupPhoto = "images/groups/default.png";
+                group.GroupPhoto = "/images/groups/default.png";
+                group.PrivateGroup = false;
 
                 db.Groups.Add(group);
                 db.SaveChanges();

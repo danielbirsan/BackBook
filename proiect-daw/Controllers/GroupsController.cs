@@ -30,6 +30,10 @@ namespace proiect_daw.Controllers
         [HttpPost]
         public IActionResult PostComment(GroupMessage groupMessage)
         {
+            if(groupMessage.Content == null)
+            {
+                return RedirectToAction("Show", new { id = groupMessage.GroupId });
+            }
             db.GroupMessages.Add(groupMessage);
             db.SaveChanges();
 

@@ -56,7 +56,10 @@ namespace proiect_daw.Controllers
 
             ViewBag.SearchString = search;
 
+            var excludedUsers = new List<string> { "admin@test.com", "editor@test.com", "user@test.com" };
+
             var users = from user in db.Users
+                        where !excludedUsers.Contains(user.UserName)
                         orderby user.UserName
                         select user;
 

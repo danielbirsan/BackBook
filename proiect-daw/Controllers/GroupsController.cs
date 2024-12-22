@@ -127,7 +127,6 @@ namespace proiect_daw.Controllers
         }
 
 
-        [Authorize(Roles = "User,Editor,Admin")]
         public IActionResult Show(int id)
         {
             var group = db.Groups.FirstOrDefault(g => g.Id == id);
@@ -261,13 +260,6 @@ namespace proiect_daw.Controllers
             var group = await db.Groups.FindAsync(groupId);
             var currentUserId = _userManager.GetUserId(User);
 
-            if (group == null || group.ModeratorId != currentUserId)
-            {
-                TempData["message"] = "You are not authorized to remove users from this group.";
-                TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Show", new { id = groupId });
-            }
-
             var groupMembership = await db.GroupMemberships
                 .FirstOrDefaultAsync(gm => gm.GroupId == groupId && gm.UserId == userId);
 
@@ -277,11 +269,6 @@ namespace proiect_daw.Controllers
                 await db.SaveChangesAsync();
                 TempData["message"] = "User removed from the group successfully.";
                 TempData["messageType"] = "alert-success";
-            }
-            else
-            {
-                TempData["message"] = "User not found in the group.";
-                TempData["messageType"] = "alert-danger";
             }
 
             return RedirectToAction("Show", new { id = groupId });

@@ -345,6 +345,16 @@ namespace proiect_daw.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public IActionResult DeleteGroup(int id)
+        {
+            db.Groups.Remove(db.Groups.FirstOrDefault(g => g.Id == id));
+            db.GroupMemberships.RemoveRange(db.GroupMemberships.Where(gm => gm.GroupId == id));
+            db.GroupMessages.RemoveRange(db.GroupMessages.Where(gm => gm.GroupId == id));
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
         public IActionResult GroupInfo()
         {
             var groups = GetGroups();

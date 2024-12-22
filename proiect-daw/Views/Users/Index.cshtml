@@ -84,17 +84,19 @@
             {
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card">
-                        <img src="@searched_user.ProfilePhoto" alt="Profile Image" class="profile-img">
-                        <div class="card-body">
-                            <p><strong>@searched_user.FirstName @searched_user.LastName</strong></p>
-                            <p class="truncate" style="max-width: 50ch;">@searched_user.ProfileDescription</p>
+                        <a asp-controller="Users" asp-action="Show" asp-route-id="@searched_user.Id" style="text-decoration:none; color:inherit;">
+                            <img src="@searched_user.ProfilePhoto" alt="Profile Image" class="profile-img">
+                            <div class="card-body">
+                                <p><strong>@searched_user.FirstName @searched_user.LastName</strong></p>
+                                <p class="truncate" style="max-width: 50ch;">@searched_user.ProfileDescription</p>
 
 
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a asp-controller="Users" asp-action="Edit" asp-route-id="@searched_user.Id" class="btn btn-sm btn-success">Edit User</a>
-                            }
-                        </div>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-controller="Users" asp-action="Edit" asp-route-id="@searched_user.Id" class="btn btn-sm btn-success">Edit User</a>
+                                }
+                            </div>
+                        </a>
                     </div>
                 </div>
             }

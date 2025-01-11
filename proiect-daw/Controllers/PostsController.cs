@@ -309,6 +309,7 @@ namespace proiect_daw.Controllers
         {
             var sanitizer = new HtmlSanitizer();
             sanitizer.AllowedTags.Add("img");
+            sanitizer.AllowedTags.Add("iframe"); // trebuie adaugata linia asta
             sanitizer.AllowedAttributes.Add("src");
             sanitizer.AllowedAttributes.Add("alt");
 
@@ -370,6 +371,7 @@ namespace proiect_daw.Controllers
         {
             var sanitizer = new HtmlSanitizer();
             sanitizer.AllowedTags.Add("img");
+            sanitizer.AllowedTags.Add("iframe"); // trebuie adaugata linia asta
             sanitizer.AllowedAttributes.Add("src");
             sanitizer.AllowedAttributes.Add("alt");
 

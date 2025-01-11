@@ -76,7 +76,46 @@
                                                         }
                                                     }
                                                 };
-                                            }
+                                            }@*,
+                                            video: function () {
+                                                // Open a prompt to get the video URL
+                                                const url = prompt('Enter the video URL (YouTube or Vimeo):');
+                                                if (url) {
+                                                    let embedUrl = '';
+                                                    let iframeHtml = '';
+
+                                                    // Check for YouTube URLs
+                                                    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                                                        const youtubeId = url.includes('youtu.be')
+                                                            ? url.split('/').pop()
+                                                            : new URL(url).searchParams.get('v');
+                                                        embedUrl = `https://www.youtube.com/embed/${youtubeId}`;
+                                                    }
+                                                    // Check for Vimeo URLs
+                                                    else if (url.includes('vimeo.com')) {
+                                                        const vimeoId = url.split('/').pop();
+                                                        embedUrl = `https://player.vimeo.com/video/${vimeoId}`;
+                                                    }
+
+                                                    if (embedUrl) {
+                                                        // Create the iframe HTML
+                                                        iframeHtml = `<iframe
+                                                            src="${embedUrl}"
+                                                            width="560"
+                                                            height="315"
+                                                            frameborder="0"
+                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                            allowfullscreen>
+                                                            </iframe>`;
+
+                                                        // Insert the iframe as raw HTML
+                                                        const range = quill.getSelection();
+                                                        quill.clipboard.dangerouslyPasteHTML(range.index, iframeHtml);
+                                                    } else {
+                                                        alert('Invalid video URL. Only YouTube and Vimeo are supported.');
+                                                    }
+                                                }
+                                            }*@
                                         }
                                     }
                                 }
